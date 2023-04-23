@@ -13,14 +13,37 @@ export const con = (from, to, condition = () => true) => {
   };
 };
 
-export const printMap = (map) => {
-  const name = (vertex) => {
-    if (vertex == undefined) {
-      return "(invalid name)";
+const name = (vertex) => {
+  if (vertex == undefined) {
+    return "(invalid name)";
+  } else {
+    return vertex.name;
+  }
+};
+
+const room = (vertex) => {
+  if (vertex == undefined) {
+    return "(invalid room)";
+  } else {
+    const sep = vertex.name.indexOf("_");
+    if (sep >= 0) {
+      return vertex.name.substring(0, sep);
     } else {
       return vertex.name;
     }
-  };
+  }
+};
+
+export const printRooms = (map) => {
+  const rooms = map
+    .map((c) => room(c.from))
+    .filter((value, index, array) => {
+      return array.indexOf(value) == index;
+    });
+  console.log(rooms);
+};
+
+export const printMap = (map) => {
   const conToString = (connection) => {
     return (
       name(connection.from) +

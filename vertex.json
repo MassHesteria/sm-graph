@@ -1,11 +1,21 @@
 {
   "vertices": [
-    { "name": "LandingSite_Ship", "room": "LandingSite", "area": "Crateria", "item": "none" },
-    { "name": "LandingSite_Ledge", "room": "LandingSite", "area": "Crateria", "item": "none" },
-    { "name": "LandingSite_PreGauntlet", "room": "LandingSite", "area": "Crateria", "item": "none" },
-    { "name": "LandingSitePBs", "room": "LandingSitePBs", "area": "Crateria", "item": "minor" },
-    { "name": "CrateriaTube", "room": "CrateriaTube", "area": "Crateria", "item": "none" },
-    { "name": "Parlor_Main", "room": "Parlor", "area": "Crateria", "item": "none" },
-    { "name": "Parlor_Alcatraz", "room": "Parlor", "area": "Crateria", "item": "none" }
+    { "name": "LandingSite_Ship", "area": "Crateria", "item": "none" },
+    { "name": "LandingSite_Ledge", "area": "Crateria", "item": "none" },
+    { "name": "LandingSite_PreGauntlet", "area": "Crateria", "item": "none" },
+    { "name": "LandingSitePBs", "area": "Crateria", "item": "minor" },
+    { "name": "CrateriaTube", "area": "Crateria", "item": "none" },
+    { "name": "GauntletEntrance", "area": "Crateria", "item": "none" },
+    { "name": "GauntletTank", "area": "Crateria", "item": "none" },
+    { "name": "GreenPirateShaft_GauntletExit", "area": "Crateria", "item": "none" },
+    { "name": "GreenPirateShaft_Main", "area": "Crateria", "item": "none" },
+    { "name": "Terminator", "area": "Crateria", "item": "major" },
+    { "name": "Parlor_Main", "area": "Crateria", "item": "none" },
+    { "name": "Parlor_Alcatraz", "area": "Crateria", "item": "none" },
+    { "name": "Parlor_Terminator", "area": "Crateria", "item": "none" },
+    { "name": "230Hallway", "area": "Crateria", "item": "none" },
+    { "name": "230Missiles", "area": "Crateria", "item": "minor" },
+    { "name": "Flyway", "area": "Crateria", "item": "none" },
+    { "name": "BombTorizo", "area": "Crateria", "item": "major" }
   ]
 }

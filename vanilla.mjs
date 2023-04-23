@@ -1,4 +1,4 @@
-import { con, printMap } from "./util.mjs";
+import { con, printMap, printRooms } from "./util.mjs";
 
 let vanilla = [
   /* ----- Landing Site ----- */
@@ -28,6 +28,13 @@ let vanilla = [
 
   con("Parlor_Main", "Parlor_Alcatraz", (samus) => samus.hasMorph),
   con("Parlor_Alcatraz", "Parlor_Main", (samus) => samus.hasMorph),
+
+  con("Parlor_Alcatraz", "Flyway"),
+  con("Flyway", "Parlor_Alcatraz"),
+
+  con("Flyway", "BombTorizo", (samus) => samus.hasSupers || samus.hasMissiles),
+  con("BombTorizo", "Flyway"),
 ];
 
 printMap(vanilla);
+printRooms(vanilla);
