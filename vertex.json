@@ -1,0 +1,11 @@
+{
+  "vertices": [
+    { "name": "LandingSite_Ship", "room": "LandingSite", "area": "Crateria", "item": "none" },
+    { "name": "LandingSite_Ledge", "room": "LandingSite", "area": "Crateria", "item": "none" },
+    { "name": "LandingSite_PreGauntlet", "room": "LandingSite", "area": "Crateria", "item": "none" },
+    { "name": "LandingSitePBs", "room": "LandingSitePBs", "area": "Crateria", "item": "minor" },
+    { "name": "CrateriaTube", "room": "CrateriaTube", "area": "Crateria", "item": "none" },
+    { "name": "Parlor_Main", "room": "Parlor", "area": "Crateria", "item": "none" },
+    { "name": "Parlor_Alcatraz", "room": "Parlor", "area": "Crateria", "item": "none" }
+  ]
+}
