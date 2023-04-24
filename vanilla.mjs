@@ -1,4 +1,4 @@
-import { con, printMap, printRooms } from "./util.mjs";
+import { con, printMap, printPossibleRooms, printRooms, processWiki } from "./util.mjs";
 
 let vanilla = [
   /* ----- Landing Site ----- */
@@ -6,7 +6,7 @@ let vanilla = [
   con("LandingSite_Ship", "LandingSite_Ledge", (samus) => samus.canFly),
   con("LandingSite_Ledge", "LandingSite_Ship"),
 
-  con("LandingSite_Ship", "CrateriaTube", (samus) => samus.hasSupers),
+  con("LandingSite_Ship", "CrateriaTube", (samus) => samus.canOpenGreenDoors),
   con("CrateriaTube", "LandingSite_Ship"),
 
   con(
@@ -32,9 +32,17 @@ let vanilla = [
   con("Parlor_Alcatraz", "Flyway"),
   con("Flyway", "Parlor_Alcatraz"),
 
-  con("Flyway", "BombTorizo", (samus) => samus.hasSupers || samus.hasMissiles),
+  con("Flyway", "BombTorizo", (samus) => samus.canOpenRedDoors),
   con("BombTorizo", "Flyway"),
+
+  con("Parlor_Alcatraz", "230Hallway"),
+  con("230Hallway", "Parlor_Alcatraz"),
+
+  con("230Hallway", "230Missiles", (samus) => samus.canUseBombs || samus.canUsePowerBombs),
+  con("230Missiles", "230Hallway", (samus) => samus.hasMorph),
 ];
 
+//processChat();
 printMap(vanilla);
-printRooms(vanilla);
+//printPossibleRooms();
+//printRooms(vanilla);

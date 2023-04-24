@@ -1,11 +1,28 @@
-import data from "./vertex.json" assert { type: "json" };
+import vertices from "./vertex.json" assert { type: "json" };
+import wiki from "./wiki.json" assert { type: "json" };
 import table from "table";
 
-const vertices = data.vertices;
+const allRooms = Object.entries(vertices)
+  .map(([k, v]) => {
+    return v.map((i) => {
+      return {
+        name: i.name,
+        area: k,
+        item: i.item,
+      };
+    });
+  })
+  .reduce((acc, cur) => {
+    return acc.concat(cur);
+  }, []);
+
+export const processWiki = () => {
+  console.log(wiki);
+};
 
 export const con = (from, to, condition = () => true) => {
-  const a = vertices.find((v) => v.name == from);
-  const b = vertices.find((v) => v.name == to);
+  const a = allRooms.find((v) => v.name == from);
+  const b = allRooms.find((v) => v.name == to);
   return {
     from: a,
     to: b,
@@ -60,6 +77,16 @@ export const printMap = (map) => {
   }
 
   console.log(table.table(tableData));
+};
+
+export const printPossibleRooms = () => {
+  const rooms = allRooms
+    .map((r) => room(r))
+    .filter((value, index, array) => {
+      return array.indexOf(value) == index;
+    });
+
+  console.log(rooms);
 };
 
 export const printAvailable = (map, samus) => {
