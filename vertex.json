@@ -28,7 +28,11 @@
   ],
   "BlueBrinstar": [
     { "name": "MorphBall_Pedastal", "item": "major" },
-    { "name": "MorphBall_RetroPBs", "item": "minor" }
+    { "name": "MorphBall_RetroPBs", "item": "minor" },
+    { "name": "ConstructionZone", "item": "none" },
+    { "name": "AlphaMissiles", "item": "minor" },
+    { "name": "CeilingTank_Main", "item": "major" },
+    { "name": "CeilingTank_Missiles", "item": "minor" }
   ],
   "GreenBrinstar": [
     { "name": "GreenBrinstarElevator", "item": "none" }
