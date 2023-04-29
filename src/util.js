@@ -1,7 +1,6 @@
 import { vertices } from "./data/vertex.js";
 import { edges } from "./data/edge.js";
 import { breadthFirstSearch } from "./search.js";
-import table from "table";
 
 const allVertices = Object.entries(vertices)
   .map(([_, v]) => {
@@ -36,71 +35,25 @@ export const allEdges = Object.entries(edges)
     return acc.concat(cur);
   }, []);
 
-const graph = allEdges.map((e) => {
-  const from = allVertices.find((v) => v.name == e.from);
-  const to = allVertices.find((v) => v.name == e.to);
-  return {
-    from: from,
-    to: to,
-    condition: e.condition,
-  };
-});
+export const createGraph = () => {
+  return allEdges.map((e) => {
+    const from = allVertices.find((v) => v.name == e.from);
+    const to = allVertices.find((v) => v.name == e.to);
+    return {
+      from: from,
+      to: to,
+      condition: e.condition,
+    };
+  });
+};
 
-const getItemLocations = (samus, collected) => {
+export const getItemLocations = (graph, samus, collected) => {
   const available = breadthFirstSearch(graph, graph[0].from, samus);
   return available
     .filter((v) => v.item != "none" && !collected.includes(v.name))
     .map((v) => v.name);
 };
 
-const itemPlacement = [
-  { location: "MorphBall", action: (load) => (load.hasMorph = true) },
-  { location: "AlphaMissiles", action: (load) => (load.canOpenRedDoors = true) },
-  {
-    location: "Bombs",
-    action: (load) => {
-      load.canUseBombs = load.hasMorph;
-      load.canFly = load.hasMorph;
-    },
-  },
-];
-
-let samus = {};
-let collected = [];
-
-while (itemPlacement.length > 0) {
-  const itemLocations = getItemLocations(samus, collected);
-  console.log(itemLocations);
-  const index = itemPlacement.findIndex((i) => itemLocations.includes(i.location));
-
-  if (index < 0) {
-    console.log("no items");
-    break;
-  }
-
-  itemPlacement[index].action(samus);
-  collected.push(itemPlacement[index].location);
-  itemPlacement.splice(index, 1);
-}
-
-//console.log(graph);
-//let samus = {};
-//let collected = [];
-//printItemLocations(samus, collected);
-console.log(getItemLocations(samus, collected));
-
-/*return Object.entries(v).map(([n, i]) => {
-      return {
-        name: k + "_" + n,
-        item: i,
-      };
-    });
-  })
-  .reduce((acc, cur) => {
-    return acc.concat(cur);
-  }, []);*/
-
-//console.log(allEdges);
 /*
 export const processWiki = () => {
   console.log(wiki);
@@ -114,14 +67,6 @@ export const con = (from, to, condition = () => true) => {
     to: b,
     condition: condition,
   };
-};
-
-const name = (vertex) => {
-  if (vertex == undefined) {
-    return "(invalid name)";
-  } else {
-    return vertex.name;
-  }
 };
 
 const room = (vertex) => {
