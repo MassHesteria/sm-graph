@@ -12,9 +12,10 @@ const itemPlacement = [
   { location: "Terminator", item: Item.EnergyTank },
   { location: "TwoThirty", item: Item.Missile },
   { location: "OldMB", item: Item.Missile },
+  { location: "EarlySupers", item: Item.Super },
 ];
 
-const graph = createGraph();
+const graph = createGraph([["Terminator", "GreenElevator"]]);
 let samus = new Loadout();
 let collected = [];
 

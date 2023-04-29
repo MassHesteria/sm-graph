@@ -134,4 +134,18 @@ export const edges = {
       BillyMays1: (_) => true,
     },
   },
+  GreenBrinstar: {
+    GreenElevator: {
+      EarlySupers: (samus) => samus.canOpenRedDoors,
+      EtecoonsTank: (samus) => samus.canUsePowerBombs,
+    },
+
+    EarlySupers: {
+      GreenElevator: (_) => true,
+    },
+
+    EtecoonsTank: {
+      GreenElevator: (_) => samus.canUsePowerBombs,
+    },
+  },
 };

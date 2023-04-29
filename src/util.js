@@ -35,16 +35,39 @@ export const allEdges = Object.entries(edges)
     return acc.concat(cur);
   }, []);
 
-export const createGraph = () => {
-  return allEdges.map((e) => {
-    const from = allVertices.find((v) => v.name == e.from);
-    const to = allVertices.find((v) => v.name == e.to);
-    return {
-      from: from,
-      to: to,
-      condition: e.condition,
-    };
-  });
+export const createGraph = (areaMapping) => {
+  return allEdges
+    .map((e) => {
+      const from = allVertices.find((v) => v.name == e.from);
+      const to = allVertices.find((v) => v.name == e.to);
+      return {
+        from: from,
+        to: to,
+        condition: e.condition,
+      };
+    })
+    .concat(
+      areaMapping.map((a) => {
+        const from = allVertices.find((v) => v.name == a[0]);
+        const to = allVertices.find((v) => v.name == a[1]);
+        return {
+          from: from,
+          to: to,
+          condition: (_) => true,
+        };
+      })
+    )
+    .concat(
+      areaMapping.map((a) => {
+        const from = allVertices.find((v) => v.name == a[0]);
+        const to = allVertices.find((v) => v.name == a[1]);
+        return {
+          from: to,
+          to: from,
+          condition: (_) => true,
+        };
+      })
+    );
 };
 
 export const getItemLocations = (graph, samus, collected) => {

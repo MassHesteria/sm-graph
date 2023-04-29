@@ -28,4 +28,15 @@ export const vertices = {
     BillyMays1: "minor",
     BillyMays2: "minor",
   },
+  GreenBrinstar: {
+    GreenElevator: "",
+    EarlySupers: "minor",
+    EarlySupersBridge: "minor",
+    BrinstarReserve: "major",
+    BrinstarReserveMissiles1: "minor",
+    BrinstarReserveMissiles2: "minor",
+    EtecoonsTank: "major",
+    EtecoonsSupers: "minor",
+    EtecoonsPBs: "minor",
+  },
 };
