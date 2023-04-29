@@ -1,4 +1,4 @@
-[
+export const wiki = [
   {
     "name": "LandingSite",
     "link": "https://wiki.supermetroid.run/Landing_Site"
@@ -371,4 +371,4 @@
     "name": "MaridiaDraygon",
     "link": "https://wiki.supermetroid.run/Maridia_Draygon"
   }
-]
+];

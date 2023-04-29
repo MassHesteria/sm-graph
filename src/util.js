@@ -3,8 +3,6 @@ import { edges } from "./edge.js";
 import { breadthFirstSearch } from "./search.js";
 import table from "table";
 
-//import wiki from "./wiki.json" assert { type: "json" };
-
 const allVertices = Object.entries(vertices)
   .map(([_, v]) => {
     return Object.entries(v).map(([name, item]) => {
