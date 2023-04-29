@@ -1,9 +1,7 @@
-import { con, printMap, printPossibleRooms, printRooms, processWiki } from "./util.mjs";
-import { breadthFirstSearch } from "./search.mjs";
+/*import { con, printMap, printPossibleRooms, printRooms, processWiki } from "./util.js";
+import { breadthFirstSearch } from "./search.js";
 
 let vanilla = [
-  /* ----- Landing Site ----- */
-
   con("LandingSite_Ship", "LandingSite_Ledge", (samus) => samus.canFly),
   con("LandingSite_Ledge", "LandingSite_Ship"),
 
@@ -118,3 +116,4 @@ printItemLocations(load);
 //printMap(vanilla);
 //printPossibleRooms();
 //printRooms(vanilla);
+*/
