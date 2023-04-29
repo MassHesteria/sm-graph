@@ -49,9 +49,7 @@ export const createGraph = () => {
 
 export const getItemLocations = (graph, samus, collected) => {
   const available = breadthFirstSearch(graph, graph[0].from, samus);
-  return available
-    .filter((v) => v.item != "none" && !collected.includes(v.name))
-    .map((v) => v.name);
+  return available.filter((v) => v.item != "" && !collected.includes(v.name)).map((v) => v.name);
 };
 
 /*
