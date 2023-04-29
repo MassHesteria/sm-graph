@@ -1,5 +1,5 @@
-import { vertices } from "./vertex.js";
-import { edges } from "./edge.js";
+import { vertices } from "./data/vertex.js";
+import { edges } from "./data/edge.js";
 import { breadthFirstSearch } from "./search.js";
 import table from "table";
 
