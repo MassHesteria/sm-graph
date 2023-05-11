@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "chalk": "^5.2.0",
     "table": "^6.8.1"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-specifier-resolution=node --no-warnings src/vanilla.js"
+  }
 }

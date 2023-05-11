@@ -142,7 +142,12 @@ export const edges = {
 
     EarlySupers: {
       GreenElevator: (_) => true,
+      EarlySupersBridge: (_) => true,
     },
+
+    //EarlySupersBridge: {
+    //EarlySupers: (_) => true,
+    //},
 
     EtecoonsTank: {
       GreenElevator: (_) => samus.canUsePowerBombs,

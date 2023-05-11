@@ -1,7 +1,7 @@
-import { createGraph, getItemLocations } from "./util.js";
+import { createGraph, getAvailableLocations } from "./util.js";
 import Loadout from "./dash/loadout.js";
 import { Item } from "./dash/items.js";
-import table from "table";
+import chalk from "chalk";
 
 const itemPlacement = [
   { location: "MorphBall", item: Item.Morph },
@@ -13,6 +13,7 @@ const itemPlacement = [
   { location: "TwoThirty", item: Item.Missile },
   { location: "OldMB", item: Item.Missile },
   { location: "EarlySupers", item: Item.Super },
+  { location: "EarlySupersBridge", item: Item.Missile },
 ];
 
 const graph = createGraph([["Terminator", "GreenElevator"]]);
@@ -26,19 +27,28 @@ const getItemNameFromCode = (itemCode) => {
   return getKeyByValue(Item, itemCode);
 };
 
-const printAvailableItems = (itemLocations) => {
-  let tableData = [];
-  tableData.push(["LOCATION", "ITEM"]);
-  itemLocations.forEach((loc) => {
+const processItemLocations = (itemLocations) => {
+  return itemLocations.map((loc) => {
     const temp = itemPlacement.find((x) => x.location == loc);
-    const str = temp == undefined ? "" : getItemNameFromCode(temp.item);
-    tableData.push([loc, str]);
+    const str = temp == undefined ? chalk.red("none") : getItemNameFromCode(temp.item);
+    return {
+      location: loc,
+      item: str,
+    };
   });
-  console.log(table.table(tableData));
+};
+
+const printAvailableItems = (itemLocations) => {
+  let output = chalk.yellow("Available: ");
+  processItemLocations(itemLocations).forEach((p) => {
+    const { location, item } = p;
+    output += `${chalk.green(item)} @ ${chalk.blue(location)} `;
+  });
+  console.log(output);
 };
 
 while (itemPlacement.length > 0) {
-  const itemLocations = getItemLocations(graph, samus, collected);
+  const itemLocations = getAvailableLocations(graph, samus, collected);
   printAvailableItems(itemLocations);
 
   const index = itemPlacement.findIndex((i) => itemLocations.includes(i.location));
@@ -58,4 +68,4 @@ while (itemPlacement.length > 0) {
 //let samus = {};
 //let collected = [];
 //printItemLocations(samus, collected);
-printAvailableItems(getItemLocations(graph, samus, collected));
+printAvailableItems(getAvailableLocations(graph, samus, collected));
