@@ -100,7 +100,8 @@ export const edges = {
     OldMB: {
       Climb: (samus) => samus.canDestroyBombWalls,
     },
-
+  },
+  BlueBrinstar: {
     MorphBall: {
       Climb: (_) => true,
       Ceiling: (_) => true,
@@ -194,15 +195,126 @@ export const edges = {
     BigPink: {
       DachoraRoomRight: (_) => true,
       ChargeMissiles: (_) => true,
+      WaveGate: (samus) => samus.canUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
+      SpoSpoSupers: (samus) =>
+        (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
+    },
+
+    SpoSpoSupers: {
+      BigPink: (samus) => (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
     },
 
     ChargeMissiles: {
       BigPink: (_) => true,
       ChargeBeam: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      TubeMissiles: (samus) => samus.canOpenGreenDoors,
     },
 
     ChargeBeam: {
       ChargeMissiles: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Waterway: (samus) => samus.canUsePowerBombs && samus.canOpenRedDoors && samus.hasSpeed,
+    },
+
+    Waterway: {
+      ChargeBeam: (samus) => samus.canUsePowerBombs,
+    },
+
+    TubeMissiles: {
+      ChargeMissiles: (_) => true,
+      NoobBridge: (samus) => samus.canOpenGreenDoors,
+      GreenHills: (samus) => samus.canUsePowerBombs,
+    },
+
+    GreenHills: {
+      TubeMissiles: (_) => true,
+    },
+
+    NoobBridge: {
+      TubeMissiles: (samus) => samus.missilePacks >= 2 || samus.hasWave,
+    },
+
+    WaveGate: {
+      BigPink: (_) => true,
+    },
+  },
+  RedBrinstar: {
+    RedTower: {
+      RedElevator: (_) => true,
+      Spazer: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
+      MaridiaTube: (samus) => samus.canUsePowerBombs,
+      KraidEntry: (_) => true,
+    },
+
+    AboveKraid: {
+      RedTower: (samus) => samus.superPacks >= 1,
+    },
+
+    KraidEntry: {
+      RedTower: (_) => true,
+    },
+
+    Spazer: {
+      RedTower: (samus) => samus.hasMorph,
+    },
+
+    MaridiaTube: {
+      RedTower: (samus) => samus.hasMorph,
+    },
+
+    RedElevator: {
+      RedTower: (samus) => samus.canUsePowerBombs,
+      AlphaPBs: (samus) => samus.canOpenGreenDoors,
+      BetaPBs: (samus) => samus.canOpenGreenDoors && samus.canUsePowerBombs,
+    },
+
+    AlphaPBs: {
+      RedElevator: (_) => true,
+      AlphaPBMissiles: (samus) => samus.canUsePowerBombs,
+    },
+
+    AlphaPBMissiles: {
+      AlphaPBs: (_) => true,
+    },
+
+    BetaPBs: {
+      RedElevator: (_) => true,
+    },
+
+    MaridiaEscape: {
+      RedElevator: (samus) => samus.hasMorph && samus.superPacks >= 1,
+    },
+  },
+  UpperNorfair: {
+    ElevatorEntry: {
+      KraidMouth: (samus) => samus.superPacks >= 1,
+    },
+    KraidMouth: {
+      ElevatorEntry: (samus) => samus.superPacks >= 1,
+    },
+  },
+  KraidsLair: {
+    KraidsLairExit: {
+      KraidsCloset: (samus) =>
+        samus.canDefeatKraid &&
+        (samus.missilePacks >= 1 ||
+          samus.hasScrewAttack ||
+          samus.canUseBombs ||
+          samus.canUsePowerBombs),
+      KraidsHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+    KraidsCloset: {
+      KraidsLairExit: (_) => true,
+    },
+    KraidsHallway: {
+      KraidsLairExit: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      KraidPBs: (samus) => samus.canUsePowerBombs,
+      KraidBossDoor: (samus) => samus.canOpenRedDoors,
+    },
+    KraidPBs: {
+      KraidsHallway: (_) => true,
+    },
+    KraidBossDoor: {
+      KraidsHallway: (_) => true,
     },
   },
 };
