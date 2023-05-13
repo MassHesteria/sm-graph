@@ -70,6 +70,7 @@ export const edges = {
       Bombs: (samus) => samus.hasMorph && samus.canOpenRedDoors,
       Climb: (_) => true,
       TwoThirty: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Ship: (_) => true,
     },
 
     Bombs: {

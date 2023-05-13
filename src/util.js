@@ -72,6 +72,5 @@ export const createGraph = (areaMapping) => {
 
 export const getAvailableLocations = (graph, samus, collected) => {
   const available = breadthFirstSearch(graph, graph[0].from, samus);
-  const notCollected = available.filter((v) => v.item != "" && !collected.includes(v.name));
-  return notCollected.map((v) => v.name);
+  return available.filter((v) => v.item != "" && !collected.includes(v.name));
 };
