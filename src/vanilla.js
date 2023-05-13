@@ -9,12 +9,26 @@ const itemPlacement = [
   { location: "Ceiling", item: Item.EnergyTank },
   { location: "AlphaMissiles", item: Item.Missile },
   { location: "BetaMissiles", item: Item.Missile },
+  { location: "BillyMays1", item: Item.Missile },
+  { location: "BillyMays2", item: Item.Missile },
+  { location: "Moat", item: Item.Missile },
+  { location: "LedgePBs", item: Item.PowerBomb },
+  { location: "RetroPBs", item: Item.PowerBomb },
   { location: "Bombs", item: Item.Bombs },
   { location: "Terminator", item: Item.EnergyTank },
   { location: "TwoThirty", item: Item.Missile },
   { location: "OldMB", item: Item.Missile },
   { location: "EarlySupers", item: Item.Super },
   { location: "EarlySupersBridge", item: Item.Missile },
+  { location: "BrinstarReserve", item: Item.Reserve },
+  { location: "BrinstarReserveMissiles1", item: Item.Missile },
+  { location: "BrinstarReserveMissiles2", item: Item.PowerBomb },
+  { location: "EtecoonsTank", item: Item.EnergyTank },
+  { location: "EtecoonsSupers", item: Item.Super },
+  { location: "EtecoonsPBs", item: Item.PowerBomb },
+  { location: "BigPink", item: Item.Missile },
+  { location: "ChargeMissiles", item: Item.Missile },
+  { location: "ChargeBeam", item: Item.Charge },
 ];
 
 const graph = createGraph([["Terminator", "GreenElevator"]]);
@@ -28,14 +42,20 @@ const getItemNameFromCode = (itemCode) => {
   return getKeyByValue(Item, itemCode);
 };
 
+//console.log(graph);
+
 const itemNodes = itemPlacement.map((i) => {
+  const part = graph.find((n) => n.from.name == i.location);
+  if (part == null) {
+    console.error("missing part", i.location);
+  }
   return {
-    location: graph.find((n) => n.from.name == i.name),
+    location: part != undefined ? part.from : null,
     item: i.item,
   };
 });
 
-console.log(itemNodes);
+//console.log(itemNodes);
 
 const processItemLocations = (itemLocations) => {
   return itemLocations.map((loc) => {
@@ -59,6 +79,8 @@ const printAvailableItems = (itemLocations) => {
 
 const collectEasyItems = (itemLocations) => {
   let result = false;
+  let str = "";
+  let a = 0;
   itemLocations.forEach((p) => {
     const index = itemPlacement.findIndex((i) => i.location == p.name);
 
@@ -75,7 +97,11 @@ const collectEasyItems = (itemLocations) => {
     }
 
     samus.add(itemPlacement[index].item);
-    console.log(">", getItemNameFromCode(itemPlacement[index].item));
+    const name = getItemNameFromCode(itemPlacement[index].item);
+    str += `> ${name}`.padEnd(20, " ");
+    if (++a % 3 == 0) {
+      str += "\n";
+    }
     collected.push(itemPlacement[index].location);
     itemPlacement.splice(index, 1);
     result = true;
@@ -84,7 +110,7 @@ const collectEasyItems = (itemLocations) => {
   if (!result) {
     console.log("No round trip locations");
   } else {
-    console.log("");
+    console.log(str + "\n");
   }
 
   return result;
@@ -111,8 +137,6 @@ while (itemPlacement.length > 0) {
   itemPlacement.splice(index, 1);
 }
 
-//console.log(graph);
-//let samus = {};
-//let collected = [];
-//printItemLocations(samus, collected);
-printAvailableItems(getAvailableLocations(graph, samus, collected));
+if (itemPlacement.length > 0) {
+  printAvailableItems(getAvailableLocations(graph, samus, collected));
+}

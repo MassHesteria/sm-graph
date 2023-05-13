@@ -137,21 +137,72 @@ export const edges = {
   },
   GreenBrinstar: {
     GreenElevator: {
-      EarlySupers: (samus) => samus.canOpenRedDoors,
+      EarlySupersBridge: (samus) => samus.canOpenRedDoors,
       EtecoonsTank: (samus) => samus.canUsePowerBombs,
+      DachoraRoomLeft: (_) => true,
+    },
+
+    EarlySupersBridge: {
+      GreenElevator: (_) => true,
+      EarlySupers: (samus) => samus.hasMorph || samus.hasSpeed,
     },
 
     EarlySupers: {
-      GreenElevator: (_) => true,
       EarlySupersBridge: (_) => true,
+      BrinstarReserve: (samus) => samus.canOpenRedDoors,
     },
 
-    //EarlySupersBridge: {
-    //EarlySupers: (_) => true,
-    //},
+    BrinstarReserve: {
+      EarlySupers: (_) => true,
+      BrinstarReserveMissiles1: (samus) => samus.hasMorph,
+    },
+
+    BrinstarReserveMissiles1: {
+      BrinstarReserve: (samus) => samus.hasMorph,
+      BrinstarReserveMissiles2: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    BrinstarReserveMissiles2: {
+      BrinstarReserveMissiles1: (_) => true,
+      BrinstarReserve: (samus) => samus.hasMorph,
+    },
 
     EtecoonsTank: {
-      GreenElevator: (_) => samus.canUsePowerBombs,
+      GreenElevator: (samus) => samus.canUsePowerBombs,
+      EtecoonsSupers: (samus) => samus.canOpenGreenDoors,
+      EtecoonsPBs: (samus) => samus.hasMorph,
+    },
+
+    EtecoonsSupers: {
+      EtecoonsTank: (_) => true,
+    },
+
+    EtecoonsPBs: {
+      EtecoonsTank: (samus) => samus.hasMorph,
+    },
+
+    DachoraRoomLeft: {
+      GreenElevator: (_) => true,
+      DachoraRoomRight: (samus) => samus.canDestroyBombWalls || samus.hasScrewAttack,
+    },
+
+    DachoraRoomRight: {
+      DachoraRoomLeft: (samus) => samus.canDestroyBombWalls || samus.hasScrewAttack,
+      BigPink: (_) => true,
+    },
+
+    BigPink: {
+      DachoraRoomRight: (_) => true,
+      ChargeMissiles: (_) => true,
+    },
+
+    ChargeMissiles: {
+      BigPink: (_) => true,
+      ChargeBeam: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    ChargeBeam: {
+      ChargeMissiles: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
   },
 };
