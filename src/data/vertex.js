@@ -127,6 +127,7 @@ export const vertices = {
     Missiles_Bowling: "minor",
     Missiles_OceanMiddle: "minor",
     Missiles_Sky: "minor",
+    Door_HighwayExit: "",
   },
   WestMaridia: {
     Door_MainStreet: "",

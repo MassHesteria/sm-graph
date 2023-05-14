@@ -8,7 +8,7 @@ export const breadthFirstSearch = (map, vertex, load) => {
 
     const connections = map.filter((c) => c.from == v);
     connections.forEach((c) => {
-      if (!visited.includes(c.to) && c.condition(load)) {
+      if (!visited.includes(c.to) && !queue.includes(c.to) && c.condition(load)) {
         queue.push(c.to);
       }
     });
