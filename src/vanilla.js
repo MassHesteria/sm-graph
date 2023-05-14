@@ -46,8 +46,8 @@ const graph = createGraph([
   ["Terminator", "GreenElevator"],
   ["GreenHills", "RetroPBs"],
   ["NoobBridge", "RedTower"],
-  ["KraidEntry", "ElevatorEntry"],
-  ["KraidMouth", "KraidsLairExit"],
+  ["KraidEntry", "Door_ElevatorEntry"],
+  ["Door_KraidMouth", "KraidsLairExit"],
   ["KraidBossDoor", "Kraid"],
 ]);
 const startVertex = graph[0].from;

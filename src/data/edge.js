@@ -285,11 +285,11 @@ export const edges = {
     },
   },
   UpperNorfair: {
-    ElevatorEntry: {
-      KraidMouth: (samus) => samus.superPacks >= 1,
+    Door_ElevatorEntry: {
+      Door_KraidMouth: (samus) => samus.superPacks >= 1,
     },
-    KraidMouth: {
-      ElevatorEntry: (samus) => samus.superPacks >= 1,
+    Door_KraidMouth: {
+      Door_ElevatorEntry: (samus) => samus.superPacks >= 1,
     },
   },
   KraidsLair: {
@@ -315,6 +315,35 @@ export const edges = {
     },
     KraidBossDoor: {
       KraidsHallway: (_) => true,
+    },
+  },
+  CrocomiresLair: {
+    CrocDoor: {
+      CrocEnergyTank: (samus) =>
+        samus.canDefeatCrocomire && (samus.tankCount >= 3 || samus.hasSpaceJump),
+      CrocPBs: (samus) =>
+        samus.canDefeatCrocomire && (samus.canFly || samus.hasIce || samus.hasHiJump),
+      GrappleBeam: (samus) =>
+        samus.canDefeatCrocomire &&
+        (samus.superPacks >= 1 || samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
+      IndianaJones: (samus) =>
+        samus.canDefeatCrocomire && (samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
+      CosineMissiles: (samus) => samus.canOpenRedDoors,
+    },
+    CrocEnergyTank: {
+      CrocDoor: (_) => true,
+    },
+    CrocPBs: {
+      CrocDoor: (_) => true,
+    },
+    GrappleBeam: {
+      CrocDoor: (_) => true,
+    },
+    IndianaJones: {
+      CrocDoor: (_) => true,
+    },
+    CosineMissiles: {
+      CrocDoor: (_) => true,
     },
   },
 };
