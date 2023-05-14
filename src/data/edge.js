@@ -114,7 +114,7 @@ export const edges = {
   BlueBrinstar: {
     MorphBall: {
       Climb: (_) => true,
-      EnergyTank_Ceiling: (_) => true,
+      EnergyTank_Ceiling: (samus) => samus.canOpenRedDoors,
       PBs_Retro: (samus) => samus.canUsePowerBombs,
       Missiles_Alpha: (samus) => samus.hasMorph,
     },
@@ -313,18 +313,69 @@ export const edges = {
       IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
       Missiles_CrumbleShaft: (samus) =>
         samus.canUsePowerBombs && (samus.hasVaria || samus.energyTanks >= 2),
+      Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
+      EnergyTank_HiJump: (samus) => samus.canOpenRedDoors,
+    },
+
+    EnergyTank_HiJump: {
+      BusinessCenter: (_) => true,
+      HiJumpBoots: (samus) => samus.hasMorph,
+    },
+
+    HiJumpBoots: {
+      EnergyTank_HiJump: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Missiles_HiJump: (_) => true,
+    },
+
+    Missiles_HiJump: {
+      EnergyTank_HiJump: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    Missiles_Cathedral: {
+      BusinessCenter: (samus) =>
+        (samus.hasVaria || samus.energyTanks >= 3) &&
+        (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall || samus.hasSpaceJump),
       BubbleMountain: (samus) =>
         samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
     },
 
     BubbleMountain: {
-      BusinessCenter: (samus) =>
-        samus.hasSpeed ||
-        ((samus.hasVaria || samus.energyTanks >= 3) &&
-          (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall)),
+      BusinessCenter: (samus) => samus.hasSpeed,
+      Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
       Missiles_BubbleMountain: (_) => true,
       Missiles_SpeedBooster: (_) => true,
       PreCrocomire: (_) => true,
+      Door_LavaDive: (_) => true,
+      Missiles_NorfairReserve1: (samus) =>
+        (samus.hasVaria || samus.energyTanks >= 3) && (samus.hasHiJump || samus.canFly),
+      Missiles_Wave: (_) => true,
+    },
+
+    Missiles_Wave: {
+      BubbleMountain: (_) => true,
+      WaveBeam: (_) => true,
+    },
+
+    WaveBeam: {
+      Missiles_Wave: (_) => true,
+    },
+
+    Missiles_NorfairReserve1: {
+      BubbleMountain: (_) => true,
+      Missiles_NorfairReserve2: (_) => true,
+    },
+
+    Missiles_NorfairReserve2: {
+      Missiles_NorfairReserve1: (_) => true,
+      ReserveTank_Norfair: (_) => true,
+    },
+
+    ReserveTank_Norfair: {
+      Missiles_NorfairReserve2: (_) => true,
+    },
+
+    Door_SingleChamber: {
+      BubbleMountain: (_) => true,
     },
 
     Missiles_SpeedBooster: {
@@ -372,19 +423,69 @@ export const edges = {
           samus.canUsePowerBombs),
       KraidsHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
+
     EnergyTank_Kraid: {
       Door_KraidsLair: (_) => true,
     },
+
     KraidsHallway: {
       Door_KraidsLair: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
       Missiles_Kraid: (samus) => samus.canUsePowerBombs,
       Door_KraidBoss: (samus) => samus.canOpenRedDoors,
     },
+
     Missiles_Kraid: {
       KraidsHallway: (_) => true,
     },
+
     Door_KraidBoss: {
       KraidsHallway: (_) => true,
+    },
+  },
+  WreckedShip: {
+    Door_Ocean: {
+      Missiles_Ocean: (_) => true,
+    },
+
+    Missiles_Ocean: {
+      Door_Ocean: (_) => true,
+      ShipHallway: (samus) => samus.canOpenGreenDoors,
+    },
+
+    ShipHallway: {
+      Missiles_Ocean: (_) => true,
+      Missiles_Spooky: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Door_PhantoonBoss: (samus) =>
+        samus.canOpenGreenDoors && (samus.hasSpeed || samus.canUseBombs || samus.canUsePowerBombs),
+      Supers_LeftSide: (samus) => samus.canDefeatPhantoon,
+      Supers_RightSide: (samus) =>
+        samus.canDefeatPhantoon && (samus.canUseBombs || samus.canUsePowerBombs),
+      Missiles_Attic: (samus) => samus.canDefeatPhantoon,
+    },
+
+    Missiles_Spooky: {
+      ShipHallway: (_) => true,
+    },
+
+    Missiles_Attic: {
+      ShipHallway: (_) => true,
+      Missiles_Sky: (samus) => samus.canFly || samus.hasSpeed,
+    },
+
+    Missiles_Sky: {
+      Missiles_Attic: (_) => true, // blanking on if the door is grey
+    },
+
+    Door_PhantoonBoss: {
+      ShipHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    Supers_LeftSide: {
+      ShipHallway: (_) => true,
+    },
+
+    Supers_RightSide: {
+      ShipHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
   },
   CrocomiresLair: {
@@ -400,18 +501,23 @@ export const edges = {
         samus.canDefeatCrocomire && (samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
       Missiles_Cosine: (samus) => samus.canOpenRedDoors,
     },
+
     EnergyTank_Croc: {
       Door_Croc: (_) => true,
     },
+
     PBs_Croc: {
       Door_Croc: (_) => true,
     },
+
     GrappleBeam: {
       Door_Croc: (_) => true,
     },
+
     Missiles_IndianaJones: {
       Door_Croc: (_) => true,
     },
+
     Missiles_Cosine: {
       Door_Croc: (_) => true,
     },

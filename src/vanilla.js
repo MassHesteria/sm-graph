@@ -54,6 +54,21 @@ const itemPlacement = [
   { location: "Missiles_IndianaJones", item: Item.Missile },
   { location: "Missiles_Cosine", item: Item.Missile },
   { location: "GrappleBeam", item: Item.Grapple },
+  { location: "Missiles_NorfairReserve1", item: Item.Missile },
+  { location: "Missiles_NorfairReserve2", item: Item.Missile },
+  { location: "ReserveTank_Norfair", item: Item.Reserve },
+  { location: "WaveBeam", item: Item.Wave },
+  { location: "Missiles_Wave", item: Item.Missile },
+  { location: "Missiles_Cathedral", item: Item.Missile },
+  { location: "Missiles_HiJump", item: Item.Missile },
+  { location: "EnergyTank_HiJump", item: Item.EnergyTank },
+  { location: "HiJumpBoots", item: Item.HJB },
+  { location: "Missiles_Spooky", item: Item.Missile },
+  { location: "Missiles_Ocean", item: Item.Missile },
+  { location: "Supers_LeftSide", item: Item.Super },
+  { location: "Supers_RightSide", item: Item.Super },
+  { location: "Missiles_Attic", item: Item.Missile },
+  { location: "Missiles_Sky", item: Item.Missile },
 ];
 
 const graph = createGraph(mapPortals());
@@ -108,8 +123,18 @@ const printAvailableItems = (itemLocations) => {
   console.log(output);
 };
 
+const cloneLoadout = (input) => {
+  const output = input.clone();
+  output.canDefeatCrocomire = input.canDefeatCrocomire;
+  output.canDefeatKraid = input.canDefeatKraid;
+  output.canDefeatPhantoon = input.canDefeatPhantoon;
+  output.canDefeatDraygon = input.canDefeatDraygon;
+  output.canDefeatRidley = input.canDefeatRidley;
+  return output;
+};
+
 const hasRoundTrip = (vertex) => {
-  const load = samus.clone();
+  const load = cloneLoadout(samus);
 
   const index = itemPlacement.findIndex((i) => i.location == vertex.name);
   if (index >= 0) {
@@ -137,7 +162,7 @@ const collectEasyItems = (itemLocations) => {
       return;
     }
 
-    const load = samus.clone();
+    const load = cloneLoadout(samus);
     load.add(itemPlacement[index].item);
     const back = breadthFirstSearch(graph, p, load);
     if (!back.includes(startVertex)) {
