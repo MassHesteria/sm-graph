@@ -1,4 +1,4 @@
-import { createGraph, getAvailableLocations } from "./util.js";
+import { createGraph, getAvailableLocations, mapPortals } from "./util.js";
 import Loadout from "./dash/loadout.js";
 import { Item } from "./dash/items.js";
 import chalk from "chalk";
@@ -42,14 +42,7 @@ const itemPlacement = [
   { location: "Boss_Kraid", item: Item.Varia },
 ];
 
-const graph = createGraph([
-  ["Door_Kago", "Door_GreenElevator"],
-  ["Door_GreenHills", "Door_RetroPBs"],
-  ["Door_NoobBridge", "Door_RedTower"],
-  ["Door_KraidEntry", "Door_ElevatorEntry"],
-  ["Door_KraidMouth", "Door_KraidsLair"],
-  ["Door_KraidBoss", "Boss_Kraid"],
-]);
+const graph = createGraph(mapPortals());
 const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();

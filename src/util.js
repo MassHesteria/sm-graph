@@ -1,5 +1,6 @@
 import { vertices } from "./data/vertex.js";
 import { edges } from "./data/edge.js";
+import { portals } from "./data/portals.js";
 import { breadthFirstSearch } from "./search.js";
 
 const allVertices = Object.entries(vertices)
@@ -35,7 +36,13 @@ export const allEdges = Object.entries(edges)
     return acc.concat(cur);
   }, []);
 
-export const createGraph = (areaMapping) => {
+export const mapPortals = () => {
+  return Object.values(portals).reduce((acc, cur) => {
+    return acc.concat(cur);
+  }, []);
+};
+
+export const createGraph = (portalMapping) => {
   const findVertex = (name) => {
     const vertex = allVertices.find((v) => v.name == name);
     if (vertex == undefined) {
@@ -52,7 +59,7 @@ export const createGraph = (areaMapping) => {
       };
     })
     .concat(
-      areaMapping.map((a) => {
+      portalMapping.map((a) => {
         return {
           from: findVertex(a[0]),
           to: findVertex(a[1]),
@@ -61,7 +68,7 @@ export const createGraph = (areaMapping) => {
       })
     )
     .concat(
-      areaMapping.map((a) => {
+      portalMapping.map((a) => {
         return {
           from: findVertex(a[1]),
           to: findVertex(a[0]),
