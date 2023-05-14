@@ -40,6 +40,20 @@ const itemPlacement = [
   { location: "EnergyTank_Kraid", item: Item.EnergyTank },
   { location: "Missiles_Kraid", item: Item.Missile },
   { location: "Boss_Kraid", item: Item.Varia },
+  { location: "IceBeam", item: Item.Ice },
+  { location: "Missiles_CrumbleShaft", item: Item.Missile },
+  { location: "EnergyTank_Gauntlet", item: Item.EnergyTank },
+  { location: "Missiles_GauntletLeft", item: Item.Missile },
+  { location: "Missiles_GauntletRight", item: Item.Missile },
+  { location: "Missiles_BubbleMountain", item: Item.Missile },
+  { location: "SpeedBooster", item: Item.Speed },
+  { location: "Missiles_SpeedBooster", item: Item.Missile },
+  { location: "Supers_Climb", item: Item.Super },
+  { location: "EnergyTank_Croc", item: Item.EnergyTank },
+  { location: "PBs_Croc", item: Item.PowerBomb },
+  { location: "Missiles_IndianaJones", item: Item.Missile },
+  { location: "Missiles_Cosine", item: Item.Missile },
+  { location: "GrappleBeam", item: Item.Grapple },
 ];
 
 const graph = createGraph(mapPortals());
@@ -50,6 +64,7 @@ samus.canDefeatKraid = false;
 samus.canDefeatPhantoon = false;
 samus.canDefeatDraygon = false;
 samus.canDefeatRidley = false;
+samus.canDefeatCrocomire = false;
 
 const getItemNameFromCode = (itemCode) => {
   function getKeyByValue(object, value) {
@@ -140,10 +155,14 @@ const collectEasyItems = (itemLocations) => {
     result = true;
   });
 
+  if (a % 3 != 0) {
+    str += "\n";
+  }
+
   if (!result) {
     console.log("No round trip locations");
   } else {
-    console.log(str + "\n");
+    console.log(str);
   }
 
   return result;
@@ -155,6 +174,7 @@ while (itemPlacement.length > 0) {
     const bossVertex = all.find((p) => p.name == `Boss_${boss}`);
     return bossVertex != undefined && hasRoundTrip(bossVertex);
   };
+  samus.canDefeatCrocomire = samus.hasCharge || samus.missilePacks >= 2 || samus.superPacks >= 2;
   samus.canDefeatKraid = roundTripToBoss("Kraid");
   samus.canDefeatPhantoon = roundTripToBoss("Phantoon");
   samus.canDefeatDraygon = roundTripToBoss("Draygon");

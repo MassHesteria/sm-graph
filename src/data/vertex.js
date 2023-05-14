@@ -15,6 +15,7 @@ export const vertices = {
     Door_G4: "",
     Door_Kago: "",
     Door_Crabs: "",
+    PreMoat: "",
     Climb: "",
     ClimbSupersBottom: "",
     Supers_Climb: "minor",
@@ -87,6 +88,9 @@ export const vertices = {
     Door_CrocEntry: "",
     Door_SingleChamber: "",
     Door_LavaDive: "",
+    PreCrocomire: "",
+    BubbleMountain: "",
+    BusinessCenter: "",
   },
   LowerNorfair: {
     Door_RidleyMouth: "",

@@ -3,7 +3,7 @@ export const edges = {
     Ship: {
       PBs_LandingSite: (samus) => samus.canFly && samus.canUsePowerBombs,
       PreGauntlet: (samus) => samus.canDestroyBombWalls,
-      Door_Crabs: (samus) => samus.canOpenGreenDoors,
+      PreMoat: (samus) => samus.canOpenGreenDoors,
       Parlor: (_) => true,
     },
 
@@ -11,9 +11,14 @@ export const edges = {
       Ship: (_) => true,
     },
 
-    Door_Crabs: {
+    PreMoat: {
       Ship: (_) => true,
       Missiles_Moat: (samus) => samus.canUsePowerBombs,
+      Door_Crabs: (samus) => samus.canUsePowerBombs,
+    },
+
+    Door_Crabs: {
+      PreMoat: (_) => true,
     },
 
     Missiles_Moat: {
@@ -33,13 +38,13 @@ export const edges = {
     PreGauntlet: {
       Ship: (samus) => samus.canDestroyBombWalls,
       EnergyTank_Gauntlet: (samus) =>
-        samus.tankCount >= 2 &&
+        samus.energyTanks >= 2 &&
         (samus.canUseBombs || (samus.hasMorph && samus.powerPacks >= 2) || samus.hasScrewAttack),
     },
 
     EnergyTank_Gauntlet: {
       PreGauntlet: (samus) =>
-        samus.tankCount >= 2 &&
+        samus.energyTanks >= 2 &&
         (samus.canUseBombs || (samus.hasMorph && samus.powerPacks >= 2) || samus.hasScrewAttack),
       Missiles_GauntletLeft: (_) => true,
       Missiles_GauntletRight: (_) => true,
@@ -95,11 +100,11 @@ export const edges = {
 
     ClimbSupersBottom: {
       Climb: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
-      Supers_Climb: (samus) => samus.hasSpeed && samus.tankCount >= 1,
+      Supers_Climb: (samus) => samus.hasSpeed && samus.energyTanks >= 1,
     },
 
     Supers_Climb: {
-      Climb: (samus) => samus.hasGrapple || samus.tankCount >= 2,
+      Climb: (samus) => samus.hasGrapple || samus.energyTanks >= 2,
     },
 
     Missiles_OldMB: {
@@ -299,10 +304,62 @@ export const edges = {
   },
   UpperNorfair: {
     Door_ElevatorEntry: {
-      Door_KraidMouth: (samus) => samus.superPacks >= 1,
+      BusinessCenter: (_) => true,
     },
+
+    BusinessCenter: {
+      Door_ElevatorEntry: (_) => true,
+      Door_KraidMouth: (samus) => samus.superPacks >= 1,
+      IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
+      Missiles_CrumbleShaft: (samus) =>
+        samus.canUsePowerBombs && (samus.hasVaria || samus.energyTanks >= 2),
+      BubbleMountain: (samus) =>
+        samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
+    },
+
+    BubbleMountain: {
+      BusinessCenter: (samus) =>
+        samus.hasSpeed ||
+        ((samus.hasVaria || samus.energyTanks >= 3) &&
+          (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall)),
+      Missiles_BubbleMountain: (_) => true,
+      Missiles_SpeedBooster: (_) => true,
+      PreCrocomire: (_) => true,
+    },
+
+    Missiles_SpeedBooster: {
+      BubbleMountain: (_) => true,
+      SpeedBooster: (_) => true,
+    },
+
+    SpeedBooster: {
+      Missiles_SpeedBooster: (_) => true,
+    },
+
+    Missiles_BubbleMountain: {
+      BubbleMountain: (_) => true,
+    },
+
     Door_KraidMouth: {
-      Door_ElevatorEntry: (samus) => samus.superPacks >= 1,
+      BusinessCenter: (samus) => samus.superPacks >= 1,
+    },
+
+    IceBeam: {
+      BusinessCenter: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    Missiles_CrumbleShaft: {
+      BusinessCenter: (samus) => samus.canUsePowerBombs,
+      PreCrocomire: (samus) => samus.hasVaria && samus.hasSpeed,
+    },
+
+    PreCrocomire: {
+      Door_CrocEntry: (samus) => samus.canOpenGreenDoors,
+      BubbleMountain: (samus) => samus.hasVaria || samus.energyTanks >= 2,
+    },
+
+    Door_CrocEntry: {
+      PreCrocomire: (samus) => samus.canDefeatCrocomire,
     },
   },
   KraidsLair: {
@@ -333,7 +390,7 @@ export const edges = {
   CrocomiresLair: {
     Door_Croc: {
       EnergyTank_Croc: (samus) =>
-        samus.canDefeatCrocomire && (samus.tankCount >= 3 || samus.hasSpaceJump),
+        samus.canDefeatCrocomire && (samus.energyTanks >= 3 || samus.hasSpaceJump),
       PBs_Croc: (samus) =>
         samus.canDefeatCrocomire && (samus.canFly || samus.hasIce || samus.hasHiJump),
       GrappleBeam: (samus) =>
