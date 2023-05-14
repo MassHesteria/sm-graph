@@ -36,34 +36,35 @@ export const allEdges = Object.entries(edges)
   }, []);
 
 export const createGraph = (areaMapping) => {
+  const findVertex = (name) => {
+    const vertex = allVertices.find((v) => v.name == name);
+    if (vertex == undefined) {
+      throw new Error(`createGraph: could not find vertex, ${name}`);
+    }
+    return vertex;
+  };
   return allEdges
     .map((e) => {
-      const from = allVertices.find((v) => v.name == e.from);
-      const to = allVertices.find((v) => v.name == e.to);
       return {
-        from: from,
-        to: to,
+        from: findVertex(e.from),
+        to: findVertex(e.to),
         condition: e.condition,
       };
     })
     .concat(
       areaMapping.map((a) => {
-        const from = allVertices.find((v) => v.name == a[0]);
-        const to = allVertices.find((v) => v.name == a[1]);
         return {
-          from: from,
-          to: to,
+          from: findVertex(a[0]),
+          to: findVertex(a[1]),
           condition: (_) => true,
         };
       })
     )
     .concat(
       areaMapping.map((a) => {
-        const from = allVertices.find((v) => v.name == a[0]);
-        const to = allVertices.find((v) => v.name == a[1]);
         return {
-          from: to,
-          to: from,
+          from: findVertex(a[1]),
+          to: findVertex(a[0]),
           condition: (_) => true,
         };
       })

@@ -1,24 +1,24 @@
 export const edges = {
   Crateria: {
     Ship: {
-      LedgePBs: (samus) => samus.canFly && samus.canUsePowerBombs,
+      PBs_LandingSite: (samus) => samus.canFly && samus.canUsePowerBombs,
       PreGauntlet: (samus) => samus.canDestroyBombWalls,
-      Crabs: (samus) => samus.canOpenGreenDoors,
+      Door_Crabs: (samus) => samus.canOpenGreenDoors,
       Parlor: (_) => true,
     },
 
-    LedgePBs: {
+    PBs_LandingSite: {
       Ship: (_) => true,
     },
 
-    Crabs: {
+    Door_Crabs: {
       Ship: (_) => true,
-      Moat: (samus) => samus.canUsePowerBombs,
+      Missiles_Moat: (samus) => samus.canUsePowerBombs,
     },
 
-    Moat: {
-      Crabs: (_) => true,
-      MoatDoor: (samus) =>
+    Missiles_Moat: {
+      Door_Crabs: (_) => true,
+      Door_Moat: (samus) =>
         (samus.hasMorph && samus.hasSpringBall) ||
         samus.hasSpeed ||
         samus.hasGrapple ||
@@ -26,50 +26,55 @@ export const edges = {
         samus.hasGravity,
     },
 
-    MoatDoor: {
-      Moat: (_) => true,
+    Door_Moat: {
+      Missiles_Moat: (_) => true,
     },
 
     PreGauntlet: {
       Ship: (samus) => samus.canDestroyBombWalls,
-      Gauntlet: (samus) =>
+      EnergyTank_Gauntlet: (samus) =>
         samus.tankCount >= 2 &&
         (samus.canUseBombs || (samus.hasMorph && samus.powerPacks >= 2) || samus.hasScrewAttack),
     },
 
-    Gauntlet: {
+    EnergyTank_Gauntlet: {
       PreGauntlet: (samus) =>
         samus.tankCount >= 2 &&
         (samus.canUseBombs || (samus.hasMorph && samus.powerPacks >= 2) || samus.hasScrewAttack),
-      GauntletLeft: (_) => true,
-      GauntletRight: (_) => true,
-      Terminator: (_) => true,
+      Missiles_GauntletLeft: (_) => true,
+      Missiles_GauntletRight: (_) => true,
+      EnergyTank_Terminator: (_) => true,
     },
 
-    GauntletLeft: {
-      GauntletRight: (_) => true,
-      Terminator: (_) => true,
+    Missiles_GauntletLeft: {
+      Missiles_GauntletRight: (_) => true,
+      EnergyTank_Terminator: (_) => true,
     },
 
-    GauntletRight: {
-      GauntletLeft: (_) => true,
-      Terminator: (_) => true,
+    Missiles_GauntletRight: {
+      Missiles_GauntletLeft: (_) => true,
+      EnergyTank_Terminator: (_) => true,
     },
 
-    Terminator: {
+    EnergyTank_Terminator: {
       Parlor: (samus) => samus.canDestroyBombWalls,
-      G4: (samus) => samus.canOpenRedDoors,
+      Door_G4: (samus) => samus.canOpenRedDoors,
+      Door_Kago: (_) => true,
     },
 
-    G4: {
-      Terminator: (_) => true,
+    Door_G4: {
+      EnergyTank_Terminator: (_) => true,
+    },
+
+    Door_Kago: {
+      EnergyTank_Terminator: (_) => true,
     },
 
     Parlor: {
-      Terminator: (samus) => samus.canDestroyBombWalls,
+      EnergyTank_Terminator: (samus) => samus.canDestroyBombWalls,
       Bombs: (samus) => samus.hasMorph && samus.canOpenRedDoors,
       Climb: (_) => true,
-      TwoThirty: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Missiles_230: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
       Ship: (_) => true,
     },
 
@@ -77,211 +82,219 @@ export const edges = {
       Parlor: (samus) => samus.hasMorph,
     },
 
-    TwoThirty: {
+    Missiles_230: {
       Parlor: (samus) => samus.hasMorph,
     },
 
     Climb: {
       Parlor: (_) => true,
       ClimbSupersBottom: (samus) => samus.canUsePowerBombs,
-      OldMB: (samus) => samus.canDestroyBombWalls,
+      Missiles_OldMB: (samus) => samus.canDestroyBombWalls,
       MorphBall: (_) => true,
     },
 
     ClimbSupersBottom: {
       Climb: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
-      ClimbSupersTop: (samus) => samus.hasSpeed && samus.tankCount >= 1,
+      Supers_Climb: (samus) => samus.hasSpeed && samus.tankCount >= 1,
     },
 
-    ClimbSupersTop: {
+    Supers_Climb: {
       Climb: (samus) => samus.hasGrapple || samus.tankCount >= 2,
     },
 
-    OldMB: {
+    Missiles_OldMB: {
       Climb: (samus) => samus.canDestroyBombWalls,
     },
   },
   BlueBrinstar: {
     MorphBall: {
       Climb: (_) => true,
-      Ceiling: (_) => true,
-      RetroPBs: (samus) => samus.canUsePowerBombs,
-      AlphaMissiles: (samus) => samus.hasMorph,
+      EnergyTank_Ceiling: (_) => true,
+      PBs_Retro: (samus) => samus.canUsePowerBombs,
+      Missiles_Alpha: (samus) => samus.hasMorph,
     },
 
-    RetroPBs: {
+    PBs_Retro: {
       MorphBall: (samus) => samus.canUsePowerBombs,
+      Door_RetroPBs: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
 
-    AlphaMissiles: {
+    Door_RetroPBs: {
+      PBs_Retro: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    Missiles_Alpha: {
       MorphBall: (samus) => samus.hasMorph,
     },
 
-    Ceiling: {
+    EnergyTank_Ceiling: {
       MorphBall: (_) => true,
-      BetaMissiles: (samus) => samus.hasMorph,
-      BillyMays1: (samus) => samus.canUsePowerBombs,
+      Missiles_Beta: (samus) => samus.hasMorph,
+      Missiles_BillyMays1: (samus) => samus.canUsePowerBombs,
     },
 
-    BetaMissiles: {
-      Ceiling: (samus) => samus.hasMorph,
+    Missiles_Beta: {
+      EnergyTank_Ceiling: (samus) => samus.hasMorph,
     },
 
-    BillyMays1: {
-      Ceiling: (samus) => samus.canUsePowerBombs,
-      BillyMays2: (_) => true,
+    Missiles_BillyMays1: {
+      EnergyTank_Ceiling: (samus) => samus.canUsePowerBombs,
+      Missiles_BillyMays2: (_) => true,
     },
 
-    BillyMays2: {
-      BillyMays1: (_) => true,
+    Missiles_BillyMays2: {
+      Missiles_BillyMays1: (_) => true,
     },
   },
   GreenBrinstar: {
-    GreenElevator: {
-      EarlySupersBridge: (samus) => samus.canOpenRedDoors,
-      EtecoonsTank: (samus) => samus.canUsePowerBombs,
+    Door_GreenElevator: {
+      Missiles_EarlySupers: (samus) => samus.canOpenRedDoors,
+      EnergyTank_Etecoons: (samus) => samus.canUsePowerBombs,
       DachoraRoomLeft: (_) => true,
     },
 
-    EarlySupersBridge: {
-      GreenElevator: (_) => true,
-      EarlySupers: (samus) => samus.hasMorph || samus.hasSpeed,
+    Missiles_EarlySupers: {
+      Door_GreenElevator: (_) => true,
+      Supers_EarlySupers: (samus) => samus.hasMorph || samus.hasSpeed,
     },
 
-    EarlySupers: {
-      EarlySupersBridge: (_) => true,
-      BrinstarReserve: (samus) => samus.canOpenRedDoors,
+    Supers_EarlySupers: {
+      Missiles_EarlySupers: (_) => true,
+      ReserveTank_Brinstar: (samus) => samus.canOpenRedDoors,
     },
 
-    BrinstarReserve: {
-      EarlySupers: (_) => true,
-      BrinstarReserveMissiles1: (samus) => samus.hasMorph,
+    ReserveTank_Brinstar: {
+      Supers_EarlySupers: (_) => true,
+      Missiles_BrinstarReserve1: (samus) => samus.hasMorph,
     },
 
-    BrinstarReserveMissiles1: {
-      BrinstarReserve: (samus) => samus.hasMorph,
-      BrinstarReserveMissiles2: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    Missiles_BrinstarReserve1: {
+      ReserveTank_Brinstar: (samus) => samus.hasMorph,
+      Missiles_BrinstarReserve2: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
 
-    BrinstarReserveMissiles2: {
-      BrinstarReserveMissiles1: (_) => true,
-      BrinstarReserve: (samus) => samus.hasMorph,
+    Missiles_BrinstarReserve2: {
+      Missiles_BrinstarReserve1: (_) => true,
+      ReserveTank_Brinstar: (samus) => samus.hasMorph,
     },
 
-    EtecoonsTank: {
-      GreenElevator: (samus) => samus.canUsePowerBombs,
-      EtecoonsSupers: (samus) => samus.canOpenGreenDoors,
-      EtecoonsPBs: (samus) => samus.hasMorph,
+    EnergyTank_Etecoons: {
+      Door_GreenElevator: (samus) => samus.canUsePowerBombs,
+      Supers_Etecoons: (samus) => samus.canOpenGreenDoors,
+      PBs_Etecoons: (samus) => samus.hasMorph,
     },
 
-    EtecoonsSupers: {
-      EtecoonsTank: (_) => true,
+    Supers_Etecoons: {
+      EnergyTank_Etecoons: (_) => true,
     },
 
-    EtecoonsPBs: {
-      EtecoonsTank: (samus) => samus.hasMorph,
+    PBs_Etecoons: {
+      EnergyTank_Etecoons: (samus) => samus.hasMorph,
     },
 
     DachoraRoomLeft: {
-      GreenElevator: (_) => true,
+      Door_GreenElevator: (_) => true,
       DachoraRoomRight: (samus) => samus.canDestroyBombWalls || samus.hasScrewAttack,
     },
 
     DachoraRoomRight: {
       DachoraRoomLeft: (samus) => samus.canDestroyBombWalls || samus.hasScrewAttack,
-      BigPink: (_) => true,
+      Missiles_BigPink: (_) => true,
     },
 
-    BigPink: {
+    Missiles_BigPink: {
       DachoraRoomRight: (_) => true,
-      ChargeMissiles: (_) => true,
-      WaveGate: (samus) => samus.canUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
-      SpoSpoSupers: (samus) =>
+      Missiles_Charge: (_) => true,
+      EnergyTank_WaveGate: (samus) =>
+        samus.canUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
+      Supers_SpoSpo: (samus) =>
         (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
     },
 
-    SpoSpoSupers: {
-      BigPink: (samus) => (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
+    Supers_SpoSpo: {
+      Missiles_BigPink: (samus) =>
+        (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
     },
 
-    ChargeMissiles: {
-      BigPink: (_) => true,
+    Missiles_Charge: {
+      Missiles_BigPink: (_) => true,
       ChargeBeam: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
-      TubeMissiles: (samus) => samus.canOpenGreenDoors,
+      Missiles_Tube: (samus) => samus.canOpenGreenDoors,
     },
 
     ChargeBeam: {
-      ChargeMissiles: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
-      Waterway: (samus) => samus.canUsePowerBombs && samus.canOpenRedDoors && samus.hasSpeed,
+      Missiles_Charge: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      EnergyTank_Waterway: (samus) =>
+        samus.canUsePowerBombs && samus.canOpenRedDoors && samus.hasSpeed,
     },
 
-    Waterway: {
+    EnergyTank_Waterway: {
       ChargeBeam: (samus) => samus.canUsePowerBombs,
     },
 
-    TubeMissiles: {
-      ChargeMissiles: (_) => true,
-      NoobBridge: (samus) => samus.canOpenGreenDoors,
-      GreenHills: (samus) => samus.canUsePowerBombs,
+    Missiles_Tube: {
+      Missiles_Charge: (_) => true,
+      Door_NoobBridge: (samus) => samus.canOpenGreenDoors,
+      Door_GreenHills: (samus) => samus.canUsePowerBombs,
     },
 
-    GreenHills: {
-      TubeMissiles: (_) => true,
+    Door_GreenHills: {
+      Missiles_Tube: (_) => true,
     },
 
-    NoobBridge: {
-      TubeMissiles: (samus) => samus.missilePacks >= 2 || samus.hasWave,
+    Door_NoobBridge: {
+      Missiles_Tube: (samus) => samus.missilePacks >= 2 || samus.hasWave,
     },
 
-    WaveGate: {
-      BigPink: (_) => true,
+    EnergyTank_WaveGate: {
+      Missiles_BigPink: (_) => true,
     },
   },
   RedBrinstar: {
-    RedTower: {
-      RedElevator: (_) => true,
+    Door_RedTower: {
+      Door_RedElevator: (_) => true,
       Spazer: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
-      MaridiaTube: (samus) => samus.canUsePowerBombs,
-      KraidEntry: (_) => true,
+      Door_MaridiaTube: (samus) => samus.canUsePowerBombs,
+      Door_KraidEntry: (_) => true,
     },
 
-    AboveKraid: {
-      RedTower: (samus) => samus.superPacks >= 1,
+    Door_AboveKraid: {
+      Door_RedTower: (samus) => samus.superPacks >= 1,
     },
 
-    KraidEntry: {
-      RedTower: (_) => true,
+    Door_KraidEntry: {
+      Door_RedTower: (_) => true,
     },
 
     Spazer: {
-      RedTower: (samus) => samus.hasMorph,
+      Door_RedTower: (samus) => samus.hasMorph,
     },
 
-    MaridiaTube: {
-      RedTower: (samus) => samus.hasMorph,
+    Door_MaridiaTube: {
+      Door_RedTower: (samus) => samus.hasMorph,
     },
 
-    RedElevator: {
-      RedTower: (samus) => samus.canUsePowerBombs,
-      AlphaPBs: (samus) => samus.canOpenGreenDoors,
-      BetaPBs: (samus) => samus.canOpenGreenDoors && samus.canUsePowerBombs,
+    Door_RedElevator: {
+      Door_RedTower: (samus) => samus.canUsePowerBombs,
+      PBs_Alpha: (samus) => samus.canOpenGreenDoors,
+      PBs_Beta: (samus) => samus.canOpenGreenDoors && samus.canUsePowerBombs,
     },
 
-    AlphaPBs: {
-      RedElevator: (_) => true,
-      AlphaPBMissiles: (samus) => samus.canUsePowerBombs,
+    PBs_Alpha: {
+      Door_RedElevator: (_) => true,
+      Missiles_AlphaPBs: (samus) => samus.canUsePowerBombs,
     },
 
-    AlphaPBMissiles: {
-      AlphaPBs: (_) => true,
+    Missiles_AlphaPBs: {
+      PBs_Alpha: (_) => true,
     },
 
-    BetaPBs: {
-      RedElevator: (_) => true,
+    PBs_Beta: {
+      Door_RedElevator: (_) => true,
     },
 
-    MaridiaEscape: {
-      RedElevator: (samus) => samus.hasMorph && samus.superPacks >= 1,
+    Door_MaridiaEscape: {
+      Door_RedElevator: (samus) => samus.hasMorph && samus.superPacks >= 1,
     },
   },
   UpperNorfair: {
@@ -293,8 +306,8 @@ export const edges = {
     },
   },
   KraidsLair: {
-    KraidsLairExit: {
-      KraidsCloset: (samus) =>
+    Door_KraidsLair: {
+      EnergyTank_Kraid: (samus) =>
         samus.canDefeatKraid &&
         (samus.missilePacks >= 1 ||
           samus.hasScrewAttack ||
@@ -302,48 +315,48 @@ export const edges = {
           samus.canUsePowerBombs),
       KraidsHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
     },
-    KraidsCloset: {
-      KraidsLairExit: (_) => true,
+    EnergyTank_Kraid: {
+      Door_KraidsLair: (_) => true,
     },
     KraidsHallway: {
-      KraidsLairExit: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
-      KraidPBs: (samus) => samus.canUsePowerBombs,
-      KraidBossDoor: (samus) => samus.canOpenRedDoors,
+      Door_KraidsLair: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Missiles_Kraid: (samus) => samus.canUsePowerBombs,
+      Door_KraidBoss: (samus) => samus.canOpenRedDoors,
     },
-    KraidPBs: {
+    Missiles_Kraid: {
       KraidsHallway: (_) => true,
     },
-    KraidBossDoor: {
+    Door_KraidBoss: {
       KraidsHallway: (_) => true,
     },
   },
   CrocomiresLair: {
-    CrocDoor: {
-      CrocEnergyTank: (samus) =>
+    Door_Croc: {
+      EnergyTank_Croc: (samus) =>
         samus.canDefeatCrocomire && (samus.tankCount >= 3 || samus.hasSpaceJump),
-      CrocPBs: (samus) =>
+      PBs_Croc: (samus) =>
         samus.canDefeatCrocomire && (samus.canFly || samus.hasIce || samus.hasHiJump),
       GrappleBeam: (samus) =>
         samus.canDefeatCrocomire &&
         (samus.superPacks >= 1 || samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
-      IndianaJones: (samus) =>
+      Missiles_IndianaJones: (samus) =>
         samus.canDefeatCrocomire && (samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
-      CosineMissiles: (samus) => samus.canOpenRedDoors,
+      Missiles_Cosine: (samus) => samus.canOpenRedDoors,
     },
-    CrocEnergyTank: {
-      CrocDoor: (_) => true,
+    EnergyTank_Croc: {
+      Door_Croc: (_) => true,
     },
-    CrocPBs: {
-      CrocDoor: (_) => true,
+    PBs_Croc: {
+      Door_Croc: (_) => true,
     },
     GrappleBeam: {
-      CrocDoor: (_) => true,
+      Door_Croc: (_) => true,
     },
-    IndianaJones: {
-      CrocDoor: (_) => true,
+    Missiles_IndianaJones: {
+      Door_Croc: (_) => true,
     },
-    CosineMissiles: {
-      CrocDoor: (_) => true,
+    Missiles_Cosine: {
+      Door_Croc: (_) => true,
     },
   },
 };
