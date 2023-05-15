@@ -1,3 +1,7 @@
+const canDoSuitlessMaridia = (samus) => {
+  return samus.hasHiJump && samus.hasGrapple && (samus.hasIce || samus.hasSpringBall);
+};
+
 export const edges = {
   Crateria: {
     Ship: {
@@ -537,16 +541,95 @@ export const edges = {
 
     MainStreet: {
       Door_MainStreet: (_) => true,
+      Missiles_MainStreet: (samus) => samus.hasGravity && samus.hasSpeed,
+      Supers_Crab: (samus) => samus.hasGravity || canDoSuitlessMaridia(samus),
+      Missiles_MamaTurtle: (samus) =>
+        samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
+      Door_MaridiaMap: (samus) => samus.canOpenGreenDoors,
+      Door_EverestTopRight: (samus) => samus.hasGravity || canDoSuitlessMaridia(samus),
+    },
+
+    Door_EverestTopRight: {
+      Supers_Crab: (_) => true,
+      Missiles_Beach: (samus) => samus.hasGravity || (samus.hasHiJump && samus.hasIce),
+      Door_PreAqueduct: (samus) => samus.canOpenGreenDoors,
+    },
+
+    Door_PreAqueduct: {
+      Door_EverestTopRight: (samus) => samus.hasGravity || samus.hasHiJump,
+    },
+
+    Missiles_Beach: {
+      Door_EverestTopRight: (_) => true,
+      Missiles_WateringHole: (samus) => samus.hasGravity || samus.hasHiJump,
+      Supers_WateringHole: (samus) => samus.hasGravity || samus.hasHiJump,
+    },
+
+    Missiles_WateringHole: {
+      Missiles_Beach: (_) => true,
+      Supers_WateringHole: (_) => true,
+    },
+
+    Supers_WateringHole: {
+      Missiles_Beach: (_) => true,
+      Missiles_WateringHole: (_) => true,
+    },
+
+    Door_MaridiaMap: {
+      MainStreet: (samus) => samus.hasGravity && samus.hasHiJump,
+    },
+
+    Supers_Crab: {
+      MainStreet: (samus) => samus.hasMorph,
+      Missiles_MamaTurtle: (samus) => samus.hasMorph,
+      Door_RedFish: (samus) => samus.hasGravity && (samus.canFly || samus.hasSpeed),
+    },
+
+    Door_RedFish: {
+      Supers_Crab: (samus) => samus.hasMorph,
+    },
+
+    Missiles_MamaTurtle: {
+      EnergyTank_MamaTurtle: (samus) => samus.canFly || samus.hasGrapple,
+      MainStreet: (samus) => samus.hasGravity || samus.hasHiJump,
+    },
+
+    EnergyTank_MamaTurtle: {
+      Missiles_MamaTurtle: (_) => true,
     },
   },
   EastMaridia: {
     Door_Aqueduct: {
-      Door_Aqueduct: (samus) => samus.hasGravity && samus.canUsePowerBombs,
+      Aqueduct: (samus) => samus.hasGravity && samus.canUsePowerBombs,
     },
 
     Aqueduct: {
       Door_Aqueduct: (samus) =>
         samus.canUsePowerBombs || (samus.hasGravity && (samus.canUseBombs || samus.hasScrewAttack)),
+      Missiles_Aqueduct: (samus) => samus.hasGravity && samus.hasSpeed,
+      Door_Botwoon: (samus) =>
+        (samus.hasGravity && samus.hasSpeed) ||
+        (samus.hasIce && (samus.hasGravity || canDoSuitlessMaridia(samus))),
+    },
+
+    Door_Botwoon: {
+      Aqueduct: (samus) => (samus.hasGravity && samus.hasSpeed) || samus.canDefeatBotwoon,
+      EnergyTank_Botwoon: (samus) => samus.canDefeatBotwoon && samus.hasMorph,
+    },
+
+    EnergyTank_Botwoon: {
+      Door_Botwoon: (samus) => samus.hasMorph,
+      Aqueduct: (_) => true,
+    },
+
+    Missiles_Aqueduct: {
+      Aqueduct: (_) => true,
+      Supers_Aqueduct: (_) => true,
+    },
+
+    Supers_Aqueduct: {
+      Missiles_Aqueduct: (_) => true,
+      Aqueduct: (_) => true,
     },
 
     Door_Highway: {
@@ -607,6 +690,7 @@ export const edges = {
       EnergyTank_Firefleas: (_) => true,
       WorstRoomTop: (samus) => samus.energyTanks >= 3,
       Missiles_Maze: (_) => true, // TODO
+      PBs_Shame: (samus) => samus.canUsePowerBombs,
     },
 
     EnergyTank_Firefleas: {
@@ -621,6 +705,15 @@ export const edges = {
 
     PBs_Maze: {
       RedKihunterShaft: (_) => true, // TODO
+    },
+
+    PBs_Shame: {
+      RedKihunterShaft: (_) => true, // TODO
+      Door_RidleyBoss: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
+    },
+
+    Door_RidleyBoss: {
+      PBs_Shame: (samus) => samus.canUsePowerBombs,
     },
 
     Missiles_MickeyMouse: {

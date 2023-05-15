@@ -82,6 +82,18 @@ const itemPlacement = [
   { location: "EnergyTank_Firefleas", item: Item.EnergyTank },
   { location: "Missiles_Maze", item: Item.Missile },
   { location: "PBs_Maze", item: Item.PowerBomb },
+  { location: "PBs_Shame", item: Item.PowerBomb },
+  { location: "Boss_Ridley", item: Item.EnergyTank },
+  { location: "Missiles_MainStreet", item: Item.Missile },
+  { location: "Supers_Crab", item: Item.Super },
+  { location: "Missiles_MamaTurtle", item: Item.Missile },
+  { location: "EnergyTank_MamaTurtle", item: Item.EnergyTank },
+  { location: "Missiles_Beach", item: Item.Missile },
+  { location: "Missiles_WateringHole", item: Item.Missile },
+  { location: "Supers_WateringHole", item: Item.Super },
+  { location: "Supers_Aqueduct", item: Item.Super },
+  { location: "Missiles_Aqueduct", item: Item.Missile },
+  { location: "EnergyTank_Botwoon", item: Item.EnergyTank },
 ];
 
 const graph = createGraph(mapPortals());
@@ -89,6 +101,7 @@ const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();
 samus.canDefeatKraid = false;
+samus.canDefeatBotwoon = true;
 samus.canDefeatPhantoon = false;
 samus.canDefeatDraygon = false;
 samus.canDefeatRidley = false;
