@@ -352,39 +352,43 @@ export const edges = {
     },
 
     Missiles_Wave: {
-      BubbleMountain: (_) => true,
-      WaveBeam: (_) => true,
+      BubbleMountain: (_) => true, // TODO
+      WaveBeam: (_) => true, // TODO
     },
 
     WaveBeam: {
-      Missiles_Wave: (_) => true,
+      Missiles_Wave: (_) => true, // TODO
     },
 
     Missiles_NorfairReserve1: {
-      BubbleMountain: (_) => true,
-      Missiles_NorfairReserve2: (_) => true,
+      BubbleMountain: (_) => true, // TODO
+      Missiles_NorfairReserve2: (_) => true, // TODO
     },
 
     Missiles_NorfairReserve2: {
-      Missiles_NorfairReserve1: (_) => true,
-      ReserveTank_Norfair: (_) => true,
+      Missiles_NorfairReserve1: (_) => true, // TODO
+      ReserveTank_Norfair: (_) => true, // TODO
     },
 
     ReserveTank_Norfair: {
-      Missiles_NorfairReserve2: (_) => true,
+      Missiles_NorfairReserve2: (_) => true, // TODO
     },
 
     Door_SingleChamber: {
-      BubbleMountain: (_) => true,
+      BubbleMountain: (_) => true, // TODO
+    },
+
+    Door_LavaDive: {
+      BubbleMountain: (_) => true, // TODO
     },
 
     Missiles_SpeedBooster: {
-      BubbleMountain: (_) => true,
-      SpeedBooster: (_) => true,
+      BubbleMountain: (_) => true, // TODO
+      SpeedBooster: (_) => true, // TODO
     },
 
     SpeedBooster: {
-      Missiles_SpeedBooster: (_) => true,
+      Missiles_SpeedBooster: (_) => true, // TODO
     },
 
     Missiles_BubbleMountain: {
@@ -461,19 +465,57 @@ export const edges = {
       Supers_RightSide: (samus) =>
         samus.canDefeatPhantoon && (samus.canUseBombs || samus.canUsePowerBombs),
       Missiles_Attic: (samus) => samus.canDefeatPhantoon,
+      ShipRearExit: (samus) =>
+        samus.canDefeatPhantoon && (samus.hasSpaceJump || samus.hasHiJump || samus.hasGravity),
     },
 
     Missiles_Spooky: {
       ShipHallway: (_) => true,
     },
 
+    ShipRearExit: {
+      EnergyTank_Ship: (samus) => samus.canDefeatPhantoon,
+      ShipHallway: (_) => true,
+      Door_HighwayExit: (samus) => samus.hasGravity || samus.hasHiJump,
+    },
+
+    EnergyTank_Ship: {
+      ShipRearExit: (_) => true,
+    },
+
+    Door_HighwayExit: {
+      ShipRearExit: (samus) => samus.hasGravity || samus.hasHiJump,
+    },
+
     Missiles_Attic: {
       ShipHallway: (_) => true,
       Missiles_Sky: (samus) => samus.canFly || samus.hasSpeed,
+      Missiles_OceanMiddle: (samus) => samus.superPacks >= 1 && samus.hasMorph,
+      GravitySuit: (samus) =>
+        (samus.energyTanks >= 3 || (samus.hasVaria && samus.energyTanks >= 2)) &&
+        (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall),
     },
 
     Missiles_Sky: {
-      Missiles_Attic: (_) => true, // blanking on if the door is grey
+      Missiles_Attic: (_) => true,
+    },
+
+    Missiles_OceanMiddle: {
+      Missiles_Attic: (samus) => samus.hasMorph && samus.superPacks >= 1,
+    },
+
+    GravitySuit: {
+      Missiles_Bowling: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+      Missiles_Ocean: (_) => true,
+    },
+
+    Missiles_Bowling: {
+      ReserveTank_Ship: (samus) => samus.canUsePowerBombs && samus.hasSpeed,
+      GravitySuit: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    ReserveTank_Ship: {
+      Missiles_Bowling: (_) => true,
     },
 
     Door_PhantoonBoss: {
@@ -486,6 +528,121 @@ export const edges = {
 
     Supers_RightSide: {
       ShipHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+  },
+  WestMaridia: {
+    Door_MainStreet: {
+      MainStreet: (_) => true,
+    },
+
+    MainStreet: {
+      Door_MainStreet: (_) => true,
+    },
+  },
+  EastMaridia: {
+    Door_Aqueduct: {
+      Door_Aqueduct: (samus) => samus.hasGravity && samus.canUsePowerBombs,
+    },
+
+    Aqueduct: {
+      Door_Aqueduct: (samus) =>
+        samus.canUsePowerBombs || (samus.hasGravity && (samus.canUseBombs || samus.hasScrewAttack)),
+    },
+
+    Door_Highway: {
+      MaridiaHighway: (samus) => samus.hasGravity,
+    },
+
+    MaridiaHighway: {
+      Door_Highway: (_) => true,
+    },
+  },
+  LowerNorfair: {
+    Door_RidleyMouth: {
+      Ruins: (samus) => samus.hasVaria && (samus.hasGravity || samus.hasHiJump),
+    },
+
+    Door_Muskateers: {
+      Muskateers: (samus) => samus.hasVaria,
+    },
+
+    Muskateers: {
+      Door_Muskateers: (_) => true,
+      Missiles_Muskateers: (samus) => samus.hasMorph && samus.canDestroyBombWalls,
+      Missiles_Maze: (samus) => samus.hasMorph,
+    },
+
+    Missiles_Muskateers: {
+      Muskateers: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    },
+
+    Ruins: {
+      Door_RidleyMouth: (_) => true,
+      Missiles_GT: (samus) => samus.hasSpaceJump && samus.canUsePowerBombs,
+      PrePillars: (samus) => samus.canUsePowerBombs,
+    },
+
+    PrePillars: {
+      Ruins: (samus) => samus.canUsePowerBombs,
+      ScrewAttack: (samus) => samus.superPacks >= 1 && samus.canDestroyBombWalls,
+      WorstRoomBottom: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
+    },
+
+    WorstRoomBottom: {
+      PrePillars: (samus) => samus.canDestroyBombWalls,
+      WorstRoomTop: (samus) =>
+        (samus.hasScrewAttack && samus.hasSpaceJump) ||
+        (samus.hasHiJump && samus.canUsePowerBombs) ||
+        samus.canUseBombs,
+    },
+
+    WorstRoomTop: {
+      WorstRoomBottom: (_) => true,
+      Missiles_MickeyMouse: (samus) => samus.canDestroyBombWalls && samus.hasMorph,
+      Ruins: (samus) => samus.canDestroyBombWalls,
+      RedKihunterShaft: (_) => true,
+    },
+
+    RedKihunterShaft: {
+      EnergyTank_Firefleas: (_) => true,
+      WorstRoomTop: (samus) => samus.energyTanks >= 3,
+      Missiles_Maze: (_) => true, // TODO
+    },
+
+    EnergyTank_Firefleas: {
+      RedKihunterShaft: (samus) => samus.hasSpaceJump || samus.hasHiJump,
+    },
+
+    Missiles_Maze: {
+      RedKihunterShaft: (_) => true, // TODO
+      PBs_Maze: (_) => true, // TODO
+      Muskateers: (samus) => samus.hasMorph,
+    },
+
+    PBs_Maze: {
+      RedKihunterShaft: (_) => true, // TODO
+    },
+
+    Missiles_MickeyMouse: {
+      WorstRoomTop: (samus) => samus.hasMorph,
+    },
+
+    Missiles_GT: {
+      Supers_GT: (samus) => samus.hasScrewAttack || samus.canUsePowerBombs,
+      ScrewAttack: (_) => true,
+    },
+
+    Supers_GT: {
+      ScrewAttack: (_) => true,
+    },
+
+    ScrewAttack: {
+      Supers_GT: (samus) => samus.hasScrewAttack || samus.canUsePowerBombs,
+      PrePillars: (samus) =>
+        samus.canUseBombs ||
+        (samus.hasSpaceJump && (samus.hasScrewAttack || samus.canUsePowerBombs)) ||
+        (samus.hasScrewAttack && samus.hasSpeed && samus.hasHiJump) ||
+        (samus.canUsePowerBombs && samus.hasSpringBall),
     },
   },
   CrocomiresLair: {
