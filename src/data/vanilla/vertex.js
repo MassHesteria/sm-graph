@@ -1,4 +1,4 @@
-export const vertices = {
+export const vanillaVertices = {
   Crateria: {
     Ship: "",
     PBs_LandingSite: "minor",

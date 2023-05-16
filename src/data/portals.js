@@ -30,3 +30,9 @@ export const portals = {
     ["Door_RidleyBoss", "Boss_Ridley"],
   ],
 };
+
+export const mapPortals = () => {
+  return Object.values(portals).reduce((acc, cur) => {
+    return acc.concat(cur);
+  }, []);
+};

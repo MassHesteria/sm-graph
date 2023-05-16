@@ -1,8 +1,9 @@
-import { createGraph, getAvailableLocations, mapPortals } from "./util.js";
 import Loadout from "./dash/loadout.js";
 import { Item } from "./dash/items.js";
 import chalk from "chalk";
-import { breadthFirstSearch } from "./search.js";
+import { breadthFirstSearch, getAvailableLocations } from "./search.js";
+import { createVanillaGraph } from "./data/vanilla/graph.js";
+import { mapPortals } from "./data/portals.js";
 
 const itemPlacement = [
   { location: "MorphBall", item: Item.Morph },
@@ -107,7 +108,7 @@ const itemPlacement = [
   { location: "Missiles_CrocEscape", item: Item.Missile },
 ];
 
-const graph = createGraph(mapPortals());
+const graph = createVanillaGraph(mapPortals());
 const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();

@@ -5,6 +5,6 @@
   },
   "type": "module",
   "scripts": {
-    "test": "node --experimental-specifier-resolution=node --no-warnings src/vanilla.js"
+    "test": "node --experimental-specifier-resolution=node --no-warnings src/main.js"
   }
 }
