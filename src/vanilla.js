@@ -94,6 +94,17 @@ const itemPlacement = [
   { location: "Supers_Aqueduct", item: Item.Super },
   { location: "Missiles_Aqueduct", item: Item.Missile },
   { location: "EnergyTank_Botwoon", item: Item.EnergyTank },
+  { location: "Missiles_Impossible", item: Item.Missile },
+  { location: "Missiles_Precious", item: Item.Missile },
+  { location: "Boss_Draygon", item: Item.SpaceJump },
+  { location: "Missiles_LeftSandPit", item: Item.Missile },
+  { location: "ReserveTank_LeftSandPit", item: Item.Reserve },
+  { location: "Missiles_RightSandPit", item: Item.Missile },
+  { location: "PBs_RightSandPit", item: Item.PowerBomb },
+  { location: "SpringBall", item: Item.SpringBall },
+  { location: "PlasmaBeam", item: Item.Plasma },
+  { location: "XrayScope", item: Item.Xray },
+  { location: "Missiles_CrocEscape", item: Item.Missile },
 ];
 
 const graph = createGraph(mapPortals());

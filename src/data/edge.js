@@ -218,6 +218,11 @@ export const edges = {
         samus.canUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
       Supers_SpoSpo: (samus) =>
         (samus.canUseBombs || samus.canUsePowerBombs) && samus.superPacks >= 1,
+      Missiles_Impossible: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
+    },
+
+    Missiles_Impossible: {
+      Missiles_BigPink: (samus) => samus.canUseBombs && samus.canUsePowerBombs,
     },
 
     Supers_SpoSpo: {
@@ -265,6 +270,18 @@ export const edges = {
       Spazer: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
       Door_MaridiaTube: (samus) => samus.canUsePowerBombs,
       Door_KraidEntry: (_) => true,
+      XrayHallway: (samus) => samus.canUsePowerBombs,
+    },
+
+    XrayHallway: {
+      Door_RedTower: (samus) => samus.canUsePowerBombs,
+      XrayScope: (samus) =>
+        samus.canOpenRedDoors && samus.hasMorph && (samus.hasSpaceJump || samus.hasGrapple),
+    },
+
+    XrayScope: {
+      XrayHallway: (samus) =>
+        (samus.canUseBombs || samus.canUsePowerBombs) && (samus.hasSpaceJump || samus.hasGrapple),
     },
 
     Door_AboveKraid: {
@@ -415,6 +432,14 @@ export const edges = {
     PreCrocomire: {
       Door_CrocEntry: (samus) => samus.canOpenGreenDoors,
       BubbleMountain: (samus) => samus.hasVaria || samus.energyTanks >= 2,
+      Missiles_CrocEscape: (samus) =>
+        (samus.hasVaria || samus.energyTanks >= 3) &&
+        (samus.hasSpaceJump || samus.hasGrapple || (samus.hasSpeed && samus.hasHiJump)),
+    },
+
+    Missiles_CrocEscape: {
+      BusinessCenter: (samus) => samus.canOpenGreenDoors,
+      PreCrocomire: (samus) => samus.hasMorph,
     },
 
     Door_CrocEntry: {
@@ -549,6 +574,10 @@ export const edges = {
       Door_EverestTopRight: (samus) => samus.hasGravity || canDoSuitlessMaridia(samus),
     },
 
+    Missiles_MainStreet: {
+      MainStreet: (_) => true,
+    },
+
     Door_EverestTopRight: {
       Supers_Crab: (_) => true,
       Missiles_Beach: (samus) => samus.hasGravity || (samus.hasHiJump && samus.hasIce),
@@ -610,6 +639,50 @@ export const edges = {
       Door_Botwoon: (samus) =>
         (samus.hasGravity && samus.hasSpeed) ||
         (samus.hasIce && (samus.hasGravity || canDoSuitlessMaridia(samus))),
+      Missiles_LeftSandPit: (samus) => samus.hasGravity && samus.hasMorph,
+      ReserveTank_LeftSandPit: (samus) => samus.hasGravity && samus.hasMorph,
+      Missiles_RightSandPit: (samus) => samus.hasGravity && samus.hasMorph,
+      PBs_RightSandPit: (samus) => samus.hasGravity && samus.hasMorph,
+    },
+
+    Missiles_LeftSandPit: {
+      Oasis: (samus) => samus.hasGravity,
+    },
+
+    ReserveTank_LeftSandPit: {
+      Oasis: (samus) => samus.hasGravity,
+    },
+
+    Missiles_RightSandPit: {
+      Oasis: (samus) => samus.hasGravity,
+    },
+
+    PBs_RightSandPit: {
+      Oasis: (samus) => samus.hasGravity,
+    },
+
+    Oasis: {
+      MainStreet: (samus) => samus.hasGravity,
+      SpringBall: (samus) =>
+        samus.hasGravity && samus.canUsePowerBombs && (samus.hasGrapple || samus.hasIce),
+      Door_PlasmaSpark: (samus) =>
+        samus.canOpenGreenDoors &&
+        (samus.canUsePowerBombs || samus.canUseBombs || (samus.hasGravity && samus.hasScrewAttack)),
+    },
+
+    Door_PlasmaSpark: {
+      Oasis: (samus) => samus.canOpenGreenDoors,
+      PlasmaBeam: (samus) => samus.canDefeatDraygon,
+      MaridiaHighway: (samus) => samus.hasGravity,
+    },
+
+    PlasmaBeam: {
+      Door_PlasmaSpark: (samus) =>
+        (samus.hasScrewAttack || samus.hasPlasma) && (samus.canFly || samus.hasHiJump),
+    },
+
+    SpringBall: {
+      Oasis: (samus) => samus.hasGravity && samus.hasMorph,
     },
 
     Door_Botwoon: {
@@ -620,6 +693,28 @@ export const edges = {
     EnergyTank_Botwoon: {
       Door_Botwoon: (samus) => samus.hasMorph,
       Aqueduct: (_) => true,
+      ColosseumTopLeft: (samus) => samus.hasGravity,
+      Missiles_Precious: (samus) => samus.hasGravity && samus.canOpenGreenDoors,
+    },
+
+    ColosseumTopLeft: {
+      EnergyTank_Botwoon: (samus) => samus.hasGravity,
+      ColosseumTopRight: (samus) => samus.hasGravity,
+      Door_PlasmaSpark: (samus) => samus.hasGravity,
+    },
+
+    ColosseumTopRight: {
+      Missiles_Precious: (samus) => samus.hasGravity && samus.canOpenGreenDoors,
+      ColosseumTopLeft: (samus) => samus.hasGravity,
+    },
+
+    Missiles_Precious: {
+      ColosseumTopRight: (samus) => samus.hasGravity,
+      Door_DraygonBoss: (samus) => samus.canOpenGreenDoors,
+    },
+
+    Door_DraygonBoss: {
+      Missiles_Precious: (samus) => samus.hasGravity,
     },
 
     Missiles_Aqueduct: {
@@ -638,6 +733,7 @@ export const edges = {
 
     MaridiaHighway: {
       Door_Highway: (_) => true,
+      Door_PlasmaSpark: (samus) => samus.hasGravity,
     },
   },
   LowerNorfair: {
