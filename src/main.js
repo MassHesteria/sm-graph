@@ -1,18 +1,24 @@
-import { Item } from "./dash/items.js";
+import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
-import { breadthFirstSearch, getAvailableLocations } from "./search.js";
+import { breadthFirstSearch, mergeGraph } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 
 const start_init = Date.now();
 
-const portals = mapPortals(1, false, true);
+//-----------------------------------------------------------------
+// Setup the graph.
+//-----------------------------------------------------------------
+
+const portals = mapPortals(1, false, false);
 const graph = createVanillaGraph(portals);
 const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();
+
+// Add extra flags to the loadout.
 samus.canDefeatKraid = false;
 samus.canDefeatBotwoon = true;
 samus.canDefeatPhantoon = false;
@@ -20,12 +26,9 @@ samus.canDefeatDraygon = false;
 samus.canDefeatRidley = false;
 samus.canDefeatCrocomire = false;
 
-const getItemNameFromCode = (itemCode) => {
-  function getKeyByValue(object, value) {
-    return Object.keys(object).find((key) => object[key] === value);
-  }
-  return getKeyByValue(Item, itemCode);
-};
+//-----------------------------------------------------------------
+// Print available item locations to the console.
+//-----------------------------------------------------------------
 
 const itemNodes = vanillaItemPlacement.map((i) => {
   const part = graph.find((n) => n.from.name == i.location);
@@ -38,29 +41,27 @@ const itemNodes = vanillaItemPlacement.map((i) => {
   };
 });
 
-const start_run = Date.now();
-
-//console.log(itemNodes);
-
-const processItemLocations = (itemLocations) => {
-  return itemLocations.map((loc) => {
-    const temp = itemNodes.find((x) => x.location == loc);
-    const str = temp == undefined ? chalk.red("none") : getItemNameFromCode(temp.item);
-    return {
-      location: loc.name,
-      item: str,
-    };
-  });
-};
+//-----------------------------------------------------------------
+// Print available item locations to the console.
+//-----------------------------------------------------------------
 
 const printAvailableItems = (itemLocations) => {
   let output = chalk.yellow("Available: ");
-  processItemLocations(itemLocations).forEach((p) => {
-    const { location, item } = p;
-    output += `${chalk.green(item)} @ ${chalk.blue(location)} `;
+  itemLocations.forEach((p) => {
+    const theNode = itemNodes.find((x) => x.location == p);
+    if (theNode == null) {
+      output += chalk.red("none");
+    } else {
+      output += chalk.green(ItemNames.get(theNode.item));
+    }
+    output += ` @ ${chalk.blue(p.name)} `;
   });
   console.log(output);
 };
+
+//-----------------------------------------------------------------
+// Clones the loadout plus any extra flags.
+//-----------------------------------------------------------------
 
 const cloneLoadout = (input) => {
   const output = input.clone();
@@ -72,6 +73,11 @@ const cloneLoadout = (input) => {
   return output;
 };
 
+//-----------------------------------------------------------------
+// Determines if the graph would allow a round trip from the
+// specified vertex to the starting vertex.
+//-----------------------------------------------------------------
+
 const hasRoundTrip = (vertex) => {
   const load = cloneLoadout(samus);
 
@@ -82,6 +88,11 @@ const hasRoundTrip = (vertex) => {
 
   return breadthFirstSearch(graph, vertex, load).includes(startVertex);
 };
+
+//-----------------------------------------------------------------
+// Collects all items where there is a round trip back to the
+// ship. All these items are collected at the same time.
+//-----------------------------------------------------------------
 
 const collectEasyItems = (itemLocations) => {
   if (itemLocations.length == 0) {
@@ -109,7 +120,7 @@ const collectEasyItems = (itemLocations) => {
     }
 
     samus.add(itemNodes[index].item);
-    const name = getItemNameFromCode(itemNodes[index].item);
+    const name = ItemNames.get(itemNodes[index].item);
     str += `> ${name}`.padEnd(20, " ");
     if (++a % 5 == 0) {
       str += "\n";
@@ -132,8 +143,16 @@ const collectEasyItems = (itemLocations) => {
   return result;
 };
 
+const start_run = Date.now();
+
 while (itemNodes.length > 0) {
+  // Reduce the graph for performance
+  mergeGraph(graph, startVertex, samus);
+
+  // Find all accessible vertices
   const all = breadthFirstSearch(graph, startVertex, samus);
+
+  // Check for access to bosses
   const roundTripToBoss = (boss) => {
     const bossVertex = all.find((p) => p.name == `Boss_${boss}`);
     return bossVertex != undefined && hasRoundTrip(bossVertex);
@@ -144,14 +163,18 @@ while (itemNodes.length > 0) {
   samus.canDefeatDraygon = roundTripToBoss("Draygon");
   samus.canDefeatRidley = roundTripToBoss("Ridley");
 
-  const itemLocations = getAvailableLocations(graph, samus, collected);
-  printAvailableItems(itemLocations);
+  // Find all uncollected item vertices
+  const uncollected = all.filter((v) => v.item != "" && !collected.includes(v));
+  printAvailableItems(uncollected);
 
-  if (collectEasyItems(itemLocations)) {
+  // Collect all items where we can make a round trip back to the start
+  if (collectEasyItems(uncollected)) {
     continue;
   }
 
-  const index = itemNodes.findIndex((i) => itemLocations.includes(i.location));
+  // Handle collecting a single item if no "easy" items are available
+  // TODO: Needs testing; not currently being executed
+  const index = itemNodes.findIndex((i) => uncollected.includes(i.location));
 
   if (index < 0) {
     console.log("no items");
@@ -159,13 +182,12 @@ while (itemNodes.length > 0) {
   }
 
   samus.add(itemNodes[index].item);
-  console.log(">", getItemNameFromCode(itemNodes[index].item), "\n");
+  console.log(">", ItemNames.get(itemNodes[index].item), "\n");
   collected.push(itemNodes[index].location);
   itemNodes.splice(index, 1);
 }
 
 if (itemNodes.length > 0) {
-  printAvailableItems(getAvailableLocations(graph, samus, collected));
   itemNodes.forEach((n) => {
     console.log("Location:", n.location.name, "Item:", n.item.name);
   });
@@ -182,4 +204,4 @@ console.log(
   "ms ]"
 );
 
-console.log(portals);
+//console.log(portals);
