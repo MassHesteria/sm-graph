@@ -1,3 +1,5 @@
+import DotNetRandom from "../dash/dotnet-random";
+
 export const portals = {
   Areas: [
     // Crateria / Blue Brinstar
@@ -31,8 +33,43 @@ export const portals = {
   ],
 };
 
-export const mapPortals = () => {
-  return Object.values(portals).reduce((acc, cur) => {
-    return acc.concat(cur);
-  }, []);
+const shufflePortals = (seed, unshuffled) => {
+  if (seed == 0) {
+    return unshuffled;
+  }
+
+  const rng = new DotNetRandom(seed);
+  const swap = (arr, x, y) => {
+    const tmp = arr[x];
+    arr[x] = arr[y];
+    arr[y] = tmp;
+  };
+
+  const shuffle = (arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      swap(arr, i, rng.NextInRange(i, arr.length));
+    }
+  };
+
+  const left = unshuffled.map((b) => b[0]);
+  shuffle(left);
+  const shuffled = new Array(left.length);
+  for (let i = 0; i < left.length; i++) {
+    shuffled[i] = [left[i], unshuffled[i][1]];
+  }
+  return shuffled;
+};
+
+const getAreaPortals = (seed) => {
+  return shufflePortals(seed, portals.Areas);
+};
+
+const getBossPortals = (seed) => {
+  return shufflePortals(seed, portals.Bosses);
+};
+
+export const mapPortals = (seed, area, boss) => {
+  const areaSeed = area ? seed + 2e9 : 0;
+  const bossSeed = boss ? seed + 1e9 : 0;
+  return getAreaPortals(areaSeed).concat(getBossPortals(bossSeed));
 };

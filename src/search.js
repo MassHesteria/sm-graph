@@ -19,5 +19,5 @@ export const breadthFirstSearch = (map, vertex, load) => {
 
 export const getAvailableLocations = (graph, samus, collected) => {
   const available = breadthFirstSearch(graph, graph[0].from, samus);
-  return available.filter((v) => v.item != "" && !collected.includes(v.name));
+  return available.filter((v) => v.item != "" && !collected.includes(v));
 };
