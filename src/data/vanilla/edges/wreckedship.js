@@ -10,15 +10,20 @@ export const wreckedshipEdges = {
 
   ShipHallway: {
     Missiles_Ocean: (_) => true,
-    Missiles_Spooky: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    Missiles_Spooky: (samus) => samus.canPassBombPassages,
     Door_PhantoonBoss: (samus) =>
-      samus.canOpenGreenDoors && (samus.hasSpeed || samus.canUseBombs || samus.canUsePowerBombs),
+      samus.canOpenRedDoors && (samus.hasSpeed || samus.canPassBombPassages),
     Supers_LeftSide: (samus) => samus.canDefeatPhantoon,
     Supers_RightSide: (samus) =>
-      samus.canDefeatPhantoon && (samus.canUseBombs || samus.canUsePowerBombs),
+      samus.canDefeatPhantoon && samus.canPassBombPassages,
     Missiles_Attic: (samus) => samus.canDefeatPhantoon,
     ShipRearExit: (samus) =>
-      samus.canDefeatPhantoon && (samus.hasSpaceJump || samus.hasHiJump || samus.hasGravity),
+      samus.canDefeatPhantoon && 
+        (samus.canfly || 
+         samus.canUsePowerBombs || 
+         samus.hasSpeed || 
+         samus.hasHiJump || 
+         samus.hasGravity),
   },
 
   Missiles_Spooky: {
@@ -28,7 +33,7 @@ export const wreckedshipEdges = {
   ShipRearExit: {
     EnergyTank_Ship: (samus) => samus.canDefeatPhantoon,
     ShipHallway: (_) => true,
-    Door_HighwayExit: (samus) => samus.hasGravity || samus.hasHiJump,
+    Door_HighwayExit: (samus) => samus.hasGravity || samus.hasHiJump || samus.hasSpaceJump,
   },
 
   EnergyTank_Ship: {
@@ -36,16 +41,17 @@ export const wreckedshipEdges = {
   },
 
   Door_HighwayExit: {
-    ShipRearExit: (samus) => samus.hasGravity || samus.hasHiJump,
+    ShipRearExit: (samus) => samus.hasGravity || samus.hasHiJump || samus.hasSpaceJump,
   },
 
   Missiles_Attic: {
     ShipHallway: (_) => true,
-    Missiles_Sky: (samus) => samus.canFly || samus.hasSpeed,
+    Missiles_Sky: (_) => true,
     Missiles_OceanMiddle: (samus) => samus.superPacks >= 1 && samus.hasMorph,
     GravitySuit: (samus) =>
-      (samus.energyTanks >= 3 || (samus.hasVaria && samus.energyTanks >= 2)) &&
-      (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall),
+      samus.hasMorph && (samus.canPassBombPassages || samus.hasSpringBall) &&
+      //like climb supers, the DASH logic doesn't seem to account for space/grapple
+      (samus.totalTanks >= 2 || (samus.hasVaria && samus.totalTanks >= 1)),
   },
 
   Missiles_Sky: {
@@ -54,16 +60,17 @@ export const wreckedshipEdges = {
 
   Missiles_OceanMiddle: {
     Missiles_Attic: (samus) => samus.hasMorph && samus.superPacks >= 1,
+    Missiles_Ocean: (samus) => samus.hasMorph,
   },
 
   GravitySuit: {
-    Missiles_Bowling: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    Missiles_Bowling: (samus) => samus.canDestroyBombWalls,
     Missiles_Ocean: (_) => true,
   },
 
   Missiles_Bowling: {
     ReserveTank_Ship: (samus) => samus.canUsePowerBombs && samus.hasSpeed,
-    GravitySuit: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    GravitySuit: (samus) => samus.canPassBombPassages,
   },
 
   ReserveTank_Ship: {
@@ -71,7 +78,7 @@ export const wreckedshipEdges = {
   },
 
   Door_PhantoonBoss: {
-    ShipHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    ShipHallway: (samus) => samus.canPassBombPassages,
   },
 
   Supers_LeftSide: {
@@ -79,6 +86,6 @@ export const wreckedshipEdges = {
   },
 
   Supers_RightSide: {
-    ShipHallway: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    ShipHallway: (samus) => samus.canPassBombPassages,
   },
 };

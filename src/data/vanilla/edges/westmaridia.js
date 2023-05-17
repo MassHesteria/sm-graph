@@ -23,7 +23,9 @@ export const westmaridiaEdges = {
 
   Door_EverestTopRight: {
     Supers_Crab: (_) => true,
-    Missiles_Beach: (samus) => samus.hasGravity || (samus.hasHiJump && samus.hasIce),
+    Missiles_Beach: (samus) => 
+        samus.hasGravity || 
+        (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
     Door_PreAqueduct: (samus) => samus.canOpenGreenDoors,
   },
 
@@ -33,8 +35,12 @@ export const westmaridiaEdges = {
 
   Missiles_Beach: {
     Door_EverestTopRight: (_) => true,
-    Missiles_WateringHole: (samus) => samus.hasGravity || samus.hasHiJump,
-    Supers_WateringHole: (samus) => samus.hasGravity || samus.hasHiJump,
+    Missiles_WateringHole: (samus) => 
+        samus.hasGravity || 
+        (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
+    Supers_WateringHole: (samus) => 
+        samus.hasGravity || 
+        (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
   },
 
   Missiles_WateringHole: {
@@ -48,13 +54,15 @@ export const westmaridiaEdges = {
   },
 
   Door_MaridiaMap: {
-    MainStreet: (samus) => samus.hasGravity && samus.hasHiJump,
+    MainStreet: (samus) => 
+        samus.hasGravity || 
+        (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
   },
 
   Supers_Crab: {
     MainStreet: (samus) => samus.hasMorph,
     Missiles_MamaTurtle: (samus) => samus.hasMorph,
-    Door_RedFish: (samus) => samus.hasGravity && (samus.canFly || samus.hasSpeed),
+    Door_RedFish: (samus) => samus.hasGravity || canDoSuitlessMaridia(samus),
   },
 
   Door_RedFish: {

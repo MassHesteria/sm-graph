@@ -1,3 +1,7 @@
+const canHellRun = (samus) => {
+    return (samus.totalTanks >= 4 || samus.hasVaria);
+};
+
 export const uppernorfairEdges = {
   Door_ElevatorEntry: {
     BusinessCenter: (_) => true,
@@ -6,10 +10,11 @@ export const uppernorfairEdges = {
   BusinessCenter: {
     Door_ElevatorEntry: (_) => true,
     Door_KraidMouth: (samus) => samus.superPacks >= 1,
-    IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
+    IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.totalTanks >= 2),
     Missiles_CrumbleShaft: (samus) =>
-      samus.canUsePowerBombs && (samus.hasVaria || samus.energyTanks >= 2),
-    Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
+      samus.canUsePowerBombs && (samus.hasVaria || samus.totalTanks >= 2),
+    Missiles_Cathedral: (samus) => canHellRun(samus),
+    BubbleMountain: (samus) => canHellRun(samus),
     EnergyTank_HiJump: (samus) => samus.canOpenRedDoors,
   },
 
@@ -19,72 +24,71 @@ export const uppernorfairEdges = {
   },
 
   HiJumpBoots: {
-    EnergyTank_HiJump: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    EnergyTank_HiJump: (samus) => samus.canPassBombPassages,
     Missiles_HiJump: (_) => true,
   },
 
   Missiles_HiJump: {
-    EnergyTank_HiJump: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    EnergyTank_HiJump: (samus) => samus.canPassBombPassages,
   },
 
   Missiles_Cathedral: {
     BusinessCenter: (samus) =>
-      (samus.hasVaria || samus.energyTanks >= 3) &&
-      (samus.canUseBombs || samus.canUsePowerBombs || samus.hasSpringBall || samus.hasSpaceJump),
+      canHellRun(samus) && (samus.canFly || samus.hasSpaceJump || samus.hasHiJump),
     BubbleMountain: (samus) =>
-      samus.canOpenGreenDoors && (samus.hasVaria || samus.energyTanks >= 3),
+      samus.canOpenGreenDoors && canHellRun(samus),
   },
 
   BubbleMountain: {
-    BusinessCenter: (samus) => samus.hasSpeed,
+    BusinessCenter: (samus) => samus.hasSpeed || canHellRun(samus),
     Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
     Missiles_BubbleMountain: (_) => true,
-    Missiles_SpeedBooster: (_) => true,
-    PreCrocomire: (_) => true,
-    Door_LavaDive: (_) => true,
-    Missiles_NorfairReserve1: (samus) =>
-      (samus.hasVaria || samus.energyTanks >= 3) && (samus.hasHiJump || samus.canFly),
-    Missiles_Wave: (_) => true,
+    Missiles_SpeedBooster: (samus) => canHellRun(samus),
+    PreCrocomire: samus.hasVaria || samus.totalTanks >= 2,
+    Door_LavaDive: samus.hasVaria || samus.totalTanks >= 2,
+    Missiles_NorfairReserve1: (samus) => canHellRun(samus),
+    Missiles_Wave: (samus) => canHellRun(samus),
   },
 
   Missiles_Wave: {
-    BubbleMountain: (_) => true, // TODO
-    WaveBeam: (_) => true, // TODO
+    BubbleMountain: (samus) => canHellRun(samus),
+    WaveBeam: (samus) => canHellRun(samus),
   },
 
   WaveBeam: {
-    Missiles_Wave: (_) => true, // TODO
+    BubbleMountain: (samus) => canHellRun(samus),
+    Missiles_Wave: (samus) => canHellRun(samus),
   },
 
   Missiles_NorfairReserve1: {
-    BubbleMountain: (_) => true, // TODO
-    Missiles_NorfairReserve2: (_) => true, // TODO
+    BubbleMountain: (_) => true,
+    Missiles_NorfairReserve2: (samus) => canHellRun(samus),
   },
 
   Missiles_NorfairReserve2: {
-    Missiles_NorfairReserve1: (_) => true, // TODO
-    ReserveTank_Norfair: (_) => true, // TODO
+    Missiles_NorfairReserve1: (samus) => canHellRun(samus),
+    ReserveTank_Norfair: (_) => true,
   },
 
   ReserveTank_Norfair: {
-    Missiles_NorfairReserve2: (_) => true, // TODO
+    Missiles_NorfairReserve2: (_) => true,
   },
 
   Door_SingleChamber: {
-    BubbleMountain: (_) => true, // TODO
+    BubbleMountain: (samus) => canHellRun(samus) && samus.canDestroyBombWalls,
   },
 
   Door_LavaDive: {
-    BubbleMountain: (_) => true, // TODO
+    BubbleMountain: samus.hasVaria || samus.totalTanks >= 2,
   },
 
   Missiles_SpeedBooster: {
-    BubbleMountain: (_) => true, // TODO
-    SpeedBooster: (_) => true, // TODO
+    BubbleMountain: (samus) => canHellRun(samus),
+    SpeedBooster: (_) => true,
   },
 
   SpeedBooster: {
-    Missiles_SpeedBooster: (_) => true, // TODO
+    Missiles_SpeedBooster: (_) => true,
   },
 
   Missiles_BubbleMountain: {
@@ -96,7 +100,7 @@ export const uppernorfairEdges = {
   },
 
   IceBeam: {
-    BusinessCenter: (samus) => samus.canUseBombs || samus.canUsePowerBombs,
+    BusinessCenter: (samus) => samus.canPassBombPassages && (samus.hasVaria || samus.totalTanks >= 2),
   },
 
   Missiles_CrumbleShaft: {
@@ -106,15 +110,16 @@ export const uppernorfairEdges = {
 
   PreCrocomire: {
     Door_CrocEntry: (samus) => samus.canOpenGreenDoors,
-    BubbleMountain: (samus) => samus.hasVaria || samus.energyTanks >= 2,
-    Missiles_CrocEscape: (samus) =>
-      (samus.hasVaria || samus.energyTanks >= 3) &&
-      (samus.hasSpaceJump || samus.hasGrapple || (samus.hasSpeed && samus.hasHiJump)),
+    BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
+    Missiles_CrocEscape: (samus) => canHellRun(samus) &&
+      (samus.canfly || samus.hasGrapple || 
+        (samus.hasHiJump && (samus.hasSpringBall || samus.hasSpeed)
+      )),
   },
 
   Missiles_CrocEscape: {
     BusinessCenter: (samus) => samus.canOpenGreenDoors,
-    PreCrocomire: (samus) => samus.hasMorph,
+    PreCrocomire: (samus) => samus.hasMorph && (samus.hasVaria || samus.totalTanks >= 2),
   },
 
   Door_CrocEntry: {

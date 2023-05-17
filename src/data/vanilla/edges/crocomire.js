@@ -1,34 +1,39 @@
 export const crocomireEdges = {
-  Door_Croc: {
+    Door_Croc: {
+        PostCroc: (samus) => samus.canDefeatCrocomire
+    },
+  
+    PostCroc: {
+    Door_Croc: (_) => true,
     EnergyTank_Croc: (samus) =>
-      samus.canDefeatCrocomire && (samus.energyTanks >= 3 || samus.hasSpaceJump),
+    //need to ask Kipp how many tanks should put this in logic
+      ((samus.energyTanks >= 3 && samus.totalTanks >= 4) || samus.hasSpaceJump || samus.hasGrapple),
     PBs_Croc: (samus) =>
-      samus.canDefeatCrocomire && (samus.canFly || samus.hasIce || samus.hasHiJump),
+      (samus.canFly || samus.hasIce || samus.hasHiJump || samus.hasGrapple),
     GrappleBeam: (samus) =>
-      samus.canDefeatCrocomire &&
-      (samus.superPacks >= 1 || samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
+      (samus.superPacks >= 1 || samus.canFly || samus.hasSpeed),
     Missiles_IndianaJones: (samus) =>
-      samus.canDefeatCrocomire && (samus.canFly || (samus.hasSpeed && samus.canUsePowerBombs)),
+      (samus.canFly || samus.hasSpeed),
     Missiles_Cosine: (samus) => samus.canOpenRedDoors,
   },
 
   EnergyTank_Croc: {
-    Door_Croc: (_) => true,
+    PostCroc: (_) => true,
   },
 
   PBs_Croc: {
-    Door_Croc: (_) => true,
+    PostCroc: (_) => true,
   },
 
   GrappleBeam: {
-    Door_Croc: (_) => true,
+    PostCroc: (_) => true,
   },
 
   Missiles_IndianaJones: {
-    Door_Croc: (_) => true,
+    PostCroc: (_) => true,
   },
 
   Missiles_Cosine: {
-    Door_Croc: (_) => true,
+    PostCroc: (_) => true,
   },
 };

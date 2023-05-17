@@ -33,40 +33,43 @@ export const lowernorfairEdges = {
     PrePillars: (samus) => samus.canDestroyBombWalls,
     WorstRoomTop: (samus) =>
       (samus.hasScrewAttack && samus.hasSpaceJump) ||
-      (samus.hasHiJump && samus.canUsePowerBombs) ||
-      samus.canUseBombs,
+      samus.canPassBombPassages && (samus.canFly || samus.hasSpringBall || samus.hasHiJump),
   },
 
   WorstRoomTop: {
-    WorstRoomBottom: (_) => true,
+    WorstRoomBottom: (samus) => samus.canDestroyBombWalls,
     Missiles_MickeyMouse: (samus) => samus.canDestroyBombWalls && samus.hasMorph,
     Ruins: (samus) => samus.canDestroyBombWalls,
     RedKihunterShaft: (_) => true,
   },
 
   RedKihunterShaft: {
-    EnergyTank_Firefleas: (_) => true,
-    WorstRoomTop: (samus) => samus.energyTanks >= 3,
-    Missiles_Maze: (_) => true, // TODO
-    PBs_Shame: (samus) => samus.canUsePowerBombs,
+    EnergyTank_Firefleas: (samus) => 
+        (samus.canUsePowerBombs || samus.superPacks >= 1),
+    WorstRoomTop: (samus) => 
+        (samus.hasGravity && samus.energyTanks >= 3 && samus.totalTanks >= 6) 
+        || samus.energyTanks >= 6, 
+    Missiles_Maze: (_) => true,
+    PBs_Shame: (samus) => samus.canDestroyBombWalls,
   },
 
   EnergyTank_Firefleas: {
-    RedKihunterShaft: (samus) => samus.hasSpaceJump || samus.hasHiJump,
+    RedKihunterShaft: (samus) => (samus.canUsePowerBombs || samus.superPacks >= 1),
   },
 
   Missiles_Maze: {
-    RedKihunterShaft: (_) => true, // TODO
-    PBs_Maze: (_) => true, // TODO
+    RedKihunterShaft: (_) => true,
+    PBs_Maze: (samus) => samus.canPassBombPassages,
     Muskateers: (samus) => samus.hasMorph,
   },
 
   PBs_Maze: {
-    RedKihunterShaft: (_) => true, // TODO
+    RedKihunterShaft: (_) => true,
   },
 
   PBs_Shame: {
-    RedKihunterShaft: (_) => true, // TODO
+    //don't think escaping ridley with 1 PB pack is in logic, but this line implies it
+    RedKihunterShaft: (samus) => samus.canPassBombPassages,
     Door_RidleyBoss: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
   },
 
@@ -75,7 +78,8 @@ export const lowernorfairEdges = {
   },
 
   Missiles_MickeyMouse: {
-    WorstRoomTop: (samus) => samus.hasMorph,
+    WorstRoomTop: (samus) => samus.hasHijump || samus.canFly,
+    Ruins: (_) => true,
   },
 
   Missiles_GT: {
@@ -90,9 +94,11 @@ export const lowernorfairEdges = {
   ScrewAttack: {
     Supers_GT: (samus) => samus.hasScrewAttack || samus.canUsePowerBombs,
     PrePillars: (samus) =>
-      samus.canUseBombs ||
-      (samus.hasSpaceJump && (samus.hasScrewAttack || samus.canUsePowerBombs)) ||
-      (samus.hasScrewAttack && samus.hasSpeed && samus.hasHiJump) ||
-      (samus.canUsePowerBombs && samus.hasSpringBall),
+      (samus.hasSpaceJump && samus.hasScrewAttack) ||
+      ((samus.canUseBombs || samus.hasSpringBall) && samus.canPassBombPassages) ||
+      (samus.hasSpeed && (
+        (samus.hasHiJump && samus.canDestroyBombWalls) ||
+        samus.canDefeatGoldTorizo       //does this exist?
+      )),
   },
 };

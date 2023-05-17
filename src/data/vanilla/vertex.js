@@ -177,6 +177,7 @@ export const vanillaVertices = {
   },
   CrocomiresLair: {
     Door_Croc: "",
+    PostCroc: "",
     EnergyTank_Croc: "major",
     PBs_Croc: "minor",
     GrappleBeam: "major",
