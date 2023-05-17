@@ -1,5 +1,5 @@
 const canHellRun = (samus) => {
-    return (samus.totalTanks >= 4 || samus.hasVaria);
+  return samus.totalTanks >= 4 || samus.hasVaria;
 };
 
 export const uppernorfairEdges = {
@@ -35,8 +35,7 @@ export const uppernorfairEdges = {
   Missiles_Cathedral: {
     BusinessCenter: (samus) =>
       canHellRun(samus) && (samus.canFly || samus.hasSpaceJump || samus.hasHiJump),
-    BubbleMountain: (samus) =>
-      samus.canOpenGreenDoors && canHellRun(samus),
+    BubbleMountain: (samus) => samus.canOpenGreenDoors && canHellRun(samus),
   },
 
   BubbleMountain: {
@@ -44,8 +43,8 @@ export const uppernorfairEdges = {
     Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
     Missiles_BubbleMountain: (_) => true,
     Missiles_SpeedBooster: (samus) => canHellRun(samus),
-    PreCrocomire: samus.hasVaria || samus.totalTanks >= 2,
-    Door_LavaDive: samus.hasVaria || samus.totalTanks >= 2,
+    PreCrocomire: (samus) => samus.hasVaria || samus.totalTanks >= 2,
+    Door_LavaDive: (samus) => samus.hasVaria || samus.totalTanks >= 2,
     Missiles_NorfairReserve1: (samus) => canHellRun(samus),
     Missiles_Wave: (samus) => canHellRun(samus),
   },
@@ -79,7 +78,7 @@ export const uppernorfairEdges = {
   },
 
   Door_LavaDive: {
-    BubbleMountain: samus.hasVaria || samus.totalTanks >= 2,
+    BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
   },
 
   Missiles_SpeedBooster: {
@@ -100,7 +99,8 @@ export const uppernorfairEdges = {
   },
 
   IceBeam: {
-    BusinessCenter: (samus) => samus.canPassBombPassages && (samus.hasVaria || samus.totalTanks >= 2),
+    BusinessCenter: (samus) =>
+      samus.canPassBombPassages && (samus.hasVaria || samus.totalTanks >= 2),
   },
 
   Missiles_CrumbleShaft: {
@@ -111,10 +111,11 @@ export const uppernorfairEdges = {
   PreCrocomire: {
     Door_CrocEntry: (samus) => samus.canOpenGreenDoors,
     BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
-    Missiles_CrocEscape: (samus) => canHellRun(samus) &&
-      (samus.canfly || samus.hasGrapple || 
-        (samus.hasHiJump && (samus.hasSpringBall || samus.hasSpeed)
-      )),
+    Missiles_CrocEscape: (samus) =>
+      canHellRun(samus) &&
+      (samus.canfly ||
+        samus.hasGrapple ||
+        (samus.hasHiJump && (samus.hasSpringBall || samus.hasSpeed))),
   },
 
   Missiles_CrocEscape: {

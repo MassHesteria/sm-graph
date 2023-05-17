@@ -150,7 +150,7 @@ const start_run = Date.now();
 
 while (itemNodes.length > 0) {
   // Reduce the graph for performance
-  mergeGraph(graph, startVertex, samus);
+  //mergeGraph(graph, startVertex, samus);
 
   // Find all accessible vertices
   const all = breadthFirstSearch(graph, startVertex, samus);
