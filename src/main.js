@@ -5,6 +5,8 @@ import { breadthFirstSearch, getAvailableLocations } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { mapPortals } from "./data/portals.js";
 
+const start_init = Date.now();
+
 const itemPlacement = [
   { location: "MorphBall", item: Item.Morph },
   { location: "EnergyTank_Ceiling", item: Item.EnergyTank },
@@ -139,6 +141,8 @@ const itemNodes = itemPlacement.map((i) => {
   };
 });
 
+const start_run = Date.now();
+
 //console.log(itemNodes);
 
 const processItemLocations = (itemLocations) => {
@@ -267,3 +271,14 @@ if (itemPlacement.length > 0) {
   printAvailableItems(getAvailableLocations(graph, samus, collected));
   console.log(itemPlacement);
 }
+
+const end_run = Date.now();
+console.log(
+  "Time:",
+  end_run - start_init,
+  "ms [ Pre:",
+  start_run - start_init,
+  "ms, Run:",
+  end_run - start_run,
+  "ms ]"
+);
