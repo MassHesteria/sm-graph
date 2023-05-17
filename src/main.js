@@ -6,12 +6,11 @@ import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 
-const start_init = Date.now();
-
 //-----------------------------------------------------------------
 // Setup the graph.
 //-----------------------------------------------------------------
 
+const start_init = Date.now();
 const portals = mapPortals(1, false, false);
 const graph = createVanillaGraph(portals);
 const startVertex = graph[0].from;
@@ -143,6 +142,10 @@ const collectEasyItems = (itemLocations) => {
   return result;
 };
 
+//-----------------------------------------------------------------
+// Attempt to collect all items.
+//-----------------------------------------------------------------
+
 const start_run = Date.now();
 
 while (itemNodes.length > 0) {
@@ -186,6 +189,10 @@ while (itemNodes.length > 0) {
   collected.push(itemNodes[index].location);
   itemNodes.splice(index, 1);
 }
+
+//-----------------------------------------------------------------
+// Check for uncollected items. This indicates an invalid graph.
+//-----------------------------------------------------------------
 
 if (itemNodes.length > 0) {
   itemNodes.forEach((n) => {
