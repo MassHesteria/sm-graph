@@ -34,14 +34,19 @@ edges:
 
 nodes:
   - WarehouseZeelaRoomLeft:
+      node_type: Room
       display_name: Left Side of Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomRight:
+      node_type: Room
       display_name: Right Side of Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomTopLeftDoor:
+      node_type: Door
       display_name: Top Left Door in Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomBottomLeftDoor:
+      node_type: Door
       display_name: Bottom Left Door in Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomTopRightDoor:
+      node_type: Door
       display_name: Top Right Door in Zeela Room in Kraid Warehouse
 
 ---
@@ -61,12 +66,22 @@ edges:
       type: Door
       requires: >-
         HasMissiles or HasSupers or CanUseBombs or CanUsePowerBombs or HasScrewAttack
+  - WarehouseEnergyTankCollectItem:
+      edge_nodes: [WarehouseEnergyTankRoomMain, WarehouseEnergyTankEnergyTank]
+      direction: unidirectional
+      type: Item
+      requires: ~
 
 nodes:
   - WarehouseEnergyTankRoomMain:
+      node_type: Room
       display_name: Energy Tank Room in Kraid Warehouse
   - WarehouseEnergyTankRoomRightDoor:
+      node_type: Door
       display_name: Right Door in Energy Tank Room in Kraid Warehouse
+  - WarehouseEnergyTankRoomEnergyTank:
+      node_type: Item
+      display_name: Energy Tank in Energy Tank Room in Kraid Warehouse
 
 ---
 # Room-to-room edges
