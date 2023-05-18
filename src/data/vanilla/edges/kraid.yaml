@@ -10,24 +10,29 @@ edges:
       type: InRoom
       requires: >-
         CanUseBombs or CanUsePowerBombs
-  - WarehouseZeelaRoomTopLeftDoorExit:
+  - WarehouseZeelaRoomTopLeftDoorTransition:
       edge_nodes: [WarehouseZeelaRoomLeft, WarehouseZeelaRoomTopLeftDoor]
-      direction: unidirectional
+      direction: bidirectional
       type: Door
       requires: ~
-  - WarehouseZeelaRoomTopRightDoorExit:
+  - WarehouseZeelaRoomTopRightDoorTransition:
       edge_nodes: [WarehouseZeelaRoomRight, WarehouseZeelaRoomTopRightDoor]
+      direction: bidirectional
+      type: Door
+      requires: ~
+  - WarehouseZeelaRoomEnterViaBottomLeftDoor:
+      edge_nodes: [WarehouseZeelaRoomBottomLeftDoor, WarehouseZeelaRoomLeft]
       direction: unidirectional
       type: Door
       requires: ~
-  - WarehouseZeelaRoomBottomLeftDoorExit:
+  - WarehouseZeelaRoomExitViaBottomLeftDoor:
       edge_nodes: [WarehouseZeelaRoomLeft, WarehouseZeelaRoomBottomLeftDoor]
       direction: unidirectional
       type: Door
       requires: >-
         CanDefeatKraid
 
-node:
+nodes:
   - WarehouseZeelaRoomLeft:
       display_name: Left Side of Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomRight:
@@ -38,3 +43,37 @@ node:
       display_name: Bottom Left Door in Zeela Room in Kraid Warehouse
   - WarehouseZeelaRoomTopRightDoor:
       display_name: Top Right Door in Zeela Room in Kraid Warehouse
+
+---
+room_name: WarehouseEnergyTankRoom
+room_area: KraidsLair
+room_id: 0x7a4b1
+
+edges:
+  - WarehouseEnergyTankRoomEnterViaRightDoor:
+      edge_nodes: [WarehouseEnergyTankRoomRightDoor, WarehouseEnergyTankRoomMain]
+      direction: unidirectional
+      type: Door
+      requires: ~
+  - WarehouseEnergyTankRoomExitViaRightDoor:
+      edge_nodes: [WarehouseEnergyTankRoomMain, WarehouseEnergyTankRoomRightDoor]
+      direction: unidirectional
+      type: Door
+      requires: >-
+        HasMissiles or HasSupers or CanUseBombs or CanUsePowerBombs or HasScrewAttack
+
+nodes:
+  - WarehouseEnergyTankRoomMain:
+      display_name: Energy Tank Room in Kraid Warehouse
+  - WarehouseEnergyTankRoomRightDoor:
+      display_name: Right Door in Energy Tank Room in Kraid Warehouse
+
+---
+# Room-to-room edges
+
+edges:
+  - WarehouseZeelaRoomToWarehouseEnergyTankRoom:
+      edge_nodes: [WarehouseZeelaRoomBottomLeftDoor, WarehouseEnergyTankRoomRightDoor]
+      direction: bidirectional
+      type: Room
+      requires: ~
