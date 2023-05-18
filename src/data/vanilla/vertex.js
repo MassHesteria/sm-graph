@@ -20,6 +20,8 @@ export const vanillaVertices = {
     ClimbSupersBottom: "",
     Supers_Climb: "minor",
     Missiles_OldMB: "minor",
+    ConstructionZone: "",
+    TacoTankRoom: "",
   },
   BlueBrinstar: {
     MorphBall: "major",
@@ -67,6 +69,11 @@ export const vanillaVertices = {
     Door_MaridiaTube: "",
     Door_AboveKraid: "",
     Door_KraidEntry: "",
+    RedTowerTop: "",
+    RedTowerMid: "",
+    RedTowerBottom: "",
+    RedTowerElevatorRoom: "",
+    RedBrinstarElevatorRoom: "",
   },
   UpperNorfair: {
     Door_ElevatorEntry: "",

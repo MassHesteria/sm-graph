@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "chalk": "^5.2.0",
+    "js-yaml": "^4.1.0",
     "table": "^6.8.1"
   },
   "type": "module",

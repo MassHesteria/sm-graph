@@ -5,6 +5,8 @@ import { breadthFirstSearch, mergeGraph } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
+import yaml from "js-yaml";
+import fs from "fs";
 
 //-----------------------------------------------------------------
 // Setup the graph.
@@ -13,6 +15,41 @@ import { mapPortals } from "./data/portals.js";
 const start_init = Date.now();
 const portals = mapPortals(1, false, false);
 const graph = createVanillaGraph(portals);
+
+//-----------------------------------------------------------------
+// Augment the graph.
+//-----------------------------------------------------------------
+
+const updateEdge = (from, to, requires) => {
+  //TODO: Support parsing
+  if (requires != null) {
+    throw new Error(`Parsing requires failed: ${requires}`);
+  }
+  const edge = graph.find((n) => n.from.name == from && n.to.name == to);
+  if (edge == null) {
+    throw new Error(`Could not find edge from ${from} to ${to}`);
+  }
+  edge.condition = (_) => true;
+};
+
+try {
+  yaml.loadAll(fs.readFileSync("src/data/common/test.yaml"), (doc) => {
+    doc.edges.forEach((c) => {
+      const data = Object.values(c)[0];
+      const [from, to] = data.edge_nodes;
+      const { requires, direction } = data;
+
+      updateEdge(from, to, requires);
+      if (direction == "bidirectional") {
+        updateEdge(to, from, requires);
+      }
+    });
+  });
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}
+
 const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();

@@ -1,0 +1,40 @@
+---
+room_name: WarehouseZeelaRoom
+room_area: KraidsLair
+room_id: 0x7a471
+
+edges:
+  - WarehouseZeelaRoomLeftToRight:
+      edge_nodes: [WarehouseZeelaRoomLeft, WarehouseZeelaRoomRight]
+      direction: bidirectional
+      type: InRoom
+      requires: >-
+        CanUseBombs or CanUsePowerBombs
+  - WarehouseZeelaRoomTopLeftDoorExit:
+      edge_nodes: [WarehouseZeelaRoomLeft, WarehouseZeelaRoomTopLeftDoor]
+      direction: unidirectional
+      type: Door
+      requires: ~
+  - WarehouseZeelaRoomTopRightDoorExit:
+      edge_nodes: [WarehouseZeelaRoomRight, WarehouseZeelaRoomTopRightDoor]
+      direction: unidirectional
+      type: Door
+      requires: ~
+  - WarehouseZeelaRoomBottomLeftDoorExit:
+      edge_nodes: [WarehouseZeelaRoomLeft, WarehouseZeelaRoomBottomLeftDoor]
+      direction: unidirectional
+      type: Door
+      requires: >-
+        CanDefeatKraid
+
+node:
+  - WarehouseZeelaRoomLeft:
+      display_name: Left Side of Zeela Room in Kraid Warehouse
+  - WarehouseZeelaRoomRight:
+      display_name: Right Side of Zeela Room in Kraid Warehouse
+  - WarehouseZeelaRoomTopLeftDoor:
+      display_name: Top Left Door in Zeela Room in Kraid Warehouse
+  - WarehouseZeelaRoomBottomLeftDoor:
+      display_name: Bottom Left Door in Zeela Room in Kraid Warehouse
+  - WarehouseZeelaRoomTopRightDoor:
+      display_name: Top Right Door in Zeela Room in Kraid Warehouse
