@@ -1,6 +1,7 @@
 ---
 room_name: WarehouseZeelaRoom
 room_area: KraidsLair
+room_link: https://wiki.supermetroid.run/Warehouse_Zeela_Room
 room_id: 0x7a471
 
 edges:
@@ -52,6 +53,7 @@ nodes:
 ---
 room_name: WarehouseEnergyTankRoom
 room_area: KraidsLair
+room_link: https://wiki.supermetroid.run/Warehouse_Energy_Tank_Room
 room_id: 0x7a4b1
 
 edges:
