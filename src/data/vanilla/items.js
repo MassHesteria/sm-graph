@@ -90,7 +90,7 @@ export const vanillaItemPlacement = [
   { location: "Supers_Aqueduct", item: Item.Super },
   { location: "Missiles_Aqueduct", item: Item.Missile },
   { location: "EnergyTank_Botwoon", item: Item.EnergyTank },
-  { location: "Missiles_Impossible", item: Item.Missile },
+  { location: "PBs_Impossible", item: Item.PowerBomb },
   { location: "Missiles_Precious", item: Item.Missile },
   { location: "Boss_Draygon", item: Item.SpaceJump },
   { location: "Missiles_LeftSandPit", item: Item.Missile },

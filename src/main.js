@@ -5,13 +5,29 @@ import { breadthFirstSearch, mergeGraph } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import yaml from "js-yaml";
-import fs from "fs";
+import { standardMajorMinor, mapLocation } from "./generate.js";
+import DotNetRandom from "./dash/dotnet-random.js";
+import { readYAML } from "./data/reader.js";
+import { CommonLogicUpdates } from "./data/common/test.js";
+
+//-----------------------------------------------------------------
+// Determine the seed.
+//-----------------------------------------------------------------
+
+const getRandomSeed = () => {
+  const timestamp = Math.floor(new Date().getTime() / 1000);
+  const RNG = new DotNetRandom(timestamp);
+  return RNG.NextInRange(1, 1000000);
+};
+
+//const seed = 497750;
+const seed = 0;
 
 //-----------------------------------------------------------------
 // Setup the graph.
 //-----------------------------------------------------------------
 
+const quiet = false;
 const start_init = Date.now();
 const portals = mapPortals(1, false, false);
 const graph = createVanillaGraph(portals);
@@ -20,34 +36,18 @@ const graph = createVanillaGraph(portals);
 // Augment the graph.
 //-----------------------------------------------------------------
 
-const updateEdge = (from, to, requires) => {
-  //TODO: Support parsing
-  if (requires != null) {
-    throw new Error(`Parsing requires failed: ${requires}`);
+if (seed > 0) {
+  if (!readYAML(graph, "src/data/common/test.yaml")) {
+    process.exit(1);
   }
-  const edge = graph.find((n) => n.from.name == from && n.to.name == to);
-  if (edge == null) {
-    throw new Error(`Could not find edge from ${from} to ${to}`);
-  }
-  edge.condition = (_) => true;
-};
-
-try {
-  yaml.loadAll(fs.readFileSync("src/data/common/test.yaml"), (doc) => {
-    doc.edges.forEach((c) => {
-      const data = Object.values(c)[0];
-      const [from, to] = data.edge_nodes;
-      const { requires, direction } = data;
-
-      updateEdge(from, to, requires);
-      if (direction == "bidirectional") {
-        updateEdge(to, from, requires);
-      }
-    });
+  CommonLogicUpdates.forEach((c) => {
+    const [from, to] = c.edges;
+    const edge = graph.find((n) => n.from.name == from && n.to.name == to);
+    if (edge == null) {
+      throw new Error(`Could not find edge from ${from} to ${to}`);
+    }
+    edge.condition = c.requires;
   });
-} catch (e) {
-  console.error(e);
-  process.exit(1);
 }
 
 const startVertex = graph[0].from;
@@ -66,22 +66,44 @@ samus.canDefeatCrocomire = false;
 // Print available item locations to the console.
 //-----------------------------------------------------------------
 
-const itemNodes = vanillaItemPlacement.map((i) => {
-  const part = graph.find((n) => n.from.name == i.location);
-  if (part == null) {
-    console.error("missing part", i.location);
+const getItemNodes = (seed) => {
+  if (seed > 0) {
+    const nodes = standardMajorMinor(seed);
+
+    return nodes.map((i) => {
+      const part = graph.find((n) => n.from.name == mapLocation(i.location.name));
+      if (part == null) {
+        console.error("missing part", i.location);
+      }
+      return {
+        location: part != undefined ? part.from : null,
+        item: i.item.type,
+      };
+    });
+  } else {
+    return vanillaItemPlacement.map((i) => {
+      const part = graph.find((n) => n.from.name == i.location);
+      if (part == null) {
+        console.error("missing part", i.location);
+      }
+      return {
+        location: part != undefined ? part.from : null,
+        item: i.item,
+      };
+    });
   }
-  return {
-    location: part != undefined ? part.from : null,
-    item: i.item,
-  };
-});
+};
+
+const itemNodes = getItemNodes(seed);
 
 //-----------------------------------------------------------------
 // Print available item locations to the console.
 //-----------------------------------------------------------------
 
 const printAvailableItems = (itemLocations) => {
+  if (quiet) {
+    return;
+  }
   let output = chalk.yellow("Available: ");
   itemLocations.forEach((p) => {
     const theNode = itemNodes.find((x) => x.location == p);
@@ -172,7 +194,7 @@ const collectEasyItems = (itemLocations) => {
 
   if (!result) {
     console.log("No round trip locations");
-  } else {
+  } else if (!quiet) {
     console.log(str);
   }
 
@@ -222,7 +244,9 @@ while (itemNodes.length > 0) {
   }
 
   samus.add(itemNodes[index].item);
-  console.log(">", ItemNames.get(itemNodes[index].item), "\n");
+  if (!quiet) {
+    console.log(">", ItemNames.get(itemNodes[index].item), "\n");
+  }
   collected.push(itemNodes[index].location);
   itemNodes.splice(index, 1);
 }
@@ -235,17 +259,23 @@ if (itemNodes.length > 0) {
   itemNodes.forEach((n) => {
     console.log("Location:", n.location.name, "Item:", n.item.name);
   });
+  console.log("Invalid seed:", seed);
+  process.exit(1);
 }
 
-const end_run = Date.now();
-console.log(
-  "Time:",
-  end_run - start_init,
-  "ms [ Pre:",
-  start_run - start_init,
-  "ms, Run:",
-  end_run - start_run,
-  "ms ]"
-);
+if (!quiet) {
+  const end_run = Date.now();
+  console.log(
+    "Time:",
+    end_run - start_init,
+    "ms [ Pre:",
+    start_run - start_init,
+    "ms, Run:",
+    end_run - start_run,
+    "ms ]"
+  );
+}
 
 //console.log(portals);
+
+console.log("Verifed", seed);

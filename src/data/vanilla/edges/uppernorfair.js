@@ -13,9 +13,35 @@ export const uppernorfairEdges = {
     IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.totalTanks >= 2),
     Missiles_CrumbleShaft: (samus) =>
       samus.canUsePowerBombs && (samus.hasVaria || samus.totalTanks >= 2),
-    Missiles_Cathedral: (samus) => canHellRun(samus),
-    BubbleMountain: (samus) => canHellRun(samus),
+    BusinessCenterTopRightDoor: (_) => true,
+    BusinessCenterBottomRightDoor: (_) => true,
     EnergyTank_HiJump: (samus) => samus.canOpenRedDoors,
+  },
+
+  BusinessCenterTopRightDoor: {
+    BusinessCenter: (_) => true,
+    CathedralEntranceLeftDoor: (_) => true,
+  },
+
+  BusinessCenterBottomRightDoor: {
+    BusinessCenter: (_) => true,
+    BubbleMountain: (samus) => samus.hasSpeed,
+  },
+
+  CathedralEntranceLeftDoor: {
+    BusinessCenterTopRightDoor: (_) => true,
+    CathedralEntranceMain: (samus) => canHellRun(samus),
+  },
+
+  CathedralEntranceMain: {
+    CathedralEntranceLeftDoor: (samus) => canHellRun(samus),
+    CathedralEntranceRightDoor: (samus) =>
+      canHellRun(samus) && (samus.hasHiJump || samus.canFly || samus.hasSpeed),
+  },
+
+  CathedralEntranceRightDoor: {
+    Missiles_Cathedral: (samus) => canHellRun(samus) && samus.canOpenRedDoors,
+    CathedralEntranceMain: (samus) => canHellRun(samus),
   },
 
   EnergyTank_HiJump: {
@@ -33,13 +59,12 @@ export const uppernorfairEdges = {
   },
 
   Missiles_Cathedral: {
-    BusinessCenter: (samus) =>
-      canHellRun(samus) && (samus.canFly || samus.hasSpaceJump || samus.hasHiJump),
+    CathedralEntranceRightDoor: (samus) => samus.canHellRun,
     BubbleMountain: (samus) => samus.canOpenGreenDoors && canHellRun(samus),
   },
 
   BubbleMountain: {
-    BusinessCenter: (samus) => samus.hasSpeed || canHellRun(samus),
+    BusinessCenterBottomRightDoor: (samus) => samus.hasSpeed,
     Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
     Missiles_BubbleMountain: (_) => true,
     Missiles_SpeedBooster: (samus) => canHellRun(samus),

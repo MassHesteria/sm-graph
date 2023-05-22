@@ -59,18 +59,16 @@ export const greenbrinstarEdges = {
     Missiles_Charge: (_) => true,
     EnergyTank_WaveGate: (samus) =>
       samus.canUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
-    Supers_SpoSpo: (samus) =>
-      samus.canPassBombPassages && samus.superPacks >= 1,
-    Missiles_Impossible: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
+    Supers_SpoSpo: (samus) => samus.canPassBombPassages && samus.superPacks >= 1,
+    PBs_Impossible: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
   },
 
-  Missiles_Impossible: {
+  PBs_Impossible: {
     Missiles_BigPink: (samus) => samus.canPassBombPassages,
   },
 
   Supers_SpoSpo: {
-    Missiles_BigPink: (samus) =>
-      samus.canPassBombPassages && samus.superPacks >= 1,
+    Missiles_BigPink: (samus) => samus.canPassBombPassages && samus.superPacks >= 1,
   },
 
   Missiles_Charge: {
