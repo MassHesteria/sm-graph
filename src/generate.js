@@ -3,21 +3,7 @@ import { getLocations } from "./dash/locations";
 import Loadout from "./dash/loadout";
 import ModeStandard from "./dash/modes/modeStandard";
 
-export const standardMajorMinor = (seed) => {
-  const mode = new ModeStandard(seed, getLocations());
-  const getPrePool = getMajorMinorPrePool;
-  const canPlaceItem = isValidMajorMinor;
-
-  // Setup the initial loadout.
-  let initLoad = new Loadout();
-  initLoad.hasCharge = true;
-
-  // Place the items.
-  performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
-  return mode.nodes;
-};
-
-export const mapLocation = (name) => {
+const mapLocation = (name) => {
   const mappings = [
     ["Supers (WS Right)", "Supers_RightSide"],
     ["Supers (WS Left)", "Supers_LeftSide"],
@@ -126,4 +112,19 @@ export const mapLocation = (name) => {
     return mapped[1];
   }
   throw new Error("missing " + name);
+};
+
+export const standardMajorMinor = (seed) => {
+  const mode = new ModeStandard(seed, getLocations());
+  const getPrePool = getMajorMinorPrePool;
+  const canPlaceItem = isValidMajorMinor;
+
+  // Setup the initial loadout.
+  let initLoad = new Loadout();
+  initLoad.hasCharge = true;
+
+  // Place the items.
+  performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
+  mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
+  return mode.nodes;
 };

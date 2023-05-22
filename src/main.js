@@ -5,7 +5,7 @@ import { breadthFirstSearch, mergeGraph } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import { standardMajorMinor, mapLocation } from "./generate.js";
+import { standardMajorMinor } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { readYAML } from "./data/reader.js";
 import { CommonLogicUpdates } from "./data/common/test.js";
@@ -53,6 +53,9 @@ if (seed > 0) {
 const startVertex = graph[0].from;
 let collected = [];
 let samus = new Loadout();
+if (seed > 0) {
+  samus.hasCharge = true;
+}
 
 // Add extra flags to the loadout.
 samus.canDefeatKraid = false;
@@ -66,31 +69,22 @@ samus.canDefeatCrocomire = false;
 // Print available item locations to the console.
 //-----------------------------------------------------------------
 
+const toItemNode = (location, item) => {
+  const part = graph.find((n) => n.from.name == location);
+  if (part == null) {
+    console.error("missing part", location);
+  }
+  return {
+    location: part != undefined ? part.from : null,
+    item: item,
+  };
+};
+
 const getItemNodes = (seed) => {
   if (seed > 0) {
-    const nodes = standardMajorMinor(seed);
-
-    return nodes.map((i) => {
-      const part = graph.find((n) => n.from.name == mapLocation(i.location.name));
-      if (part == null) {
-        console.error("missing part", i.location);
-      }
-      return {
-        location: part != undefined ? part.from : null,
-        item: i.item.type,
-      };
-    });
+    return standardMajorMinor(seed).map((i) => toItemNode(i.location.name, i.item.type));
   } else {
-    return vanillaItemPlacement.map((i) => {
-      const part = graph.find((n) => n.from.name == i.location);
-      if (part == null) {
-        console.error("missing part", i.location);
-      }
-      return {
-        location: part != undefined ? part.from : null,
-        item: i.item,
-      };
-    });
+    return vanillaItemPlacement.map((i) => toItemNode(i.location, i.item));
   }
 };
 
