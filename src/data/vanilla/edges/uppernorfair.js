@@ -59,7 +59,7 @@ export const uppernorfairEdges = {
   },
 
   Missiles_Cathedral: {
-    CathedralEntranceRightDoor: (samus) => samus.canHellRun,
+    CathedralEntranceRightDoor: (samus) => canHellRun(samus),
     BubbleMountain: (samus) => samus.canOpenGreenDoors && canHellRun(samus),
   },
 

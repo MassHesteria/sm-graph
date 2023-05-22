@@ -60,7 +60,7 @@ export const crateriaEdges = {
   },
 
   EnergyTank_Terminator: {
-    Parlor: (samus) => samus.canDestroyBombWalls,
+    Parlor: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
     Door_G4: (samus) => samus.canOpenRedDoors,
     Door_Kago: (_) => true,
   },
@@ -74,7 +74,7 @@ export const crateriaEdges = {
   },
 
   Parlor: {
-    EnergyTank_Terminator: (samus) => samus.canDestroyBombWalls,
+    EnergyTank_Terminator: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
     Bombs: (samus) => samus.hasMorph && samus.canOpenRedDoors,
     Climb: (_) => true,
     Missiles_230: (samus) => samus.canPassBombPassages,

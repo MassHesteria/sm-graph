@@ -20,14 +20,20 @@ const getRandomSeed = () => {
   return RNG.NextInRange(1, 1000000);
 };
 
-//const seed = 497750;
-const seed = 0;
+//let seed = getRandomSeed();
+//let seed = 180558;
+let seed = 1327;
+let quiet = false;
+
+if (process.argv.length > 2) {
+  seed = parseInt(process.argv[2]);
+  quiet = true;
+}
 
 //-----------------------------------------------------------------
 // Setup the graph.
 //-----------------------------------------------------------------
 
-const quiet = false;
 const start_init = Date.now();
 const portals = mapPortals(1, false, false);
 const graph = createVanillaGraph(portals);
@@ -188,6 +194,7 @@ const collectEasyItems = (itemLocations) => {
 
   if (!result) {
     console.log("No round trip locations");
+    process.exit(1);
   } else if (!quiet) {
     console.log(str);
   }
@@ -251,7 +258,7 @@ while (itemNodes.length > 0) {
 
 if (itemNodes.length > 0) {
   itemNodes.forEach((n) => {
-    console.log("Location:", n.location.name, "Item:", n.item.name);
+    console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
   });
   console.log("Invalid seed:", seed);
   process.exit(1);
@@ -272,4 +279,6 @@ if (!quiet) {
 
 //console.log(portals);
 
-console.log("Verifed", seed);
+if (!quiet) {
+  console.log("Verifed", seed);
+}

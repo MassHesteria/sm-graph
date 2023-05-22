@@ -1,8 +1,9 @@
 #!/bin/bash
 
-for i in $(seq 1 100); do
-   node --experimental-specifier-resolution=node --no-warnings src/main.js
+for i in $(seq 1101 10000); do
+   node --experimental-specifier-resolution=node --no-warnings src/main.js $i
    if [ $? -ne 0 ]; then
+      echo "seed $i failed"
       exit 1
    fi
 done

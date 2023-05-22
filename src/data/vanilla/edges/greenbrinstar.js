@@ -46,11 +46,11 @@ export const greenbrinstarEdges = {
 
   DachoraRoomLeft: {
     Door_GreenElevator: (_) => true,
-    DachoraRoomRight: (samus) => samus.canDestroyBombWalls,
+    DachoraRoomRight: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
   },
 
   DachoraRoomRight: {
-    DachoraRoomLeft: (samus) => samus.canDestroyBombWalls,
+    DachoraRoomLeft: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
     Missiles_BigPink: (_) => true,
   },
 
