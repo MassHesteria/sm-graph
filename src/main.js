@@ -65,14 +65,6 @@ const solve = (seed) => {
     samus.hasCharge = true;
   }
 
-  // Add extra flags to the loadout.
-  samus.canDefeatKraid = false;
-  samus.canDefeatBotwoon = true;
-  samus.canDefeatPhantoon = false;
-  samus.canDefeatDraygon = false;
-  samus.canDefeatRidley = false;
-  samus.canDefeatCrocomire = false;
-
   //-----------------------------------------------------------------
   // Print available item locations to the console.
   //-----------------------------------------------------------------
@@ -120,26 +112,12 @@ const solve = (seed) => {
   };
 
   //-----------------------------------------------------------------
-  // Clones the loadout plus any extra flags.
-  //-----------------------------------------------------------------
-
-  const cloneLoadout = (input) => {
-    const output = input.clone();
-    output.canDefeatCrocomire = input.canDefeatCrocomire;
-    output.canDefeatKraid = input.canDefeatKraid;
-    output.canDefeatPhantoon = input.canDefeatPhantoon;
-    output.canDefeatDraygon = input.canDefeatDraygon;
-    output.canDefeatRidley = input.canDefeatRidley;
-    return output;
-  };
-
-  //-----------------------------------------------------------------
   // Determines if the graph would allow a round trip from the
   // specified vertex to the starting vertex.
   //-----------------------------------------------------------------
 
   const hasRoundTrip = (vertex) => {
-    const load = cloneLoadout(samus);
+    const load = samus.clone();
 
     const index = itemNodes.findIndex((i) => i.location == vertex);
     if (index >= 0) {
@@ -172,8 +150,9 @@ const solve = (seed) => {
         return;
       }
 
-      const load = cloneLoadout(samus);
+      const load = samus.clone();
       load.add(itemNodes[index].item);
+      //TODO: Handle boss criteria?
       if (!canReachVertex(graph, p, startVertex, checkLoadout, load)) {
         return;
       }
@@ -195,23 +174,27 @@ const solve = (seed) => {
 
     if (!result) {
       console.log("No round trip locations");
-      /*itemLocations.forEach((p) => {
-      const index = itemNodes.findIndex((i) => i.location == p);
-      const load = cloneLoadout(samus);
-      load.add(itemNodes[index].item);
-      const back = breadthFirstSearch(graph, p, load);
-      console.log(p);
-      console.log(back);
-    });*/
-      /*itemNodes.forEach((n) => {
-      console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
-    });*/
       process.exit(1);
     } else if (!quiet) {
       console.log(str);
     }
 
     return result;
+  };
+
+  const bossData = {
+    CanDefeatBotwoon: true,
+    CanDefeatKraid: false,
+    CanDefeatPhantoon: false,
+    CanDefeatDraygon: false,
+    CanDefeatRidley: false,
+  };
+
+  const bossVertices = {
+    Kraid: graph.find((n) => n.to.name == "Boss_Kraid").to,
+    Phantoon: graph.find((n) => n.to.name == "Boss_Phantoon").to,
+    Draygon: graph.find((n) => n.to.name == "Boss_Draygon").to,
+    Ridley: graph.find((n) => n.to.name == "Boss_Ridley").to,
   };
 
   const checkLoadout = (condition, load) => {
@@ -235,6 +218,16 @@ const solve = (seed) => {
       load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria;
     const CanDoSuitlessMaridia =
       load.hasHiJump && load.hasGrapple && (load.hasIce || load.hasSpringBall);
+
+    const {
+      CanDefeatBotwoon,
+      CanDefeatCrocomire,
+      CanDefeatKraid,
+      CanDefeatPhantoon,
+      CanDefeatDraygon,
+      CanDefeatRidley,
+    } = bossData;
+
     return eval(`(${condition.toString()})(load)`);
   };
 
@@ -252,15 +245,22 @@ const solve = (seed) => {
     const all = breadthFirstSearch(graph, startVertex, checkLoadout, samus);
 
     // Check for access to bosses
-    const roundTripToBoss = (boss) => {
-      const bossVertex = all.find((p) => p.name == `Boss_${boss}`);
-      return bossVertex != undefined && hasRoundTrip(bossVertex);
-    };
-    samus.canDefeatCrocomire = samus.hasCharge || samus.missilePacks >= 2 || samus.superPacks >= 2;
-    samus.canDefeatKraid = roundTripToBoss("Kraid");
-    samus.canDefeatPhantoon = roundTripToBoss("Phantoon");
-    samus.canDefeatDraygon = roundTripToBoss("Draygon");
-    samus.canDefeatRidley = roundTripToBoss("Ridley");
+    if (!bossData.CanDefeatCrocomire) {
+      bossData.CanDefeatCrocomire =
+        samus.hasCharge || samus.missilePacks >= 2 || samus.superPacks >= 2;
+    }
+    if (!bossData.CanDefeatKraid) {
+      bossData.CanDefeatKraid = hasRoundTrip(bossVertices.Kraid);
+    }
+    if (!bossData.CanDefeatPhantoon) {
+      bossData.CanDefeatPhantoon = hasRoundTrip(bossVertices.Phantoon);
+    }
+    if (!bossData.CanDefeatDraygon) {
+      bossData.CanDefeatDraygon = hasRoundTrip(bossVertices.Draygon);
+    }
+    if (!bossData.CanDefeatRidley) {
+      bossData.CanDefeatRidley = hasRoundTrip(bossVertices.Ridley);
+    }
 
     // Find all uncollected item vertices
     const uncollected = all.filter((v) => v.item != "" && !collected.includes(v));

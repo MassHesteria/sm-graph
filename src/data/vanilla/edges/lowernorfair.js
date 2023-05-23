@@ -95,7 +95,6 @@ export const lowernorfairEdges = {
     PrePillars: (samus) =>
       (samus.hasSpaceJump && samus.hasScrewAttack) ||
       ((samus.canUseBombs || samus.hasSpringBall) && samus.canPassBombPassages) ||
-      (samus.hasSpeed &&
-        ((samus.hasHiJump && samus.canDestroyBombWalls) || samus.canDefeatGoldTorizo)), //does this exist?
+      (samus.hasSpeed && ((samus.hasHiJump && samus.canDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
   },
 };

@@ -149,6 +149,6 @@ export const uppernorfairEdges = {
   },
 
   Door_CrocEntry: {
-    PreCrocomire: (samus) => samus.canDefeatCrocomire,
+    PreCrocomire: (samus) => CanDefeatCrocomire,
   },
 };

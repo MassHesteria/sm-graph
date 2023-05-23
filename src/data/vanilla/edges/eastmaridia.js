@@ -55,7 +55,7 @@ export const eastmaridiaEdges = {
 
   Door_PlasmaSpark: {
     Oasis: (samus) => samus.canOpenGreenDoors,
-    PlasmaBeam: (samus) => samus.canDefeatDraygon,
+    PlasmaBeam: (samus) => CanDefeatDraygon,
     MaridiaHighway: true,
   },
 
@@ -72,10 +72,9 @@ export const eastmaridiaEdges = {
   },
 
   Door_Botwoon: {
-    Aqueduct: (samus) =>
-      (samus.hasGravity && samus.hasSpeed) || samus.hasIce || samus.canDefeatBotwoon,
+    Aqueduct: (samus) => (samus.hasGravity && samus.hasSpeed) || samus.hasIce || CanDefeatBotwoon,
     EnergyTank_Botwoon: (samus) =>
-      samus.canDefeatBotwoon &&
+      CanDefeatBotwoon &&
       samus.hasMorph &&
       //might've been overly thorough here
       (samus.hasGravity || samus.hasHiJump || samus.hasSpringBall),

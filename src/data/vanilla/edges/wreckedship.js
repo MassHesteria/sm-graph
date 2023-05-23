@@ -13,11 +13,11 @@ export const wreckedshipEdges = {
     Missiles_Spooky: (samus) => samus.canPassBombPassages,
     Door_PhantoonBoss: (samus) =>
       samus.canOpenRedDoors && (samus.hasSpeed || samus.canPassBombPassages),
-    Supers_LeftSide: (samus) => samus.canDefeatPhantoon,
-    Supers_RightSide: (samus) => samus.canDefeatPhantoon && samus.canPassBombPassages,
-    Missiles_Attic: (samus) => samus.canDefeatPhantoon,
+    Supers_LeftSide: (samus) => CanDefeatPhantoon,
+    Supers_RightSide: (samus) => CanDefeatPhantoon && samus.canPassBombPassages,
+    Missiles_Attic: (samus) => CanDefeatPhantoon,
     ShipRearExit: (samus) =>
-      samus.canDefeatPhantoon &&
+      CanDefeatPhantoon &&
       (samus.canfly ||
         samus.canUsePowerBombs ||
         samus.hasSpeed ||
@@ -30,7 +30,7 @@ export const wreckedshipEdges = {
   },
 
   ShipRearExit: {
-    EnergyTank_Ship: (samus) => samus.canDefeatPhantoon,
+    EnergyTank_Ship: (samus) => CanDefeatPhantoon,
     ShipHallway: true,
     Door_HighwayExit: (samus) => samus.hasGravity || samus.hasHiJump || samus.hasSpaceJump,
   },

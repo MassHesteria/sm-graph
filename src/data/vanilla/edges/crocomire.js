@@ -1,6 +1,6 @@
 export const crocomireEdges = {
   Door_Croc: {
-    PostCroc: (samus) => samus.canDefeatCrocomire,
+    PostCroc: (samus) => CanDefeatCrocomire,
   },
 
   PostCroc: {

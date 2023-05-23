@@ -1,7 +1,7 @@
 export const kraidslairEdges = {
   Door_KraidsLair: {
     EnergyTank_Kraid: (samus) =>
-      samus.canDefeatKraid && (samus.missilePacks >= 1 || samus.canDestroyBombWalls), //beetoms are bomb walls, trust me
+      CanDefeatKraid && (samus.missilePacks >= 1 || samus.canDestroyBombWalls), //beetoms are bomb walls, trust me
     KraidsHallway: (samus) => samus.canPassBombPassages,
   },
 
