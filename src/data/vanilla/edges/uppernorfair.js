@@ -137,8 +137,9 @@ export const uppernorfairEdges = {
     BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
     Missiles_CrocEscape: (samus) =>
       canHellRun(samus) &&
-      (samus.canfly ||
+      (samus.canFly ||
         samus.hasGrapple ||
+        samus.hasIce || //TODO: Probably remove this
         (samus.hasHiJump && (samus.hasSpringBall || samus.hasSpeed))),
   },
 

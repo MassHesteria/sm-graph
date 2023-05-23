@@ -34,7 +34,7 @@ export const crateriaEdges = {
     //more specifically, the door from landing site to gauntlet
     Ship: (samus) => samus.canDestroyBombWalls,
     EnergyTank_Gauntlet: (samus) =>
-      samus.canUseBombs & (samus.totalTanks >= 2) ||
+      samus.canUseBombs ||
       (samus.hasMorph && samus.powerPacks >= 2 && samus.totalTanks >= 1) ||
       samus.hasScrewAttack,
   },
