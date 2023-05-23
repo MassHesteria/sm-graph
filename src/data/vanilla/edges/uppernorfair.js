@@ -1,5 +1,5 @@
 const canHellRun = (samus) => {
-  return samus.totalTanks >= 4 || samus.hasVaria;
+  return samus.totalTanks >= 4 || (samus.hasGravity && samus.totalTanks >= 3) || samus.hasVaria;
 };
 
 export const uppernorfairEdges = {
@@ -50,7 +50,6 @@ export const uppernorfairEdges = {
   },
 
   HiJumpBoots: {
-    EnergyTank_HiJump: (samus) => samus.canPassBombPassages,
     Missiles_HiJump: (_) => true,
   },
 

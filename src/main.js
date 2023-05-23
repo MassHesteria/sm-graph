@@ -22,7 +22,7 @@ const getRandomSeed = () => {
 
 //let seed = getRandomSeed();
 //let seed = 180558;
-let seed = 1327;
+let seed = 8746;
 let quiet = false;
 
 if (process.argv.length > 2) {
@@ -194,6 +194,17 @@ const collectEasyItems = (itemLocations) => {
 
   if (!result) {
     console.log("No round trip locations");
+    /*itemLocations.forEach((p) => {
+      const index = itemNodes.findIndex((i) => i.location == p);
+      const load = cloneLoadout(samus);
+      load.add(itemNodes[index].item);
+      const back = breadthFirstSearch(graph, p, load);
+      console.log(p);
+      console.log(back);
+    });*/
+    /*itemNodes.forEach((n) => {
+      console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
+    });*/
     process.exit(1);
   } else if (!quiet) {
     console.log(str);
@@ -279,6 +290,6 @@ if (!quiet) {
 
 //console.log(portals);
 
-if (!quiet) {
+if (!quiet || seed % 100 == 0) {
   console.log("Verifed", seed);
 }
