@@ -1,7 +1,7 @@
 import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
-import { breadthFirstSearch, mergeGraph } from "./search.js";
+import { breadthFirstSearch, mergeGraph, canReachVertex } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
@@ -21,7 +21,7 @@ const getRandomSeed = () => {
 
 //let seed = getRandomSeed();
 //let seed = 180558;
-let seed = 8746;
+let seed = 32466;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
@@ -146,7 +146,7 @@ const solve = (seed) => {
       load.add(itemNodes[index].item);
     }
 
-    return breadthFirstSearch(graph, vertex, load).includes(startVertex);
+    return canReachVertex(graph, vertex, startVertex, load);
   };
 
   //-----------------------------------------------------------------
@@ -174,8 +174,7 @@ const solve = (seed) => {
 
       const load = cloneLoadout(samus);
       load.add(itemNodes[index].item);
-      const back = breadthFirstSearch(graph, p, load);
-      if (!back.includes(startVertex)) {
+      if (!canReachVertex(graph, p, startVertex, load)) {
         return;
       }
 

@@ -17,6 +17,33 @@ export const breadthFirstSearch = (graph, vertex, load) => {
   return visited;
 };
 
+export const canReachVertex = (graph, startVertex, endVertex, load) => {
+  if (startVertex == endVertex) {
+    return true;
+  }
+
+  let queue = [startVertex];
+  let visited = [];
+
+  while (queue.length > 0) {
+    const v = queue.shift();
+    visited.push(v);
+
+    const connections = graph.filter((c) => c.from == v);
+    for (let i = 0; i < connections.length; i++) {
+      const c = connections[i];
+      if (!visited.includes(c.to) && !queue.includes(c.to) && c.condition(load)) {
+        if (c.to == endVertex) {
+          return true;
+        }
+        queue.push(c.to);
+      }
+    }
+  }
+
+  return false;
+};
+
 export const mergeGraph = (graph, vertex, load) => {
   for (let i = 0; i < graph.length; i++) {
     // Skip all item vertices
