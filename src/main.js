@@ -21,7 +21,7 @@ const getRandomSeed = () => {
 
 //let seed = getRandomSeed();
 //let seed = 180558;
-let seed = 32466;
+let seed = 76026;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
@@ -146,7 +146,7 @@ const solve = (seed) => {
       load.add(itemNodes[index].item);
     }
 
-    return canReachVertex(graph, vertex, startVertex, load);
+    return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
   };
 
   //-----------------------------------------------------------------
@@ -174,7 +174,7 @@ const solve = (seed) => {
 
       const load = cloneLoadout(samus);
       load.add(itemNodes[index].item);
-      if (!canReachVertex(graph, p, startVertex, load)) {
+      if (!canReachVertex(graph, p, startVertex, checkLoadout, load)) {
         return;
       }
 
@@ -214,6 +214,30 @@ const solve = (seed) => {
     return result;
   };
 
+  const checkLoadout = (condition, load) => {
+    //TODO: see if there's a better way to do this
+    /*return Function(
+      "samus",
+      `
+      "use strict";
+      const HasMorph = samus.hasMorph;
+      const CanHellRun = samus.totalTanks >= 4 || (samus.hasGravity && samus.totalTanks >= 3) || samus.hasVaria;
+      const CanDoSuitlessMaridia = samus.hasHiJump && samus.hasGrapple && (samus.hasIce || samus.hasSpringBall);
+      return (${condition.toString()})(samus)`
+    )(load);*/
+
+    if (condition === true) {
+      return true;
+    }
+
+    const HasMorph = load.hasMorph;
+    const CanHellRun =
+      load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria;
+    const CanDoSuitlessMaridia =
+      load.hasHiJump && load.hasGrapple && (load.hasIce || load.hasSpringBall);
+    return eval(`(${condition.toString()})(load)`);
+  };
+
   //-----------------------------------------------------------------
   // Attempt to collect all items.
   //-----------------------------------------------------------------
@@ -225,7 +249,7 @@ const solve = (seed) => {
     //mergeGraph(graph, startVertex, samus);
 
     // Find all accessible vertices
-    const all = breadthFirstSearch(graph, startVertex, samus);
+    const all = breadthFirstSearch(graph, startVertex, checkLoadout, samus);
 
     // Check for access to bosses
     const roundTripToBoss = (boss) => {

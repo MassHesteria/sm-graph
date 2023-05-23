@@ -1,6 +1,6 @@
 export const redbrinstarEdges = {
   Door_RedTower: {
-    RedTowerMid: (_) => true,
+    RedTowerMid: true,
   },
 
   XrayHallway: {
@@ -26,7 +26,7 @@ export const redbrinstarEdges = {
   },
 
   Door_KraidEntry: {
-    RedTowerBottom: (_) => true,
+    RedTowerBottom: true,
   },
 
   Spazer: {
@@ -39,51 +39,51 @@ export const redbrinstarEdges = {
 
   RedBrinstarElevatorRoom: {
     Door_RedElevator: (samus) => samus.canUsePowerBombs,
-    RedTowerElevatorRoom: (_) => true,
+    RedTowerElevatorRoom: true,
   },
 
   RedTowerElevatorRoom: {
     Door_MaridiaEscape: (_) => false, //for future use
-    RedBrinstarElevatorRoom: (_) => true,
+    RedBrinstarElevatorRoom: true,
     RedTowerTop: (samus) => samus.canUsePowerBombs,
     PBs_Alpha: (samus) => samus.canOpenGreenDoors,
     PBs_Beta: (samus) => samus.canOpenGreenDoors && samus.canUsePowerBombs,
   },
 
   RedTowerTop: {
-    RedTowerElevatorRoom: (_) => true,
-    RedTowerMid: (_) => true,
+    RedTowerElevatorRoom: true,
+    RedTowerMid: true,
   },
 
   RedTowerMid: {
-    Door_RedTower: (_) => true,
-    RedTowerTop: (_) => true,
-    RedTowerBottom: (_) => true,
+    Door_RedTower: true,
+    RedTowerTop: true,
+    RedTowerBottom: true,
     XrayHallway: (samus) => samus.canUsePowerBombs,
   },
 
   RedTowerBottom: {
-    Door_KraidEntry: (_) => true,
+    Door_KraidEntry: true,
     Door_MaridiaTube: (samus) => samus.canUsePowerBombs && (samus.hasHiJump || samus.hasGravity),
     RedTowerMid: (samus) => samus.hasIce || samus.hasHiJump || samus.hasSpaceJump,
     Spazer: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
   },
 
   Door_RedElevator: {
-    RedBrinstarElevatorRoom: (_) => true,
+    RedBrinstarElevatorRoom: true,
   },
 
   PBs_Alpha: {
-    RedTowerElevatorRoom: (_) => true,
+    RedTowerElevatorRoom: true,
     Missiles_AlphaPBs: (samus) => samus.canUsePowerBombs,
   },
 
   Missiles_AlphaPBs: {
-    PBs_Alpha: (_) => true,
+    PBs_Alpha: true,
   },
 
   PBs_Beta: {
-    RedTowerElevatorRoom: (_) => true,
+    RedTowerElevatorRoom: true,
   },
 
   Door_MaridiaEscape: {

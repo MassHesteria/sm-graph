@@ -4,30 +4,30 @@ export const crateriaEdges = {
       (samus.canFly || (samus.hasSpeed && samus.totalTanks >= 1)) && samus.canUsePowerBombs,
     PreGauntlet: (samus) => samus.canDestroyBombWalls,
     PreMoat: (samus) => samus.canOpenGreenDoors,
-    Parlor: (_) => true,
+    Parlor: true,
   },
 
   PBs_LandingSite: {
-    Ship: (_) => true,
+    Ship: true,
   },
 
   PreMoat: {
-    Ship: (_) => true,
+    Ship: true,
     Missiles_Moat: (samus) => samus.canUsePowerBombs,
     Door_Crabs: (samus) => samus.canUsePowerBombs,
   },
 
   Door_Crabs: {
-    PreMoat: (_) => true,
+    PreMoat: true,
   },
 
   Missiles_Moat: {
-    Door_Crabs: (_) => true,
-    Door_Moat: (_) => true,
+    Door_Crabs: true,
+    Door_Moat: true,
   },
 
   Door_Moat: {
-    Missiles_Moat: (_) => true,
+    Missiles_Moat: true,
   },
 
   PreGauntlet: {
@@ -50,35 +50,35 @@ export const crateriaEdges = {
   },
 
   Missiles_GauntletLeft: {
-    Missiles_GauntletRight: (_) => true,
-    EnergyTank_Terminator: (_) => true,
+    Missiles_GauntletRight: true,
+    EnergyTank_Terminator: true,
   },
 
   Missiles_GauntletRight: {
-    Missiles_GauntletLeft: (_) => true,
-    EnergyTank_Terminator: (_) => true,
+    Missiles_GauntletLeft: true,
+    EnergyTank_Terminator: true,
   },
 
   EnergyTank_Terminator: {
     Parlor: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
     Door_G4: (samus) => samus.canOpenRedDoors,
-    Door_Kago: (_) => true,
+    Door_Kago: true,
   },
 
   Door_G4: {
-    EnergyTank_Terminator: (_) => true,
+    EnergyTank_Terminator: true,
   },
 
   Door_Kago: {
-    EnergyTank_Terminator: (_) => true,
+    EnergyTank_Terminator: true,
   },
 
   Parlor: {
     EnergyTank_Terminator: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
     Bombs: (samus) => samus.hasMorph && samus.canOpenRedDoors,
-    Climb: (_) => true,
+    Climb: true,
     Missiles_230: (samus) => samus.canPassBombPassages,
-    Ship: (_) => true,
+    Ship: true,
   },
 
   Bombs: {
@@ -90,10 +90,10 @@ export const crateriaEdges = {
   },
 
   Climb: {
-    Parlor: (_) => true,
+    Parlor: true,
     ClimbSupersBottom: (samus) => samus.canUsePowerBombs,
     Missiles_OldMB: (samus) => samus.canDestroyBombWalls,
-    MorphBall: (_) => true,
+    MorphBall: true,
   },
 
   ClimbSupersBottom: {
@@ -111,20 +111,20 @@ export const crateriaEdges = {
   },
 
   MorphBall: {
-    Climb: (_) => true,
+    Climb: true,
     PBs_Retro: (samus) => samus.canUsePowerBombs,
-    ConstructionZone: (_) => true,
+    ConstructionZone: true,
   },
 
   ConstructionZone: {
     Missiles_Alpha: (samus) => samus.hasMorph,
     TacoTankRoom: (samus) => samus.canOpenRedDoors,
-    MorphBall: (_) => true,
+    MorphBall: true,
   },
 
   TacoTankRoom: {
-    ConstructionZone: (_) => true,
-    EnergyTank_Ceiling: (_) => true,
+    ConstructionZone: true,
+    EnergyTank_Ceiling: true,
     Missiles_Beta: (samus) => samus.hasMorph,
   },
 
@@ -142,7 +142,7 @@ export const crateriaEdges = {
   },
 
   EnergyTank_Ceiling: {
-    MorphBall: (_) => true,
+    MorphBall: true,
     Missiles_Beta: (samus) => samus.hasMorph,
     Missiles_BillyMays1: (samus) => samus.canUsePowerBombs,
     Missiles_BillyMays2: (samus) => samus.canUsePowerBombs,
@@ -154,10 +154,10 @@ export const crateriaEdges = {
 
   Missiles_BillyMays1: {
     EnergyTank_Ceiling: (samus) => samus.canUsePowerBombs,
-    Missiles_BillyMays2: (_) => true,
+    Missiles_BillyMays2: true,
   },
 
   Missiles_BillyMays2: {
-    Missiles_BillyMays1: (_) => true,
+    Missiles_BillyMays1: true,
   },
 };

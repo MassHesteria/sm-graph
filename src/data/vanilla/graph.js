@@ -79,7 +79,7 @@ export const createVanillaGraph = (portalMapping) => {
         return {
           from: findVertex(a[0]),
           to: findVertex(a[1]),
-          condition: (_) => true,
+          condition: true,
         };
       })
     )
@@ -88,7 +88,7 @@ export const createVanillaGraph = (portalMapping) => {
         return {
           from: findVertex(a[1]),
           to: findVertex(a[0]),
-          condition: (_) => true,
+          condition: true,
         };
       })
     );

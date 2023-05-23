@@ -1,4 +1,4 @@
-export const breadthFirstSearch = (graph, vertex, load) => {
+export const breadthFirstSearch = (graph, vertex, test, load) => {
   let queue = [vertex];
   let visited = [];
 
@@ -8,7 +8,7 @@ export const breadthFirstSearch = (graph, vertex, load) => {
 
     const connections = graph.filter((c) => c.from == v);
     connections.forEach((c) => {
-      if (!visited.includes(c.to) && !queue.includes(c.to) && c.condition(load)) {
+      if (!visited.includes(c.to) && !queue.includes(c.to) && test(c.condition, load)) {
         queue.push(c.to);
       }
     });
@@ -17,7 +17,7 @@ export const breadthFirstSearch = (graph, vertex, load) => {
   return visited;
 };
 
-export const canReachVertex = (graph, startVertex, endVertex, load) => {
+export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
   if (startVertex == endVertex) {
     return true;
   }
@@ -32,7 +32,7 @@ export const canReachVertex = (graph, startVertex, endVertex, load) => {
     const connections = graph.filter((c) => c.from == v);
     for (let i = 0; i < connections.length; i++) {
       const c = connections[i];
-      if (!visited.includes(c.to) && !queue.includes(c.to) && c.condition(load)) {
+      if (!visited.includes(c.to) && !queue.includes(c.to) && test(c.condition, load)) {
         if (c.to == endVertex) {
           return true;
         }

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-start_seed=25000
-end_seed=26000
+start_seed=100001
+end_seed=101000
 options="--experimental-specifier-resolution=node --no-warnings"
 node $options src/main.js $start_seed $end_seed
 
