@@ -1,9 +1,14 @@
 #!/bin/bash
 
-for i in $(seq 10001 14000); do
-   node --experimental-specifier-resolution=node --no-warnings src/main.js $i
-   if [ $? -ne 0 ]; then
-      echo "seed $i failed"
-      exit 1
-   fi
-done
+start_seed=25000
+end_seed=26000
+options="--experimental-specifier-resolution=node --no-warnings"
+node $options src/main.js $start_seed $end_seed
+
+#for i in $(seq 14001 14001); do
+   #node --experimental-specifier-resolution=node --no-warnings src/main.js $i
+   #if [ $? -ne 0 ]; then
+      #echo "seed $i failed"
+      #exit 1
+   #fi
+#done
