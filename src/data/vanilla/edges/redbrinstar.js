@@ -34,20 +34,20 @@ export const redbrinstarEdges = {
   },
 
   Door_MaridiaTube: {
-    RedTowerBottom: (samus) => samus.hasMorph,
+    RedTowerBottom: () => HasMorph,
   },
 
   RedBrinstarElevatorRoom: {
-    Door_RedElevator: (samus) => samus.canUsePowerBombs,
+    Door_RedElevator: () => CanUsePowerBombs,
     RedTowerElevatorRoom: true,
   },
 
   RedTowerElevatorRoom: {
     Door_MaridiaEscape: (_) => false, //for future use
     RedBrinstarElevatorRoom: true,
-    RedTowerTop: (samus) => samus.canUsePowerBombs,
-    PBs_Alpha: (samus) => samus.canOpenGreenDoors,
-    PBs_Beta: (samus) => samus.canOpenGreenDoors && samus.canUsePowerBombs,
+    RedTowerTop: () => CanUsePowerBombs,
+    PBs_Alpha: () => CanOpenGreenDoors,
+    PBs_Beta: () => CanOpenGreenDoors && CanUsePowerBombs,
   },
 
   RedTowerTop: {
@@ -59,14 +59,14 @@ export const redbrinstarEdges = {
     Door_RedTower: true,
     RedTowerTop: true,
     RedTowerBottom: true,
-    XrayHallway: (samus) => samus.canUsePowerBombs,
+    XrayHallway: () => CanUsePowerBombs,
   },
 
   RedTowerBottom: {
     Door_KraidEntry: true,
-    Door_MaridiaTube: (samus) => samus.canUsePowerBombs && (samus.hasHiJump || samus.hasGravity),
+    Door_MaridiaTube: (samus) => CanUsePowerBombs && (samus.hasHiJump || HasGravity),
     RedTowerMid: (samus) => samus.hasIce || samus.hasHiJump || samus.hasSpaceJump,
-    Spazer: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
+    Spazer: () => HasMorph && CanOpenGreenDoors,
   },
 
   Door_RedElevator: {
@@ -75,7 +75,7 @@ export const redbrinstarEdges = {
 
   PBs_Alpha: {
     RedTowerElevatorRoom: true,
-    Missiles_AlphaPBs: (samus) => samus.canUsePowerBombs,
+    Missiles_AlphaPBs: () => CanUsePowerBombs,
   },
 
   Missiles_AlphaPBs: {

@@ -8,38 +8,36 @@
 
 export const eastmaridiaEdges = {
   Door_Aqueduct: {
-    Aqueduct: (samus) => samus.canUsePowerBombs,
+    Aqueduct: () => CanUsePowerBombs,
   },
 
   Aqueduct: {
-    Door_Aqueduct: (samus) =>
-      samus.canUsePowerBombs || (samus.hasGravity && samus.canDestroyBombWalls),
-    Missiles_Aqueduct: (samus) => samus.hasGravity && samus.hasSpeed,
-    Supers_Aqueduct: (samus) => samus.hasGravity && samus.hasSpeed,
+    Door_Aqueduct: (samus) => CanUsePowerBombs || (HasGravity && samus.canDestroyBombWalls),
+    Missiles_Aqueduct: (samus) => HasGravity && samus.hasSpeed,
+    Supers_Aqueduct: (samus) => HasGravity && samus.hasSpeed,
     Door_Botwoon: (samus) =>
-      (samus.hasGravity && samus.hasSpeed) ||
-      (samus.hasIce && (samus.hasGravity || CanDoSuitlessMaridia)),
-    Missiles_LeftSandPit: (samus) => samus.hasGravity && samus.hasMorph,
-    ReserveTank_LeftSandPit: (samus) => samus.hasGravity && samus.hasMorph,
-    Missiles_RightSandPit: (samus) => samus.hasGravity,
-    PBs_RightSandPit: (samus) => samus.hasGravity && samus.hasMorph,
-    Oasis: (samus) => samus.hasGravity || samus.hasHiJump,
+      (HasGravity && samus.hasSpeed) || (samus.hasIce && (HasGravity || CanDoSuitlessMaridia)),
+    Missiles_LeftSandPit: () => HasGravity && HasMorph,
+    ReserveTank_LeftSandPit: () => HasGravity && HasMorph,
+    Missiles_RightSandPit: () => HasGravity,
+    PBs_RightSandPit: () => HasGravity && HasMorph,
+    Oasis: (samus) => HasGravity || samus.hasHiJump,
   },
 
   Missiles_LeftSandPit: {
-    Oasis: (samus) => (samus.hasGravity || samus.hasHiJump) && samus.hasMorph,
+    Oasis: (samus) => (HasGravity || samus.hasHiJump) && HasMorph,
   },
 
   ReserveTank_LeftSandPit: {
-    Oasis: (samus) => (samus.hasGravity || samus.hasHiJump) && samus.hasMorph,
+    Oasis: (samus) => (HasGravity || samus.hasHiJump) && HasMorph,
   },
 
   Missiles_RightSandPit: {
-    Oasis: (samus) => samus.hasGravity || samus.hasHiJump,
+    Oasis: (samus) => HasGravity || samus.hasHiJump,
   },
 
   PBs_RightSandPit: {
-    Oasis: (samus) => (samus.hasGravity || samus.hasHiJump) && samus.hasMorph,
+    Oasis: (samus) => (HasGravity || samus.hasHiJump) && HasMorph,
   },
 
   Oasis: {
@@ -48,64 +46,63 @@ export const eastmaridiaEdges = {
       samus.hasGravity &&
       samus.canUsePowerBombs &&
       ((samus.hasGrapple && (samus.canFly || samus.hasHiJump)) || samus.hasIce),
-    Door_PlasmaSpark: (samus) =>
-      samus.canOpenGreenDoors &&
-      (samus.canUsePowerBombs || samus.canUseBombs || (samus.hasGravity && samus.hasScrewAttack)),
+    Door_PlasmaSpark: () =>
+      CanOpenGreenDoors && (CanUsePowerBombs || CanUseBombs || (HasGravity && HasScrewAttack)),
   },
 
   Door_PlasmaSpark: {
-    Oasis: (samus) => samus.canOpenGreenDoors,
-    PlasmaBeam: (samus) => CanDefeatDraygon,
+    Oasis: () => CanOpenGreenDoors,
+    PlasmaBeam: () => CanDefeatDraygon,
     MaridiaHighway: true,
   },
 
   PlasmaBeam: {
     Door_PlasmaSpark: (samus) =>
-      (samus.hasScrewAttack ||
+      (HasScrewAttack ||
         samus.hasPlasma ||
-        (samus.hasGravity && samus.hasCharge && samus.totalTanks >= 3)) &&
+        (HasGravity && samus.hasCharge && samus.totalTanks >= 3)) &&
       (samus.canFly || samus.hasHiJump || samus.hasSpeed || samus.hasSpringBall),
   },
 
   SpringBall: {
-    Oasis: (samus) => samus.hasGravity && samus.hasMorph,
+    Oasis: () => HasGravity && HasMorph,
   },
 
   Door_Botwoon: {
-    Aqueduct: (samus) => (samus.hasGravity && samus.hasSpeed) || samus.hasIce || CanDefeatBotwoon,
+    Aqueduct: (samus) => (HasGravity && samus.hasSpeed) || samus.hasIce || CanDefeatBotwoon,
     EnergyTank_Botwoon: (samus) =>
       CanDefeatBotwoon &&
-      samus.hasMorph &&
+      HasMorph &&
       //might've been overly thorough here
-      (samus.hasGravity || samus.hasHiJump || samus.hasSpringBall),
-    ColosseumTopLeft: (samus) => samus.hasGravity && (samus.hasSpeed || samus.hasMorph),
+      (HasGravity || samus.hasHiJump || samus.hasSpringBall),
+    ColosseumTopLeft: (samus) => HasGravity && (samus.hasSpeed || HasMorph),
   },
 
   EnergyTank_Botwoon: {
-    Door_Botwoon: (samus) => samus.hasMorph,
+    Door_Botwoon: () => HasMorph,
     Aqueduct: true,
-    ColosseumTopLeft: (samus) => samus.hasGravity && samus.hasMorph,
+    ColosseumTopLeft: () => HasGravity && HasMorph,
   },
 
   ColosseumTopLeft: {
     EnergyTank_Botwoon: (samus) =>
-      samus.hasMorph && (samus.hasGravity || samus.hasHiJump || samus.hasSpringBall),
-    ColosseumTopRight: (samus) => samus.hasGravity || samus.hasSpaceJump || CanDoSuitlessMaridia,
-    Door_PlasmaSpark: (samus) => samus.hasGravity || (samus.hasHiJump && samus.hasSpaceJump),
+      HasMorph && (HasGravity || samus.hasHiJump || samus.hasSpringBall),
+    ColosseumTopRight: () => HasGravity || HasSpaceJump || CanDoSuitlessMaridia,
+    Door_PlasmaSpark: (samus) => HasGravity || (samus.hasHiJump && HasSpaceJump),
   },
 
   ColosseumTopRight: {
-    Missiles_Precious: (samus) => samus.canOpenGreenDoors,
-    ColosseumTopLeft: (samus) => samus.hasGravity || samus.hasSpaceJump || CanDoSuitlessMaridia,
+    Missiles_Precious: () => CanOpenGreenDoors,
+    ColosseumTopLeft: () => HasGravity || HasSpaceJump || CanDoSuitlessMaridia,
   },
 
   Missiles_Precious: {
-    ColosseumTopRight: (samus) => samus.hasGravity || CanDoSuitlessMaridia,
-    Door_DraygonBoss: (samus) => samus.canOpenRedDoors,
+    ColosseumTopRight: () => HasGravity || CanDoSuitlessMaridia,
+    Door_DraygonBoss: () => CanOpenRedDoors,
   },
 
   Door_DraygonBoss: {
-    Missiles_Precious: (samus) => samus.hasGravity || (samus.hasHiJump && samus.hasSpringBall),
+    Missiles_Precious: (samus) => HasGravity || (samus.hasHiJump && samus.hasSpringBall),
   },
 
   Missiles_Aqueduct: {
@@ -119,11 +116,11 @@ export const eastmaridiaEdges = {
   },
 
   Door_Highway: {
-    MaridiaHighway: (samus) => samus.hasGravity || samus.hasHiJump,
+    MaridiaHighway: (samus) => HasGravity || samus.hasHiJump,
   },
 
   MaridiaHighway: {
     Door_Highway: true,
-    Door_PlasmaSpark: (samus) => samus.hasGravity || samus.hasHiJump,
+    Door_PlasmaSpark: (samus) => HasGravity || samus.hasHiJump,
   },
 };

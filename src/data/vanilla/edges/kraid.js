@@ -11,8 +11,8 @@ export const kraidslairEdges = {
 
   KraidsHallway: {
     Door_KraidsLair: (samus) => samus.canPassBombPassages,
-    Missiles_Kraid: (samus) => samus.canUsePowerBombs,
-    Door_KraidBoss: (samus) => samus.canOpenRedDoors,
+    Missiles_Kraid: () => CanUsePowerBombs,
+    Door_KraidBoss: () => CanOpenRedDoors,
   },
 
   Missiles_Kraid: {

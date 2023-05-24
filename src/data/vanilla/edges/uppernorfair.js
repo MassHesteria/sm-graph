@@ -30,18 +30,18 @@ export const uppernorfairEdges = {
 
   CathedralEntranceLeftDoor: {
     BusinessCenterTopRightDoor: true,
-    CathedralEntranceMain: (samus) => CanHellRun,
+    CathedralEntranceMain: () => CanHellRun,
   },
 
   CathedralEntranceMain: {
-    CathedralEntranceLeftDoor: (samus) => CanHellRun,
+    CathedralEntranceLeftDoor: () => CanHellRun,
     CathedralEntranceRightDoor: (samus) =>
       CanHellRun && (samus.hasHiJump || samus.canFly || samus.hasSpeed),
   },
 
   CathedralEntranceRightDoor: {
     Missiles_Cathedral: (samus) => CanHellRun && samus.canOpenRedDoors,
-    CathedralEntranceMain: (samus) => CanHellRun,
+    CathedralEntranceMain: () => CanHellRun,
   },
 
   EnergyTank_HiJump: {
@@ -58,38 +58,38 @@ export const uppernorfairEdges = {
   },
 
   Missiles_Cathedral: {
-    CathedralEntranceRightDoor: (samus) => CanHellRun,
+    CathedralEntranceRightDoor: () => CanHellRun,
     BubbleMountain: (samus) => samus.canOpenGreenDoors && CanHellRun,
   },
 
   BubbleMountain: {
     BusinessCenterBottomRightDoor: (samus) => samus.hasSpeed,
-    Missiles_Cathedral: (samus) => samus.hasVaria || samus.energyTanks >= 3,
+    Missiles_Cathedral: () => CanHellRun,
     Missiles_BubbleMountain: true,
-    Missiles_SpeedBooster: (samus) => CanHellRun,
+    Missiles_SpeedBooster: () => CanHellRun,
     PreCrocomire: (samus) => samus.hasVaria || samus.totalTanks >= 2,
     Door_LavaDive: (samus) => samus.hasVaria || samus.totalTanks >= 2,
-    Missiles_NorfairReserve1: (samus) => CanHellRun,
-    Missiles_Wave: (samus) => CanHellRun,
+    Missiles_NorfairReserve1: () => CanHellRun,
+    Missiles_Wave: () => CanHellRun,
   },
 
   Missiles_Wave: {
-    BubbleMountain: (samus) => CanHellRun,
-    WaveBeam: (samus) => CanHellRun,
+    BubbleMountain: () => CanHellRun,
+    WaveBeam: () => CanHellRun,
   },
 
   WaveBeam: {
-    BubbleMountain: (samus) => CanHellRun,
-    Missiles_Wave: (samus) => CanHellRun,
+    BubbleMountain: () => CanHellRun,
+    Missiles_Wave: () => CanHellRun,
   },
 
   Missiles_NorfairReserve1: {
     BubbleMountain: true,
-    Missiles_NorfairReserve2: (samus) => CanHellRun,
+    Missiles_NorfairReserve2: () => CanHellRun,
   },
 
   Missiles_NorfairReserve2: {
-    Missiles_NorfairReserve1: (samus) => CanHellRun,
+    Missiles_NorfairReserve1: () => CanHellRun,
     ReserveTank_Norfair: true,
   },
 
@@ -102,11 +102,11 @@ export const uppernorfairEdges = {
   },
 
   Door_LavaDive: {
-    BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
+    BubbleMountain: () => CanHellRun,
   },
 
   Missiles_SpeedBooster: {
-    BubbleMountain: (samus) => CanHellRun,
+    BubbleMountain: () => CanHellRun,
     SpeedBooster: true,
   },
 

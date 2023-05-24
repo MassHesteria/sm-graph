@@ -5,12 +5,11 @@ export const westmaridiaEdges = {
 
   MainStreet: {
     Door_MainStreet: true,
-    Missiles_MainStreet: (samus) => samus.hasGravity && samus.hasSpeed,
-    Supers_Crab: (samus) => samus.hasGravity || CanDoSuitlessMaridia,
-    Missiles_MamaTurtle: (samus) =>
-      samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
-    Door_MaridiaMap: (samus) => samus.canOpenGreenDoors,
-    Door_EverestTopRight: (samus) => samus.hasGravity || CanDoSuitlessMaridia,
+    Missiles_MainStreet: () => HasGravity && HasSpeed,
+    Supers_Crab: () => HasGravity || CanDoSuitlessMaridia,
+    Missiles_MamaTurtle: () => HasGravity || (HasHiJump && (HasIce || HasSpringBall)),
+    Door_MaridiaMap: () => CanOpenGreenDoors,
+    Door_EverestTopRight: () => HasGravity || CanDoSuitlessMaridia,
   },
 
   Missiles_MainStreet: {
@@ -19,21 +18,18 @@ export const westmaridiaEdges = {
 
   Door_EverestTopRight: {
     Supers_Crab: true,
-    Missiles_Beach: (samus) =>
-      samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
-    Door_PreAqueduct: (samus) => samus.canOpenGreenDoors,
+    Missiles_Beach: () => HasGravity || (HasHiJump && (HasIce || HasSpringBall)),
+    Door_PreAqueduct: () => CanOpenGreenDoors,
   },
 
   Door_PreAqueduct: {
-    Door_EverestTopRight: (samus) => samus.hasGravity || samus.hasHiJump,
+    Door_EverestTopRight: () => HasGravity || HasHiJump,
   },
 
   Missiles_Beach: {
     Door_EverestTopRight: true,
-    Missiles_WateringHole: (samus) =>
-      samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
-    Supers_WateringHole: (samus) =>
-      samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
+    Missiles_WateringHole: () => HasGravity || (HasHiJump && (HasIce || HasSpringBall)),
+    Supers_WateringHole: () => HasGravity || (HasHiJump && (HasIce || HasSpringBall)),
   },
 
   Missiles_WateringHole: {
@@ -47,23 +43,22 @@ export const westmaridiaEdges = {
   },
 
   Door_MaridiaMap: {
-    MainStreet: (samus) =>
-      samus.hasGravity || (samus.hasHiJump && (samus.hasIce || samus.hasSpringBall)),
+    MainStreet: () => HasGravity || (HasHiJump && (HasIce || HasSpringBall)),
   },
 
   Supers_Crab: {
-    MainStreet: (samus) => samus.hasMorph,
-    Missiles_MamaTurtle: (samus) => samus.hasMorph,
-    Door_RedFish: (samus) => samus.hasGravity || CanDoSuitlessMaridia,
+    MainStreet: () => HasMorph,
+    Missiles_MamaTurtle: () => HasMorph,
+    Door_RedFish: () => HasGravity || CanDoSuitlessMaridia,
   },
 
   Door_RedFish: {
-    Supers_Crab: (samus) => samus.hasMorph,
+    Supers_Crab: () => HasMorph,
   },
 
   Missiles_MamaTurtle: {
-    EnergyTank_MamaTurtle: (samus) => samus.canFly || samus.hasGrapple || samus.hasSpeed,
-    MainStreet: (samus) => samus.hasGravity || samus.hasHiJump,
+    EnergyTank_MamaTurtle: (samus) => samus.canFly || samus.hasGrapple || HasSpeed,
+    MainStreet: () => HasGravity || HasHiJump,
   },
 
   EnergyTank_MamaTurtle: {

@@ -21,7 +21,7 @@ const getRandomSeed = () => {
 
 //let seed = getRandomSeed();
 //let seed = 180558;
-let seed = 76026;
+let seed = 893225;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
@@ -173,7 +173,10 @@ const solve = (seed) => {
     }
 
     if (!result) {
-      console.log("No round trip locations");
+      console.log("No round trip locations:", seed);
+      itemNodes.forEach((n) => {
+        console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
+      });
       process.exit(1);
     } else if (!quiet) {
       console.log(str);
@@ -184,6 +187,8 @@ const solve = (seed) => {
 
   const bossData = {
     CanDefeatBotwoon: true,
+    CanDefeatCrocomire: false,
+    CanDefeatGoldTorizo: true,
     CanDefeatKraid: false,
     CanDefeatPhantoon: false,
     CanDefeatDraygon: false,
@@ -213,7 +218,36 @@ const solve = (seed) => {
       return true;
     }
 
-    const HasMorph = load.hasMorph;
+    const [
+      CanUseBombs,
+      CanUsePowerBombs,
+      CanOpenRedDoors,
+      CanOpenGreenDoors,
+      HasGravity,
+      HasHiJump,
+      HasIce,
+      HasMorph,
+      HasScrewAttack,
+      HasSpaceJump,
+      HasSpeed,
+      HasSpringBall,
+      HasVaria,
+    ] = [
+      load.canUseBombs,
+      load.canUsePowerBombs,
+      load.canOpenRedDoors,
+      load.canOpenGreenDoors,
+      load.hasGravity,
+      load.hasHiJump,
+      load.hasIce,
+      load.hasMorph,
+      load.hasScrewAttack,
+      load.hasSpaceJump,
+      load.hasSpeed,
+      load.hasSpringBall,
+      load.hasVaria,
+    ];
+
     const CanHellRun =
       load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria;
     const CanDoSuitlessMaridia =
@@ -222,6 +256,7 @@ const solve = (seed) => {
     const {
       CanDefeatBotwoon,
       CanDefeatCrocomire,
+      CanDefeatGoldTorizo,
       CanDefeatKraid,
       CanDefeatPhantoon,
       CanDefeatDraygon,
