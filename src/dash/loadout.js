@@ -78,7 +78,7 @@ class Loadout {
   }
 
   static canOpenYellowDoors(load) {
-    return load.powerPacks > 0 && Loadout.canUsePowerBombs(load);
+    return Loadout.canUsePowerBombs(load);
   }
 
   static canCrystalFlash(load) {
@@ -92,6 +92,26 @@ class Loadout {
 
   static totalTanks(load) {
     return load.energyTanks + load.reserveTanks;
+  }
+
+  getFlags() {
+    return {
+      CanUseBombs: this.canUseBombs,
+      CanUsePowerBombs: this.canUsePowerBombs,
+      CanOpenRedDoors: this.canOpenRedDoors,
+      CanOpenGreenDoors: this.canOpenGreenDoors,
+      HasGravity: this.hasGravity,
+      HasGrapple: this.hasGrapple,
+      HasHiJump: this.hasHiJump,
+      HasIce: this.hasIce,
+      HasMorph: this.hasMorph,
+      HasScrewAttack: this.hasScrewAttack,
+      HasSpaceJump: this.hasSpaceJump,
+      HasSpeed: this.hasSpeed,
+      HasSpringBall: this.hasSpringBall,
+      HasVaria: this.hasVaria,
+      TotalTanks: this.totalTanks,
+    };
   }
 
   clone() {

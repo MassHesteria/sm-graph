@@ -31,7 +31,7 @@ const UpperNorfair_HiJumpEnergyTankRoom_Missiles_to_EnergyTank = {
 // Exports.
 //-----------------------------------------------------------------
 
-export const CommonLogicUpdates = [
+export const CommonEdgeUpdates = [
   Crateria_ConstructionZoneToTacoTank,
   RedBrinstar_RedBrinstarElevatorRoomToPreMoat,
   RedBrinstar_RedTower_Bottom_to_Mid,

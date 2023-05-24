@@ -7,7 +7,7 @@ import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 import { standardMajorMinor } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
-import { CommonLogicUpdates } from "./data/common/test.js";
+import { CommonEdgeUpdates } from "./data/common/edges.js";
 
 //-----------------------------------------------------------------
 // Determine the seed.
@@ -20,7 +20,6 @@ const getRandomSeed = () => {
 };
 
 //let seed = getRandomSeed();
-//let seed = 180558;
 let seed = 893225;
 let quiet = false;
 let startSeed = seed;
@@ -48,7 +47,7 @@ const solve = (seed) => {
   //-----------------------------------------------------------------
 
   if (seed > 0) {
-    CommonLogicUpdates.forEach((c) => {
+    CommonEdgeUpdates.forEach((c) => {
       const [from, to] = c.edges;
       const edge = graph.find((n) => n.from.name == from && n.to.name == to);
       if (edge == null) {
@@ -218,12 +217,13 @@ const solve = (seed) => {
       return true;
     }
 
-    const [
+    const {
       CanUseBombs,
       CanUsePowerBombs,
       CanOpenRedDoors,
       CanOpenGreenDoors,
       HasGravity,
+      HasGrapple,
       HasHiJump,
       HasIce,
       HasMorph,
@@ -232,26 +232,11 @@ const solve = (seed) => {
       HasSpeed,
       HasSpringBall,
       HasVaria,
-    ] = [
-      load.canUseBombs,
-      load.canUsePowerBombs,
-      load.canOpenRedDoors,
-      load.canOpenGreenDoors,
-      load.hasGravity,
-      load.hasHiJump,
-      load.hasIce,
-      load.hasMorph,
-      load.hasScrewAttack,
-      load.hasSpaceJump,
-      load.hasSpeed,
-      load.hasSpringBall,
-      load.hasVaria,
-    ];
+      TotalTanks,
+    } = load.getFlags();
 
-    const CanHellRun =
-      load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria;
-    const CanDoSuitlessMaridia =
-      load.hasHiJump && load.hasGrapple && (load.hasIce || load.hasSpringBall);
+    const CanHellRun = TotalTanks >= 4 || (HasGravity && TotalTanks >= 3) || HasVaria;
+    const CanDoSuitlessMaridia = HasHiJump && HasGrapple && (HasIce || HasSpringBall);
 
     const {
       CanDefeatBotwoon,
