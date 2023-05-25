@@ -23,7 +23,7 @@ const getRandomSeed = () => {
 };
 
 //let seed = getRandomSeed();
-let seed = 5;
+let seed = 40;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
@@ -31,6 +31,7 @@ let recall = true;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
+  endSeed = parseInt(process.argv[2]);
 } else if (process.argv.length == 4) {
   startSeed = parseInt(process.argv[2]);
   endSeed = parseInt(process.argv[3]);
@@ -235,8 +236,10 @@ const solve = (seed) => {
       HasHiJump,
       HasIce,
       HasMorph,
+      HasPlasma,
       HasPressureValve,
       HasScrewAttack,
+      HasSpazer,
       HasSpaceJump,
       HasSpeed,
       HasSpringBall,
@@ -328,6 +331,10 @@ const solve = (seed) => {
     itemNodes.forEach((n) => {
       console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
     });
+    //console.log(getRecallFlags(samus));
+    breadthFirstSearch(graph, startVertex, checkLoadout, samus)
+      .filter((a) => !collected.includes(a))
+      .forEach((a) => console.log(a));
     console.log("Invalid seed:", seed);
     process.exit(1);
   }

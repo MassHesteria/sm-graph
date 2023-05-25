@@ -10,6 +10,7 @@ export const westmaridiaEdges = {
     Missiles_MamaTurtle: () => CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall)),
     Door_MaridiaMap: () => CanOpenGreenDoors,
     Door_EverestTopRight: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
+    OasisBottom: () => CanOpenGreenDoors && HasGravity,
   },
 
   Missiles_MainStreet: {

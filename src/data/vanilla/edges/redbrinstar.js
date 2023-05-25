@@ -4,21 +4,17 @@ export const redbrinstarEdges = {
   },
 
   XrayHallway: {
-    RedTowerMid: (samus) => samus.canUsePowerBombs,
-    XrayScope: (samus) =>
-      samus.canOpenRedDoors &&
-      samus.hasMorph &&
-      (samus.hasSpaceJump ||
-        samus.hasGrapple ||
-        (((samus.hasHiJump && samus.hasSpeed) || samus.hasIce) && samus.totalTanks >= 4)),
+    RedTowerMid: () => CanUsePowerBombs,
+    XrayScope: () =>
+      CanOpenRedDoors &&
+      HasMorph &&
+      (HasSpaceJump || HasGrapple || (((HasHiJump && HasSpeed) || HasIce) && TotalTanks >= 4)),
   },
 
   XrayScope: {
-    XrayHallway: (samus) =>
-      (samus.canUseBombs || samus.canUsePowerBombs) &&
-      (samus.hasSpaceJump ||
-        samus.hasGrapple ||
-        (((samus.hasHiJump && samus.hasSpeed) || samus.hasIce) && samus.totalTanks >= 4)),
+    XrayHallway: () =>
+      (CanUseBombs || CanUsePowerBombs) &&
+      (HasSpaceJump || HasGrapple || (((HasHiJump && HasSpeed) || HasIce) && TotalTanks >= 4)),
   },
 
   Door_AboveKraid: {
@@ -30,7 +26,7 @@ export const redbrinstarEdges = {
   },
 
   Spazer: {
-    RedTowerBottom: (samus) => samus.hasMorph && samus.canOpenGreenDoors,
+    RedTowerBottom: () => HasMorph && CanOpenGreenDoors,
   },
 
   Door_MaridiaTube: {
@@ -64,8 +60,8 @@ export const redbrinstarEdges = {
 
   RedTowerBottom: {
     Door_KraidEntry: true,
-    Door_MaridiaTube: (samus) => CanUsePowerBombs && (samus.hasHiJump || HasGravity),
-    RedTowerMid: (samus) => samus.hasIce || samus.hasHiJump || samus.hasSpaceJump,
+    Door_MaridiaTube: () => CanUsePowerBombs && (HasHiJump || CanMoveInWestMaridia),
+    RedTowerMid: () => HasIce || HasHiJump || HasSpaceJump,
     Spazer: () => HasMorph && CanOpenGreenDoors,
   },
 
@@ -87,6 +83,6 @@ export const redbrinstarEdges = {
   },
 
   Door_MaridiaEscape: {
-    RedTowerElevatorRoom: (samus) => samus.hasMorph && samus.superPacks >= 1,
+    RedTowerElevatorRoom: (samus) => HasMorph && samus.superPacks >= 1,
   },
 };

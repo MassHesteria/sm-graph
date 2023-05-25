@@ -7,7 +7,7 @@ export const greenbrinstarEdges = {
 
   Missiles_EarlySupers: {
     Door_GreenElevator: true,
-    Supers_EarlySupers: (samus) => HasMorph || samus.hasSpeed,
+    Supers_EarlySupers: () => HasMorph || HasSpeed,
   },
 
   Supers_EarlySupers: {
@@ -22,12 +22,12 @@ export const greenbrinstarEdges = {
 
   Missiles_BrinstarReserve1: {
     ReserveTank_Brinstar: () => HasMorph,
-    Missiles_BrinstarReserve2: (samus) => samus.canDestroyBombWalls,
+    Missiles_BrinstarReserve2: () => CanDestroyBombWalls,
   },
 
   Missiles_BrinstarReserve2: {
     Missiles_BrinstarReserve1: true,
-    ReserveTank_Brinstar: (samus) => samus.hasMorph,
+    ReserveTank_Brinstar: () => HasMorph,
   },
 
   EnergyTank_Etecoons: {
@@ -78,11 +78,11 @@ export const greenbrinstarEdges = {
 
   ChargeBeam: {
     Missiles_Charge: (samus) => samus.canPassBombPassages,
-    EnergyTank_Waterway: (samus) => CanUsePowerBombs && CanOpenRedDoors && samus.hasSpeed,
+    EnergyTank_Waterway: () => CanUsePowerBombs && CanOpenRedDoors && HasSpeed,
   },
 
   EnergyTank_Waterway: {
-    ChargeBeam: (samus) => samus.canUsePowerBombs,
+    ChargeBeam: () => CanUsePowerBombs,
   },
 
   Missiles_Tube: {
