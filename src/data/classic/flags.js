@@ -1,0 +1,28 @@
+export const getClassicFlags = (load) => {
+  return {
+    CanUseBombs: load.canUseBombs,
+    CanUsePowerBombs: load.canUsePowerBombs,
+    CanOpenRedDoors: load.canOpenRedDoors,
+    CanOpenGreenDoors: load.canOpenGreenDoors,
+    HasDoubleJump: load.hasDoubleJump,
+    HasGravity: load.hasGravity,
+    HasGrapple: load.hasGrapple,
+    HasHeatShield: false,
+    HasHiJump: load.hasHiJump,
+    HasIce: load.hasIce,
+    HasMorph: load.hasMorph,
+    HasPressureValve: false,
+    HasScrewAttack: load.hasScrewAttack,
+    HasSpaceJump: load.hasSpaceJump,
+    HasSpeed: load.hasSpeed,
+    HasSpringBall: load.hasSpringBall,
+    HasVaria: load.hasVaria,
+    TotalTanks: load.totalTanks,
+    CanFly: load.canFly,
+    CanHellRun: load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria,
+    CanDoSuitlessMaridia: load.hasHiJump && load.hasGrapple && (load.hasIce || load.hasSpringBall),
+    CanPassBombPassages: load.canPassBombPassages,
+    CanDestroyBombWalls: load.canDestroyBombWalls,
+    CanMoveInWestMaridia: load.hasGravity,
+  };
+};

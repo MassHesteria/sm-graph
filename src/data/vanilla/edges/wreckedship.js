@@ -10,15 +10,14 @@ export const wreckedshipEdges = {
 
   ShipHallway: {
     Missiles_Ocean: true,
-    Missiles_Spooky: (samus) => samus.canPassBombPassages,
-    Door_PhantoonBoss: (samus) => CanOpenRedDoors && (HasSpeed || samus.canPassBombPassages),
+    Missiles_Spooky: () => CanPassBombPassages,
+    Door_PhantoonBoss: () => CanOpenRedDoors && (HasSpeed || CanPassBombPassages),
     Supers_LeftSide: () => CanDefeatPhantoon,
-    Supers_RightSide: (samus) => CanDefeatPhantoon && samus.canPassBombPassages,
+    Supers_RightSide: () => CanDefeatPhantoon && CanPassBombPassages,
     Missiles_Attic: () => CanDefeatPhantoon,
     //TODO: Double check this. Probably add more nodes to clarify logic.
-    ShipRearExit: (samus) =>
-      CanDefeatPhantoon &&
-      (samus.canFly || CanUsePowerBombs || HasSpeed || HasHiJump || HasGravity),
+    ShipRearExit: () =>
+      CanDefeatPhantoon && (CanFly || CanUsePowerBombs || HasSpeed || HasHiJump || HasGravity),
   },
 
   Missiles_Spooky: {
@@ -43,11 +42,11 @@ export const wreckedshipEdges = {
     ShipHallway: true,
     Missiles_Sky: true,
     Missiles_OceanMiddle: (samus) => samus.superPacks >= 1 && HasMorph,
-    GravitySuit: (samus) =>
+    GravitySuit: () =>
       HasMorph &&
-      (samus.canPassBombPassages || HasSpringBall) &&
+      (CanPassBombPassages || HasSpringBall) &&
       //like climb supers, the DASH logic doesn't seem to account for space/grapple
-      (samus.totalTanks >= 2 || (HasVaria && samus.totalTanks >= 1)),
+      (TotalTanks >= 2 || (HasVaria && TotalTanks >= 1)),
   },
 
   Missiles_Sky: {
@@ -55,18 +54,18 @@ export const wreckedshipEdges = {
   },
 
   Missiles_OceanMiddle: {
-    Missiles_Attic: () => HasMorph && samus.superPacks >= 1,
+    Missiles_Attic: (samus) => HasMorph && samus.superPacks >= 1,
     Missiles_Ocean: () => HasMorph,
   },
 
   GravitySuit: {
-    Missiles_Bowling: (samus) => samus.canDestroyBombWalls,
+    Missiles_Bowling: () => CanDestroyBombWalls,
     Missiles_Ocean: true,
   },
 
   Missiles_Bowling: {
     ReserveTank_Ship: () => CanUsePowerBombs && HasSpeed,
-    GravitySuit: (samus) => samus.canPassBombPassages,
+    GravitySuit: () => CanPassBombPassages,
   },
 
   ReserveTank_Ship: {
@@ -74,7 +73,7 @@ export const wreckedshipEdges = {
   },
 
   Door_PhantoonBoss: {
-    ShipHallway: (samus) => samus.canPassBombPassages,
+    ShipHallway: () => CanPassBombPassages,
   },
 
   Supers_LeftSide: {
@@ -82,6 +81,6 @@ export const wreckedshipEdges = {
   },
 
   Supers_RightSide: {
-    ShipHallway: (samus) => samus.canPassBombPassages,
+    ShipHallway: () => CanPassBombPassages,
   },
 };

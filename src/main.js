@@ -5,9 +5,12 @@ import { breadthFirstSearch, mergeGraph, canReachVertex } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import { standardMajorMinor } from "./generate.js";
+import { recallMajorMinor, standardMajorMinor } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { CommonEdgeUpdates } from "./data/common/edges.js";
+import { RecallEdgeUpdates } from "./data/recall/edges.js";
+import { getClassicFlags } from "./data/classic/flags.js";
+import { getRecallFlags } from "./data/recall/flags.js";
 
 //-----------------------------------------------------------------
 // Determine the seed.
@@ -20,10 +23,11 @@ const getRandomSeed = () => {
 };
 
 //let seed = getRandomSeed();
-let seed = 893225;
+let seed = 5;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
+let recall = true;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
@@ -47,7 +51,8 @@ const solve = (seed) => {
   //-----------------------------------------------------------------
 
   if (seed > 0) {
-    CommonEdgeUpdates.forEach((c) => {
+    const EdgeUpdates = recall ? RecallEdgeUpdates : CommonEdgeUpdates;
+    EdgeUpdates.forEach((c) => {
       const [from, to] = c.edges;
       const edge = graph.find((n) => n.from.name == from && n.to.name == to);
       if (edge == null) {
@@ -81,7 +86,8 @@ const solve = (seed) => {
 
   const getItemNodes = (seed) => {
     if (seed > 0) {
-      return standardMajorMinor(seed).map((i) => toItemNode(i.location.name, i.item.type));
+      const gen = recall ? recallMajorMinor : standardMajorMinor;
+      return gen(seed).map((i) => toItemNode(i.location.name, i.item.type));
     } else {
       return vanillaItemPlacement.map((i) => toItemNode(i.location, i.item));
     }
@@ -222,21 +228,27 @@ const solve = (seed) => {
       CanUsePowerBombs,
       CanOpenRedDoors,
       CanOpenGreenDoors,
+      HasDoubleJump,
       HasGravity,
       HasGrapple,
+      HasHeatShield,
       HasHiJump,
       HasIce,
       HasMorph,
+      HasPressureValve,
       HasScrewAttack,
       HasSpaceJump,
       HasSpeed,
       HasSpringBall,
       HasVaria,
       TotalTanks,
-    } = load.getFlags();
-
-    const CanHellRun = TotalTanks >= 4 || (HasGravity && TotalTanks >= 3) || HasVaria;
-    const CanDoSuitlessMaridia = HasHiJump && HasGrapple && (HasIce || HasSpringBall);
+      CanFly,
+      CanHellRun,
+      CanDoSuitlessMaridia,
+      CanPassBombPassages,
+      CanDestroyBombWalls,
+      CanMoveInWestMaridia,
+    } = recall ? getRecallFlags(load) : getClassicFlags(load);
 
     const {
       CanDefeatBotwoon,

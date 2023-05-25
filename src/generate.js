@@ -2,6 +2,7 @@ import { performVerifiedFill, getMajorMinorPrePool, isValidMajorMinor } from "./
 import { getLocations } from "./dash/locations";
 import Loadout from "./dash/loadout";
 import ModeStandard from "./dash/modes/modeStandard";
+import ModeRecall from "./dash/modes/modeRecall";
 
 const mapLocation = (name) => {
   const mappings = [
@@ -112,6 +113,21 @@ const mapLocation = (name) => {
     return mapped[1];
   }
   throw new Error("missing " + name);
+};
+
+export const recallMajorMinor = (seed) => {
+  const mode = new ModeRecall(seed, getLocations());
+  const getPrePool = getMajorMinorPrePool;
+  const canPlaceItem = isValidMajorMinor;
+
+  // Setup the initial loadout.
+  let initLoad = new Loadout();
+  initLoad.hasCharge = true;
+
+  // Place the items.
+  performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
+  mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
+  return mode.nodes;
 };
 
 export const standardMajorMinor = (seed) => {

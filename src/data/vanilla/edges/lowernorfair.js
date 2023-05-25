@@ -1,6 +1,6 @@
 export const lowernorfairEdges = {
   Door_RidleyMouth: {
-    Ruins: (samus) => HasVaria && (HasGravity || samus.hasHiJump),
+    Ruins: () => HasVaria && (HasGravity || HasHiJump),
   },
 
   Door_Muskateers: {
@@ -9,7 +9,7 @@ export const lowernorfairEdges = {
 
   Muskateers: {
     Door_Muskateers: true,
-    Missiles_Muskateers: (samus) => HasMorph && samus.canDestroyBombWalls,
+    Missiles_Muskateers: () => HasMorph && CanDestroyBombWalls,
     Missiles_Maze: () => HasMorph,
   },
 
@@ -24,40 +24,42 @@ export const lowernorfairEdges = {
   },
 
   PrePillars: {
-    Ruins: (samus) => samus.canUsePowerBombs,
-    ScrewAttack: (samus) => samus.superPacks >= 1 && samus.canDestroyBombWalls,
-    WorstRoomBottom: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
+    Ruins: () => CanUsePowerBombs,
+    ScrewAttack: (samus) => samus.superPacks >= 1 && CanDestroyBombWalls,
+    WorstRoomBottom: () => CanDestroyBombWalls || HasSpeed,
   },
 
   WorstRoomBottom: {
-    PrePillars: (samus) => samus.canDestroyBombWalls,
-    WorstRoomTop: (samus) =>
+    PrePillars: () => CanDestroyBombWalls,
+    WorstRoomTop: () =>
       (HasScrewAttack && HasSpaceJump) ||
-      (samus.canPassBombPassages && (samus.canFly || samus.hasSpringBall || samus.hasHiJump)),
+      (CanPassBombPassages && (CanFly || HasSpringBall || HasHiJump)),
   },
 
   WorstRoomTop: {
-    WorstRoomBottom: (samus) => samus.canDestroyBombWalls,
-    Missiles_MickeyMouse: (samus) => samus.canDestroyBombWalls && HasMorph,
-    Ruins: (samus) => samus.canDestroyBombWalls,
+    WorstRoomBottom: () => CanDestroyBombWalls,
+    Missiles_MickeyMouse: () => CanDestroyBombWalls && HasMorph,
+    Ruins: () => CanDestroyBombWalls,
     RedKihunterShaft: true,
   },
 
   RedKihunterShaft: {
-    EnergyTank_Firefleas: (samus) => samus.canUsePowerBombs || samus.superPacks >= 1,
+    //TODO: Don't think this is right
+    EnergyTank_Firefleas: (samus) => CanUsePowerBombs || samus.superPacks >= 1,
     WorstRoomTop: (samus) =>
-      (HasGravity && samus.energyTanks >= 3 && samus.totalTanks >= 6) || samus.energyTanks >= 6,
+      (HasGravity && samus.energyTanks >= 3 && TotalTanks >= 6) || samus.energyTanks >= 6,
     Missiles_Maze: true,
-    PBs_Shame: (samus) => samus.canDestroyBombWalls,
+    PBs_Shame: () => CanDestroyBombWalls,
   },
 
   EnergyTank_Firefleas: {
-    RedKihunterShaft: (samus) => samus.canUsePowerBombs || samus.superPacks >= 1,
+    //TODO: Don't think this is right
+    RedKihunterShaft: (samus) => CanUsePowerBombs || samus.superPacks >= 1,
   },
 
   Missiles_Maze: {
     RedKihunterShaft: true,
-    PBs_Maze: (samus) => samus.canPassBombPassages,
+    PBs_Maze: () => CanPassBombPassages,
     Muskateers: () => HasMorph,
   },
 
@@ -67,16 +69,16 @@ export const lowernorfairEdges = {
 
   PBs_Shame: {
     //don't think escaping ridley with 1 PB pack is in logic, but this line implies it
-    RedKihunterShaft: (samus) => samus.canPassBombPassages,
-    Door_RidleyBoss: (samus) => samus.canUsePowerBombs && samus.canOpenGreenDoors,
+    RedKihunterShaft: () => CanPassBombPassages,
+    Door_RidleyBoss: () => CanUsePowerBombs && CanOpenGreenDoors,
   },
 
   Door_RidleyBoss: {
-    PBs_Shame: (samus) => samus.canUsePowerBombs,
+    PBs_Shame: () => CanUsePowerBombs,
   },
 
   Missiles_MickeyMouse: {
-    WorstRoomTop: (samus) => samus.hasHijump || samus.canFly,
+    WorstRoomTop: () => HasHiJump || CanFly,
     Ruins: true,
   },
 
@@ -91,9 +93,9 @@ export const lowernorfairEdges = {
 
   ScrewAttack: {
     Supers_GT: () => HasScrewAttack || CanUsePowerBombs,
-    PrePillars: (samus) =>
+    PrePillars: () =>
       (HasSpaceJump && (HasScrewAttack || CanUsePowerBombs)) ||
-      ((samus.canUseBombs || samus.hasSpringBall) && samus.canPassBombPassages) ||
-      (samus.hasSpeed && ((samus.hasHiJump && samus.canDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
+      ((CanUseBombs || HasSpringBall) && CanPassBombPassages) || // don't think bomb passage matters
+      (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
   },
 };
