@@ -61,6 +61,35 @@ const GreenBrinstar_ChargeBeam_to_Waterway = {
   requires: () => CanUsePowerBombs && CanOpenRedDoors && (HasSpeed || HasSpazer),
 };
 
+const RedBrinstar_Xray_Hallway_to_Item = {
+  edges: ["XrayHallway", "XrayScope"],
+  requires: () =>
+    CanOpenRedDoors &&
+    HasMorph &&
+    (HasSpaceJump ||
+      HasGrapple ||
+      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) && TotalTanks >= 4)),
+};
+
+const RedBrinstar_Xray_Item_to_Hallway = {
+  edges: ["XrayScope", "XrayHallway"],
+  requires: () =>
+    (CanUseBombs || CanUsePowerBombs) &&
+    (HasSpaceJump ||
+      HasGrapple ||
+      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) && TotalTanks >= 4)),
+};
+
+const WestMaridia_MamaTurtle_to_EnergyTank = {
+  edges: ["Missiles_MamaTurtle", "EnergyTank_MamaTurtle"],
+  requires: () => CanFly || HasGrapple || HasSpeed || HasDoubleJump,
+};
+
+const UpperNorfair_PreCrocomire_to_CrocEscape = {
+  edges: ["PreCrocomire", "Missiles_CrocEscape"],
+  requires: () => CanHellRun && (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
+};
+
 //-----------------------------------------------------------------
 // Exports.
 //-----------------------------------------------------------------
@@ -77,4 +106,8 @@ export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
   EastMaridia_PlasmaSparkRoomTop_to_PrePlasmaBeam,
   GreenBrinstar_ChargeBeam_to_Waterway,
   EastMaridia_BotwoonHallway_Left_to_Right,
+  RedBrinstar_Xray_Hallway_to_Item,
+  RedBrinstar_Xray_Item_to_Hallway,
+  WestMaridia_MamaTurtle_to_EnergyTank,
+  UpperNorfair_PreCrocomire_to_CrocEscape,
 ]);

@@ -5,7 +5,7 @@ import { breadthFirstSearch, mergeGraph, canReachVertex } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import { recallMajorMinor, standardMajorMinor } from "./generate.js";
+import { generateSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { CommonEdgeUpdates } from "./data/common/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
@@ -23,11 +23,10 @@ const getRandomSeed = () => {
 };
 
 //let seed = getRandomSeed();
-let seed = 40;
+let seed = 321051;
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
-let recall = true;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
@@ -38,7 +37,7 @@ if (process.argv.length == 3) {
   quiet = true;
 }
 
-const solve = (seed) => {
+const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
   // Setup the graph.
   //-----------------------------------------------------------------
@@ -87,8 +86,7 @@ const solve = (seed) => {
 
   const getItemNodes = (seed) => {
     if (seed > 0) {
-      const gen = recall ? recallMajorMinor : standardMajorMinor;
-      return gen(seed).map((i) => toItemNode(i.location.name, i.item.type));
+      return generateSeed(seed, recall, full).map((i) => toItemNode(i.location.name, i.item.type));
     } else {
       return vanillaItemPlacement.map((i) => toItemNode(i.location, i.item));
     }
@@ -360,5 +358,5 @@ const solve = (seed) => {
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
-  solve(i);
+  solve(i, true, false); // Recall MM
 }

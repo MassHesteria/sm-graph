@@ -1,4 +1,10 @@
-import { performVerifiedFill, getMajorMinorPrePool, isValidMajorMinor } from "./dash/itemPlacement";
+import {
+  performVerifiedFill,
+  getFullPrePool,
+  getMajorMinorPrePool,
+  isEmptyNode,
+  isValidMajorMinor,
+} from "./dash/itemPlacement";
 import { getLocations } from "./dash/locations";
 import Loadout from "./dash/loadout";
 import ModeStandard from "./dash/modes/modeStandard";
@@ -115,25 +121,13 @@ const mapLocation = (name) => {
   throw new Error("missing " + name);
 };
 
-export const recallMajorMinor = (seed) => {
-  const mode = new ModeRecall(seed, getLocations());
-  const getPrePool = getMajorMinorPrePool;
-  const canPlaceItem = isValidMajorMinor;
-
-  // Setup the initial loadout.
-  let initLoad = new Loadout();
-  initLoad.hasCharge = true;
-
-  // Place the items.
-  performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
-  mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
-  return mode.nodes;
-};
-
-export const standardMajorMinor = (seed) => {
-  const mode = new ModeStandard(seed, getLocations());
-  const getPrePool = getMajorMinorPrePool;
-  const canPlaceItem = isValidMajorMinor;
+export const generateSeed = (seed, recall, full) => {
+  const mode = recall
+    ? new ModeRecall(seed, getLocations())
+    : new ModeStandard(seed, getLocations());
+  const [getPrePool, canPlaceItem] = full
+    ? [getFullPrePool, isEmptyNode]
+    : [getMajorMinorPrePool, isValidMajorMinor];
 
   // Setup the initial loadout.
   let initLoad = new Loadout();

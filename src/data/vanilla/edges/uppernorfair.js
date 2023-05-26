@@ -133,14 +133,11 @@ export const uppernorfairEdges = {
   },
 
   PreCrocomire: {
-    Door_CrocEntry: (samus) => samus.canOpenGreenDoors,
-    BubbleMountain: (samus) => samus.hasVaria || samus.totalTanks >= 2,
-    Missiles_CrocEscape: (samus) =>
-      CanHellRun &&
-      (samus.canFly ||
-        samus.hasGrapple ||
-        samus.hasIce || //TODO: Probably remove this
-        (samus.hasHiJump && (samus.hasSpringBall || samus.hasSpeed))),
+    Door_CrocEntry: () => CanOpenGreenDoors,
+    BubbleMountain: () => HasVaria || TotalTanks >= 2,
+    //TODO: Probably remove HasIce
+    Missiles_CrocEscape: () =>
+      CanHellRun && (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
   },
 
   Missiles_CrocEscape: {
