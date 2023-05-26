@@ -8,12 +8,15 @@ export const crocomireEdges = {
     EnergyTank_Croc: (samus) =>
       //need to ask Kipp how many tanks should put this in logic
       (samus.energyTanks >= 3 && TotalTanks >= 4) || HasSpaceJump || HasGrapple,
-    //TODO: Standard logic allows access to Croc PBs without any movement items. While
-    //      looking at the first million, one seed failed: 893225.
+    //TODO: Standard logic allows access to Croc PBs without any movement items but
+    //      we probably do not want that. In the first million, one seed failed: 893225.
     //PBs_Croc: (samus) => samus.canFly || samus.hasIce || samus.hasHiJump || samus.hasGrapple,
     PBs_Croc: true,
     GrappleBeam: (samus) => samus.superPacks >= 1 || CanFly || HasSpeed,
-    Missiles_IndianaJones: () => CanFly || HasGrapple || (CanUsePowerBombs && HasSpeed),
+    //TODO: Both Standard and Recall allow access to Indiana Jones using Speed
+    //      without PBs to break the blocks. Not sure we want to require stutters.
+    //Missiles_IndianaJones: () => CanFly || HasGrapple || (CanUsePowerBombs && HasSpeed),
+    Missiles_IndianaJones: () => CanFly || HasGrapple || HasSpeed,
     Missiles_Cosine: () => CanOpenRedDoors,
   },
 
