@@ -6,7 +6,9 @@ import { CommonEdgeUpdates } from "../common/edges";
 
 const Crocomire_PostCroc_to_IndianaJones = {
   edges: ["PostCroc", "Missiles_IndianaJones"],
-  requires: () => CanFly || (CanUsePowerBombs && HasSpeed),
+  //TODO: Look at notes on main crocomire edges.
+  //requires: () => CanFly || (CanUsePowerBombs && HasSpeed),
+  requires: () => CanFly || HasSpeed,
 };
 
 const LowerNorfair_WorstRoom_Bottom_to_Top = {
@@ -90,6 +92,14 @@ const UpperNorfair_PreCrocomire_to_CrocEscape = {
   requires: () => CanHellRun && (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
 };
 
+const LowerNorfair_ScrewAttack_to_PrePillars = {
+  edges: ["ScrewAttack", "PrePillars"],
+  requires: () =>
+    ((HasSpaceJump || HasDoubleJump) && (HasScrewAttack || CanUsePowerBombs)) ||
+    ((CanUseBombs || HasSpringBall) && CanPassBombPassages) || // don't think bomb passage matters
+    (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
+};
+
 //-----------------------------------------------------------------
 // Exports.
 //-----------------------------------------------------------------
@@ -110,4 +120,5 @@ export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
   RedBrinstar_Xray_Item_to_Hallway,
   WestMaridia_MamaTurtle_to_EnergyTank,
   UpperNorfair_PreCrocomire_to_CrocEscape,
+  LowerNorfair_ScrewAttack_to_PrePillars,
 ]);

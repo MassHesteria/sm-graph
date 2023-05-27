@@ -111,6 +111,17 @@ const solve = (seed, recall, full) => {
     console.log(output);
   };
 
+  const printUncollectedItems = () => {
+    const isUnique = (value, index, array) => {
+      return array.indexOf(value) === index;
+    };
+    graph
+      .filter((n) => n.from.item != undefined)
+      .map((n) => `Location: ${n.from.name} Item: ${ItemNames.get(n.from.item)}`)
+      .filter(isUnique)
+      .forEach((n) => console.log(n));
+  };
+
   //-----------------------------------------------------------------
   // Determines if the graph would allow a round trip from the
   // specified vertex to the starting vertex.
@@ -154,7 +165,8 @@ const solve = (seed, recall, full) => {
 
     if (items.length == 0) {
       console.log("No round trip locations:", seed);
-      itemLocations.forEach((n) => console.log(n));
+      itemLocations.forEach((i) => console.log(i));
+      printUncollectedItems();
       process.exit(1);
     } else if (!quiet) {
       let str = "";
@@ -307,11 +319,7 @@ const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
 
   if (graph.filter((n) => n.from.item != undefined).length > 0) {
-    graph
-      .filter((n) => n.from.item != undefined)
-      .forEach((n) => {
-        console.log("Location:", n.from.name, "Item:", ItemNames.get(n.from.item));
-      });
+    printUncollectedItems();
     //console.log(getRecallFlags(samus));
     searchAndCache(graph, startVertex, checkLoadout, samus)
       .filter((a) => a.item != undefined)
@@ -335,12 +343,12 @@ const solve = (seed, recall, full) => {
 
   //console.log(portals);
 
-  if (!quiet || seed % 100 == 0) {
+  if (!quiet || seed % 1000 == 0) {
     console.log("Verifed", seed);
   }
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
-  //solve(i, true, false); // Recall MM
-  solve(i, false, true); // Standard Full
+  solve(i, true, false); // Recall MM
+  //solve(i, false, true); // Standard Full
 }

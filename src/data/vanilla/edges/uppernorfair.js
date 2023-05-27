@@ -1,7 +1,3 @@
-//const canHellRun = (samus) => {
-//return samus.totalTanks >= 4 || (samus.hasGravity && samus.totalTanks >= 3) || samus.hasVaria;
-//};
-
 export const uppernorfairEdges = {
   Door_ElevatorEntry: {
     BusinessCenter: true,
@@ -10,12 +6,11 @@ export const uppernorfairEdges = {
   BusinessCenter: {
     Door_ElevatorEntry: true,
     Door_KraidMouth: (samus) => samus.superPacks >= 1,
-    IceBeam: (samus) => samus.canOpenGreenDoors && (samus.hasVaria || samus.totalTanks >= 2),
-    Missiles_CrumbleShaft: (samus) =>
-      samus.canUsePowerBombs && (samus.hasVaria || samus.totalTanks >= 2),
+    IceBeam: () => CanOpenGreenDoors && (HasVaria || TotalTanks >= 2),
+    Missiles_CrumbleShaft: () => CanUsePowerBombs && CanHellRun,
     BusinessCenterTopRightDoor: true,
     BusinessCenterBottomRightDoor: true,
-    EnergyTank_HiJump: (samus) => samus.canOpenRedDoors,
+    EnergyTank_HiJump: () => CanOpenRedDoors,
   },
 
   BusinessCenterTopRightDoor: {
@@ -25,7 +20,7 @@ export const uppernorfairEdges = {
 
   BusinessCenterBottomRightDoor: {
     BusinessCenter: true,
-    BubbleMountain: (samus) => samus.hasSpeed,
+    BubbleMountainBottomLeftDoor: () => HasSpeed,
   },
 
   CathedralEntranceLeftDoor: {
@@ -35,18 +30,17 @@ export const uppernorfairEdges = {
 
   CathedralEntranceMain: {
     CathedralEntranceLeftDoor: () => CanHellRun,
-    CathedralEntranceRightDoor: (samus) =>
-      CanHellRun && (samus.hasHiJump || samus.canFly || samus.hasSpeed),
+    CathedralEntranceRightDoor: () => CanHellRun && (HasHiJump || CanFly || HasSpeed),
   },
 
   CathedralEntranceRightDoor: {
-    Missiles_Cathedral: (samus) => CanHellRun && samus.canOpenRedDoors,
+    Missiles_Cathedral: () => CanHellRun && CanOpenRedDoors,
     CathedralEntranceMain: () => CanHellRun,
   },
 
   EnergyTank_HiJump: {
     BusinessCenter: true,
-    HiJumpBoots: (samus) => samus.hasMorph,
+    HiJumpBoots: () => HasMorph,
   },
 
   HiJumpBoots: {
@@ -54,37 +48,43 @@ export const uppernorfairEdges = {
   },
 
   Missiles_HiJump: {
-    EnergyTank_HiJump: (samus) => samus.canPassBombPassages,
+    EnergyTank_HiJump: () => CanPassBombPassages,
   },
 
   Missiles_Cathedral: {
     CathedralEntranceRightDoor: () => CanHellRun,
-    BubbleMountain: (samus) => samus.canOpenGreenDoors && CanHellRun,
+    BubbleMountainMain: () => CanOpenGreenDoors && CanHellRun,
   },
 
-  BubbleMountain: {
-    BusinessCenterBottomRightDoor: (samus) => samus.hasSpeed,
+  BubbleMountainMain: {
+    BubbleMountainBottomLeftDoor: () => CanUsePowerBombs || CanUseBombs,
     Missiles_Cathedral: () => CanHellRun,
     Missiles_BubbleMountain: true,
     Missiles_SpeedBooster: () => CanHellRun,
-    PreCrocomire: (samus) => samus.hasVaria || samus.totalTanks >= 2,
-    Door_LavaDive: (samus) => samus.hasVaria || samus.totalTanks >= 2,
+    PreCrocomire: () => CanHellRun,
+    Door_LavaDive: () => CanHellRun,
     Missiles_NorfairReserve1: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
   },
 
+  BubbleMountainBottomLeftDoor: {
+    BubbleMountainMain: () => CanUsePowerBombs || CanUseBombs,
+    BusinessCenterBottomRightDoor: () => HasSpeed,
+    PreCrocomire: () => CanHellRun,
+  },
+
   Missiles_Wave: {
-    BubbleMountain: () => CanHellRun,
+    BubbleMountainMain: () => CanHellRun,
     WaveBeam: () => CanHellRun,
   },
 
   WaveBeam: {
-    BubbleMountain: () => CanHellRun,
+    BubbleMountainMain: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
   },
 
   Missiles_NorfairReserve1: {
-    BubbleMountain: true,
+    BubbleMountainMain: true,
     Missiles_NorfairReserve2: () => CanHellRun,
   },
 
@@ -98,15 +98,15 @@ export const uppernorfairEdges = {
   },
 
   Door_SingleChamber: {
-    BubbleMountain: (samus) => CanHellRun && samus.canDestroyBombWalls,
+    BubbleMountainMain: () => CanHellRun && CanDestroyBombWalls,
   },
 
   Door_LavaDive: {
-    BubbleMountain: () => CanHellRun,
+    BubbleMountainMain: () => CanHellRun,
   },
 
   Missiles_SpeedBooster: {
-    BubbleMountain: () => CanHellRun,
+    BubbleMountainMain: () => CanHellRun,
     SpeedBooster: true,
   },
 
@@ -115,7 +115,7 @@ export const uppernorfairEdges = {
   },
 
   Missiles_BubbleMountain: {
-    BubbleMountain: true,
+    BubbleMountainMain: true,
   },
 
   Door_KraidMouth: {
@@ -123,29 +123,28 @@ export const uppernorfairEdges = {
   },
 
   IceBeam: {
-    BusinessCenter: (samus) =>
-      samus.canPassBombPassages && (samus.hasVaria || samus.totalTanks >= 2),
+    BusinessCenter: () => CanPassBombPassages && (HasVaria || TotalTanks >= 2),
   },
 
   Missiles_CrumbleShaft: {
-    BusinessCenter: (samus) => samus.canUsePowerBombs,
-    PreCrocomire: (samus) => samus.hasVaria && samus.hasSpeed,
+    BusinessCenter: () => CanUsePowerBombs,
+    PreCrocomire: () => HasVaria && HasSpeed,
   },
 
   PreCrocomire: {
     Door_CrocEntry: () => CanOpenGreenDoors,
-    BubbleMountain: () => HasVaria || TotalTanks >= 2,
+    BubbleMountainBottomLeftDoor: () => CanHellRun,
     //TODO: Probably remove HasIce
     Missiles_CrocEscape: () =>
       CanHellRun && (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
   },
 
   Missiles_CrocEscape: {
-    BusinessCenter: (samus) => samus.canOpenGreenDoors,
-    PreCrocomire: (samus) => samus.hasMorph && (samus.hasVaria || samus.totalTanks >= 2),
+    BusinessCenter: () => CanOpenGreenDoors,
+    PreCrocomire: () => HasMorph && (HasVaria || TotalTanks >= 2),
   },
 
   Door_CrocEntry: {
-    PreCrocomire: (samus) => CanDefeatCrocomire,
+    PreCrocomire: () => CanDefeatCrocomire,
   },
 };

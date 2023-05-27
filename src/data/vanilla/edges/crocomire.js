@@ -15,6 +15,7 @@ export const crocomireEdges = {
     GrappleBeam: (samus) => samus.superPacks >= 1 || CanFly || HasSpeed,
     //TODO: Both Standard and Recall allow access to Indiana Jones using Speed
     //      without PBs to break the blocks. Not sure we want to require stutters.
+    //      Also probably want to remove grapple.
     //Missiles_IndianaJones: () => CanFly || HasGrapple || (CanUsePowerBombs && HasSpeed),
     Missiles_IndianaJones: () => CanFly || HasGrapple || HasSpeed,
     Missiles_Cosine: () => CanOpenRedDoors,
