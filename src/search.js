@@ -1,4 +1,9 @@
-export const breadthFirstSearch = (graph, vertex, test, load) => {
+//-----------------------------------------------------------------
+// Finds accessible vertices and caches open edges.
+//-----------------------------------------------------------------
+
+export const searchAndCache = (graph, vertex, test, load) => {
+  // Use breadth first search
   let queue = [vertex];
   let visited = [];
 
@@ -8,8 +13,12 @@ export const breadthFirstSearch = (graph, vertex, test, load) => {
 
     const connections = graph.filter((c) => c.from == v);
     connections.forEach((c) => {
-      if (!visited.includes(c.to) && !queue.includes(c.to) && test(c.condition, load)) {
-        queue.push(c.to);
+      if (c.condition === true || test(c.condition, load)) {
+        // Cache that the edge is open
+        c.condition = true;
+        if (!visited.includes(c.to) && !queue.includes(c.to)) {
+          queue.push(c.to);
+        }
       }
     });
   }
@@ -32,11 +41,13 @@ export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
     const connections = graph.filter((c) => c.from == v);
     for (let i = 0; i < connections.length; i++) {
       const c = connections[i];
-      if (!visited.includes(c.to) && !queue.includes(c.to) && test(c.condition, load)) {
+      if (c.condition === true || test(c.condition, load)) {
         if (c.to == endVertex) {
           return true;
         }
-        queue.push(c.to);
+        if (!visited.includes(c.to) && !queue.includes(c.to)) {
+          queue.push(c.to);
+        }
       }
     }
   }

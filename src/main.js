@@ -1,7 +1,7 @@
 import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
-import { breadthFirstSearch, mergeGraph, canReachVertex } from "./search.js";
+import { searchAndCache, mergeGraph, canReachVertex } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
@@ -161,7 +161,7 @@ const solve = (seed, recall, full) => {
         return;
       }
 
-      samus.add(itemNodes[index].item);
+      samus = load;
       const name = ItemNames.get(itemNodes[index].item);
       str += `> ${name}`.padEnd(20, " ");
       if (++a % 5 == 0) {
@@ -218,10 +218,6 @@ const solve = (seed, recall, full) => {
       return (${condition.toString()})(samus)`
     )(load);*/
 
-    if (condition === true) {
-      return true;
-    }
-
     const {
       CanUseBombs,
       CanUsePowerBombs,
@@ -275,7 +271,7 @@ const solve = (seed, recall, full) => {
     //mergeGraph(graph, startVertex, samus);
 
     // Find all accessible vertices
-    const all = breadthFirstSearch(graph, startVertex, checkLoadout, samus);
+    const all = searchAndCache(graph, startVertex, checkLoadout, samus);
 
     // Check for access to bosses
     if (!bossData.CanDefeatCrocomire) {
@@ -330,7 +326,7 @@ const solve = (seed, recall, full) => {
       console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
     });
     //console.log(getRecallFlags(samus));
-    breadthFirstSearch(graph, startVertex, checkLoadout, samus)
+    searchAndCache(graph, startVertex, checkLoadout, samus)
       .filter((a) => !collected.includes(a))
       .forEach((a) => console.log(a));
     console.log("Invalid seed:", seed);
