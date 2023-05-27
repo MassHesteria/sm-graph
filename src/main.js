@@ -142,9 +142,7 @@ const solve = (seed, recall, full) => {
       return;
     }
 
-    let result = false;
-    let str = "";
-    let a = 0;
+    let items = [];
 
     itemLocations.forEach((p) => {
       const index = itemNodes.findIndex((i) => i.location == p);
@@ -162,31 +160,33 @@ const solve = (seed, recall, full) => {
       }
 
       samus = load;
-      const name = ItemNames.get(itemNodes[index].item);
-      str += `> ${name}`.padEnd(20, " ");
-      if (++a % 5 == 0) {
-        str += "\n";
-      }
+      items.push(itemNodes[index].item);
       collected.push(itemNodes[index].location);
       itemNodes.splice(index, 1);
-      result = true;
     });
 
-    if (a % 5 != 0) {
-      str += "\n";
-    }
-
-    if (!result) {
+    if (items.length == 0) {
       console.log("No round trip locations:", seed);
       itemNodes.forEach((n) => {
         console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
       });
       process.exit(1);
     } else if (!quiet) {
+      let str = "";
+      items.forEach((item, idx) => {
+        const name = ItemNames.get(item);
+        str += `> ${name}`.padEnd(20, " ");
+        if ((idx + 1) % 5 == 0) {
+          str += "\n";
+        }
+      });
+      if (items.length % 5 != 0) {
+        str += "\n";
+      }
       console.log(str);
     }
 
-    return result;
+    return true;
   };
 
   const bossData = {
