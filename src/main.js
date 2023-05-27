@@ -63,7 +63,6 @@ const solve = (seed, recall, full) => {
   }
 
   const startVertex = graph[0].from;
-  let collected = [];
   let samus = new Loadout();
   if (seed > 0) {
     samus.hasCharge = true;
@@ -161,7 +160,7 @@ const solve = (seed, recall, full) => {
 
       samus = load;
       items.push(itemNodes[index].item);
-      collected.push(itemNodes[index].location);
+      p.collected = true;
       itemNodes.splice(index, 1);
     });
 
@@ -292,7 +291,7 @@ const solve = (seed, recall, full) => {
     }
 
     // Find all uncollected item vertices
-    const uncollected = all.filter((v) => v.item != "" && !collected.includes(v));
+    const uncollected = all.filter((v) => v.type != "" && !v.collected);
     printAvailableItems(uncollected);
 
     // Collect all items where we can make a round trip back to the start
@@ -313,7 +312,7 @@ const solve = (seed, recall, full) => {
     if (!quiet) {
       console.log(">", ItemNames.get(itemNodes[index].item), "\n");
     }
-    collected.push(itemNodes[index].location);
+    itemNodes[index].location.collected = true;
     itemNodes.splice(index, 1);
   }
 
@@ -327,7 +326,7 @@ const solve = (seed, recall, full) => {
     });
     //console.log(getRecallFlags(samus));
     searchAndCache(graph, startVertex, checkLoadout, samus)
-      .filter((a) => !collected.includes(a))
+      .filter((a) => !a.collected)
       .forEach((a) => console.log(a));
     console.log("Invalid seed:", seed);
     process.exit(1);

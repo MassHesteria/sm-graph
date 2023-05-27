@@ -58,7 +58,7 @@ export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
 export const mergeGraph = (graph, vertex, load) => {
   for (let i = 0; i < graph.length; i++) {
     // Skip all item vertices
-    if (graph[i].to.item != "" || graph[i].from.item != "") {
+    if (graph[i].to.type != "" || graph[i].from.type != "") {
       continue;
     }
     // Not a connection from the specified vertex?
