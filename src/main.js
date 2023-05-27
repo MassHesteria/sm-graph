@@ -22,8 +22,7 @@ const getRandomSeed = () => {
   return RNG.NextInRange(1, 1000000);
 };
 
-//let seed = getRandomSeed();
-let seed = 321051;
+let seed = getRandomSeed();
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
@@ -69,29 +68,28 @@ const solve = (seed, recall, full) => {
   }
 
   //-----------------------------------------------------------------
-  // Print available item locations to the console.
+  // Places items within the graph.
   //-----------------------------------------------------------------
 
-  const toItemNode = (location, item) => {
+  const placeItem = (location, item) => {
     const part = graph.find((n) => n.from.name == location);
     if (part == null) {
       console.error("missing part", location);
     }
-    return {
-      location: part != undefined ? part.from : null,
-      item: item,
-    };
+    part.from.item = item;
   };
 
-  const getItemNodes = (seed) => {
+  const placeItems = (seed) => {
     if (seed > 0) {
-      return generateSeed(seed, recall, full).map((i) => toItemNode(i.location.name, i.item.type));
+      return generateSeed(seed, recall, full).forEach((i) =>
+        placeItem(i.location.name, i.item.type)
+      );
     } else {
-      return vanillaItemPlacement.map((i) => toItemNode(i.location, i.item));
+      return vanillaItemPlacement.forEach((i) => placeItem(i.location, i.item));
     }
   };
 
-  const itemNodes = getItemNodes(seed);
+  placeItems(seed);
 
   //-----------------------------------------------------------------
   // Print available item locations to the console.
@@ -103,11 +101,10 @@ const solve = (seed, recall, full) => {
     }
     let output = chalk.yellow("Available: ");
     itemLocations.forEach((p) => {
-      const theNode = itemNodes.find((x) => x.location == p);
-      if (theNode == null) {
+      if (p.item == null) {
         output += chalk.red("none");
       } else {
-        output += chalk.green(ItemNames.get(theNode.item));
+        output += chalk.green(ItemNames.get(p.item));
       }
       output += ` @ ${chalk.blue(p.name)} `;
     });
@@ -120,14 +117,13 @@ const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
 
   const hasRoundTrip = (vertex) => {
-    const load = samus.clone();
-
-    const index = itemNodes.findIndex((i) => i.location == vertex);
-    if (index >= 0) {
-      load.add(itemNodes[index].item);
+    if (vertex.item != undefined) {
+      const load = samus.clone();
+      load.add(vertex.item);
+      return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
     }
 
-    return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
+    return canReachVertex(graph, vertex, startVertex, checkLoadout, samus);
   };
 
   //-----------------------------------------------------------------
@@ -144,31 +140,21 @@ const solve = (seed, recall, full) => {
     let items = [];
 
     itemLocations.forEach((p) => {
-      const index = itemNodes.findIndex((i) => i.location == p);
-
-      if (index < 0) {
-        console.log("no item at", p.name);
-        return;
-      }
-
       const load = samus.clone();
-      load.add(itemNodes[index].item);
+      load.add(p.item);
       //TODO: Handle boss criteria?
       if (!canReachVertex(graph, p, startVertex, checkLoadout, load)) {
         return;
       }
 
       samus = load;
-      items.push(itemNodes[index].item);
-      p.collected = true;
-      itemNodes.splice(index, 1);
+      items.push(p.item);
+      p.item = undefined;
     });
 
     if (items.length == 0) {
       console.log("No round trip locations:", seed);
-      itemNodes.forEach((n) => {
-        console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
-      });
+      itemLocations.forEach((n) => console.log(n));
       process.exit(1);
     } else if (!quiet) {
       let str = "";
@@ -265,12 +251,19 @@ const solve = (seed, recall, full) => {
 
   const start_run = Date.now();
 
-  while (itemNodes.length > 0) {
+  while (true) {
     // Reduce the graph for performance
     //mergeGraph(graph, startVertex, samus);
 
     // Find all accessible vertices
     const all = searchAndCache(graph, startVertex, checkLoadout, samus);
+
+    // Find all uncollected item vertices
+    const uncollected = all.filter((v) => v.item != undefined);
+    if (uncollected.length == 0) {
+      break;
+    }
+    printAvailableItems(uncollected);
 
     // Check for access to bosses
     if (!bossData.CanDefeatCrocomire) {
@@ -290,10 +283,6 @@ const solve = (seed, recall, full) => {
       bossData.CanDefeatRidley = hasRoundTrip(bossVertices.Ridley);
     }
 
-    // Find all uncollected item vertices
-    const uncollected = all.filter((v) => v.type != "" && !v.collected);
-    printAvailableItems(uncollected);
-
     // Collect all items where we can make a round trip back to the start
     if (collectEasyItems(uncollected)) {
       continue;
@@ -301,32 +290,31 @@ const solve = (seed, recall, full) => {
 
     // Handle collecting a single item if no "easy" items are available
     // TODO: Needs testing; not currently being executed
-    const index = itemNodes.findIndex((i) => uncollected.includes(i.location));
+    const first = uncollected[0];
 
-    if (index < 0) {
-      console.log("no items");
-      break;
-    }
-
-    samus.add(itemNodes[index].item);
+    samus.add(first.item);
     if (!quiet) {
-      console.log(">", ItemNames.get(itemNodes[index].item), "\n");
+      console.log(">", ItemNames.get(first.item), "\n");
     }
-    itemNodes[index].location.collected = true;
-    itemNodes.splice(index, 1);
+    first.item = undefined;
+
+    console.log("one way ticket");
+    process.exit(2);
   }
 
   //-----------------------------------------------------------------
   // Check for uncollected items. This indicates an invalid graph.
   //-----------------------------------------------------------------
 
-  if (itemNodes.length > 0) {
-    itemNodes.forEach((n) => {
-      console.log("Location:", n.location.name, "Item:", ItemNames.get(n.item));
-    });
+  if (graph.filter((n) => n.from.item != undefined).length > 0) {
+    graph
+      .filter((n) => n.from.item != undefined)
+      .forEach((n) => {
+        console.log("Location:", n.from.name, "Item:", ItemNames.get(n.from.item));
+      });
     //console.log(getRecallFlags(samus));
     searchAndCache(graph, startVertex, checkLoadout, samus)
-      .filter((a) => !a.collected)
+      .filter((a) => a.item != undefined)
       .forEach((a) => console.log(a));
     console.log("Invalid seed:", seed);
     process.exit(1);
@@ -353,5 +341,6 @@ const solve = (seed, recall, full) => {
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
-  solve(i, true, false); // Recall MM
+  //solve(i, true, false); // Recall MM
+  solve(i, false, true); // Standard Full
 }
