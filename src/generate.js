@@ -121,7 +121,7 @@ const mapLocation = (name) => {
   throw new Error("missing " + name);
 };
 
-export const generateSeed = (seed, recall, full) => {
+export const generateSeed = (seed, recall, full, failIsGood) => {
   const mode = recall
     ? new ModeRecall(seed, getLocations())
     : new ModeStandard(seed, getLocations());
@@ -134,7 +134,15 @@ export const generateSeed = (seed, recall, full) => {
   initLoad.hasCharge = true;
 
   // Place the items.
-  performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
+  performVerifiedFill(
+    seed,
+    mode.nodes,
+    mode.itemPool,
+    getPrePool,
+    initLoad,
+    canPlaceItem,
+    failIsGood
+  );
   mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
   return mode.nodes;
 };

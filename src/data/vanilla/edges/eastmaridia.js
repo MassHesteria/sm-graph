@@ -80,10 +80,8 @@ export const eastmaridiaEdges = {
   },
 
   PlasmaBeam: {
-    PrePlasmaBeam: (samus) =>
-      (HasScrewAttack ||
-        samus.hasPlasma ||
-        (HasGravity && samus.hasCharge && samus.totalTanks >= 3)) &&
+    PrePlasmaBeam: () =>
+      (HasScrewAttack || HasPlasma || (HasGravity && HasCharge && TotalTanks >= 3)) &&
       (CanFly || HasHiJump || HasSpeed || HasSpringBall),
   },
 
@@ -121,7 +119,7 @@ export const eastmaridiaEdges = {
   },
 
   Door_DraygonBoss: {
-    Missiles_Precious: (samus) => HasGravity || (samus.hasHiJump && samus.hasSpringBall),
+    Missiles_Precious: () => HasGravity || (HasHiJump && HasSpringBall),
   },
 
   Missiles_Aqueduct: {
@@ -135,7 +133,7 @@ export const eastmaridiaEdges = {
   },
 
   Door_Highway: {
-    MaridiaHighway: (samus) => HasGravity || samus.hasHiJump,
+    MaridiaHighway: () => HasGravity || HasHiJump,
   },
 
   MaridiaHighway: {

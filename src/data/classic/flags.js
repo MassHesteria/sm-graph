@@ -4,6 +4,7 @@ export const getClassicFlags = (load) => {
     CanUsePowerBombs: load.canUsePowerBombs,
     CanOpenRedDoors: load.canOpenRedDoors,
     CanOpenGreenDoors: load.canOpenGreenDoors,
+    HasCharge: load.hasCharge,
     HasDoubleJump: load.hasDoubleJump,
     HasGravity: load.hasGravity,
     HasGrapple: load.hasGrapple,

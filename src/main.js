@@ -26,6 +26,7 @@ let seed = getRandomSeed();
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
+let failIsGood = true;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
@@ -82,7 +83,7 @@ const solve = (seed, recall, full) => {
 
   const placeItems = (seed) => {
     if (seed > 0) {
-      return generateSeed(seed, recall, full).forEach((i) =>
+      return generateSeed(seed, recall, full, failIsGood).forEach((i) =>
         placeItem(i.location.name, i.item.type)
       );
     } else {
@@ -124,31 +125,11 @@ const solve = (seed, recall, full) => {
   };
 
   //-----------------------------------------------------------------
-  // Determines if the graph would allow a round trip from the
-  // specified vertex to the starting vertex.
-  //-----------------------------------------------------------------
-
-  const hasRoundTrip = (vertex) => {
-    if (vertex.item != undefined) {
-      const load = samus.clone();
-      load.add(vertex.item);
-      return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
-    }
-
-    return canReachVertex(graph, vertex, startVertex, checkLoadout, samus);
-  };
-
-  //-----------------------------------------------------------------
   // Collects all items where there is a round trip back to the
   // ship. All these items are collected at the same time.
   //-----------------------------------------------------------------
 
   const collectEasyItems = (itemLocations) => {
-    if (itemLocations.length == 0) {
-      console.log("no locations");
-      return;
-    }
-
     let items = [];
 
     itemLocations.forEach((p) => {
@@ -165,12 +146,14 @@ const solve = (seed, recall, full) => {
     });
 
     if (items.length == 0) {
-      console.log("No round trip locations:", seed);
-      itemLocations.forEach((i) => {
-        console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
-      });
-      printUncollectedItems();
-      process.exit(1);
+      if (!quiet || !failIsGood) {
+        console.log("No round trip locations:", seed);
+        itemLocations.forEach((i) => {
+          console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
+        });
+        printUncollectedItems();
+      }
+      throw new Error("no round trip locations");
     } else if (!quiet) {
       let str = "";
       items.forEach((item, idx) => {
@@ -223,6 +206,7 @@ const solve = (seed, recall, full) => {
       CanUsePowerBombs,
       CanOpenRedDoors,
       CanOpenGreenDoors,
+      HasCharge,
       HasDoubleJump,
       HasGravity,
       HasGrapple,
@@ -280,6 +264,24 @@ const solve = (seed, recall, full) => {
     }
     printAvailableItems(uncollected);
 
+    //-----------------------------------------------------------------
+    // Determines if the graph would allow a round trip from the
+    // specified vertex to the starting vertex.
+    //-----------------------------------------------------------------
+
+    const hasRoundTrip = (vertex) => {
+      if (!all.includes(vertex)) {
+        return false;
+      }
+      if (vertex.item != undefined) {
+        const load = samus.clone();
+        load.add(vertex.item);
+        return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
+      }
+
+      return canReachVertex(graph, vertex, startVertex, checkLoadout, samus);
+    };
+
     // Check for access to bosses
     if (!bossData.CanDefeatCrocomire) {
       bossData.CanDefeatCrocomire =
@@ -313,8 +315,7 @@ const solve = (seed, recall, full) => {
     }
     first.item = undefined;
 
-    console.log("one way ticket");
-    process.exit(2);
+    throw new Error("one way ticket");
   }
 
   //-----------------------------------------------------------------
@@ -322,13 +323,14 @@ const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
 
   if (graph.filter((n) => n.from.item != undefined).length > 0) {
-    printUncollectedItems();
-    //console.log(getRecallFlags(samus));
-    searchAndCache(graph, startVertex, checkLoadout, samus)
-      .filter((a) => a.item != undefined)
-      .forEach((a) => console.log(a));
-    console.log("Invalid seed:", seed);
-    process.exit(1);
+    if (!failIsGood) {
+      printUncollectedItems();
+      //console.log(getRecallFlags(samus));
+      searchAndCache(graph, startVertex, checkLoadout, samus)
+        .filter((a) => a.item != undefined)
+        .forEach((a) => console.log(a));
+    }
+    throw new Error(`Invalid seed: ${seed}`);
   }
 
   if (!quiet) {
@@ -352,6 +354,23 @@ const solve = (seed, recall, full) => {
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
-  //solve(i, true, false); // Recall MM
-  solve(i, false, true); // Standard Full
+  try {
+    solve(i, false, false); // Standard MM
+    //solve(i, true, false); // Recall MM
+    //solve(i, false, true); // Standard Full
+    //solve(i, true, true); // Recall Full
+
+    if (failIsGood) {
+      console.log("Unexpected success", i);
+      process.exit(1);
+    }
+  } catch (e) {
+    if (!failIsGood) {
+      console.log(e);
+      process.exit(1);
+    }
+    if (!quiet) {
+      console.log("Expected failure", i);
+    }
+  }
 }
