@@ -1,7 +1,7 @@
 import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
-import { searchAndCache, mergeGraph, canReachVertex } from "./search.js";
+import { searchAndCache, mergeGraph, canReachStart, canReachVertex } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
@@ -62,6 +62,7 @@ const solve = (seed, recall, full) => {
   }
 
   const startVertex = graph[0].from;
+  startVertex.pathToStart = true;
   let samus = new Loadout();
   if (seed > 0) {
     samus.hasCharge = true;
@@ -154,7 +155,7 @@ const solve = (seed, recall, full) => {
       const load = samus.clone();
       load.add(p.item);
       //TODO: Handle boss criteria?
-      if (!canReachVertex(graph, p, startVertex, checkLoadout, load)) {
+      if (!canReachStart(graph, p, checkLoadout, load)) {
         return;
       }
 

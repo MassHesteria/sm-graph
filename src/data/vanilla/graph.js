@@ -32,6 +32,7 @@ const allVertices = Object.entries(vanillaVertices)
         name: name,
         type: type,
         item: undefined,
+        pathToStart: false,
       };
     });
   })
@@ -60,7 +61,10 @@ export const allEdges = Object.entries(getVanillaEdges())
   }, []);
 
 export const createVanillaGraph = (portalMapping) => {
-  allVertices.forEach((v) => (v.item = undefined));
+  allVertices.forEach((v) => {
+    v.item = undefined;
+    v.pathToStart = false;
+  });
   const findVertex = (name) => {
     const vertex = allVertices.find((v) => v.name == name);
     if (vertex == undefined) {

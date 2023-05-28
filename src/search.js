@@ -26,6 +26,35 @@ export const searchAndCache = (graph, vertex, test, load) => {
   return visited;
 };
 
+export const canReachStart = (graph, vertex, test, load) => {
+  if (vertex.pathToStart) {
+    return true;
+  }
+
+  let queue = [vertex];
+  let visited = [];
+
+  while (queue.length > 0) {
+    const v = queue.shift();
+    visited.push(v);
+
+    const connections = graph.filter((c) => c.from == v);
+    for (let i = 0; i < connections.length; i++) {
+      const c = connections[i];
+      if (c.condition === true || test(c.condition, load)) {
+        if (c.to.pathToStart) {
+          c.from.pathToStart = true;
+          return true;
+        }
+        if (!visited.includes(c.to) && !queue.includes(c.to)) {
+          queue.push(c.to);
+        }
+      }
+    }
+  }
+
+  return false;
+};
 export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
   if (startVertex == endVertex) {
     return true;
