@@ -7,7 +7,7 @@ import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 import { generateSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
-import { CommonEdgeUpdates } from "./data/common/edges.js";
+import { ClassicEdgeUpdates } from "./data/classic/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
@@ -50,7 +50,7 @@ const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
 
   if (seed > 0) {
-    const EdgeUpdates = recall ? RecallEdgeUpdates : CommonEdgeUpdates;
+    const EdgeUpdates = recall ? RecallEdgeUpdates : ClassicEdgeUpdates;
     EdgeUpdates.forEach((c) => {
       const [from, to] = c.edges;
       const edge = graph.find((n) => n.from.name == from && n.to.name == to);
@@ -165,7 +165,9 @@ const solve = (seed, recall, full) => {
 
     if (items.length == 0) {
       console.log("No round trip locations:", seed);
-      itemLocations.forEach((i) => console.log(i));
+      itemLocations.forEach((i) => {
+        console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
+      });
       printUncollectedItems();
       process.exit(1);
     } else if (!quiet) {
@@ -343,12 +345,12 @@ const solve = (seed, recall, full) => {
 
   //console.log(portals);
 
-  if (!quiet || seed % 1000 == 0) {
+  if (!quiet || seed % 100 == 0) {
     console.log("Verifed", seed);
   }
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
-  solve(i, true, false); // Recall MM
-  //solve(i, false, true); // Standard Full
+  //solve(i, true, false); // Recall MM
+  solve(i, false, true); // Standard Full
 }

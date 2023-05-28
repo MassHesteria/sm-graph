@@ -345,7 +345,10 @@ class ModeRecall {
     });
 
     minor("Supers (GT)", (load) => {
-      return canAccessLowerNorfair(load);
+      return (
+        canAccessLowerNorfair(load) &&
+        (load.canFly || load.hasDoubleJump || load.hasSpringBall || load.hasSpeed)
+      );
     });
 
     minor("Missiles (Alpha PBs)", (load) => {

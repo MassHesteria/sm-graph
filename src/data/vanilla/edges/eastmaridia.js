@@ -13,14 +13,22 @@ export const eastmaridiaEdges = {
 
   Aqueduct: {
     Door_Aqueduct: () => CanUsePowerBombs || (HasGravity && CanDestroyBombWalls),
-    Missiles_Aqueduct: () => HasGravity && HasSpeed,
-    Supers_Aqueduct: () => HasGravity && HasSpeed,
+    //TODO: Snail clip is techincally in logic
+    Missiles_Aqueduct: () => HasGravity,
+    Supers_Aqueduct: () => HasGravity,
     BotwoonHallwayLeft: () => HasGravity || CanDoSuitlessMaridia,
-    Missiles_LeftSandPit: () => HasGravity && HasMorph,
-    ReserveTank_LeftSandPit: () => HasGravity && HasMorph,
+    LeftSandPitBottom: () => HasGravity,
     Missiles_RightSandPit: () => HasGravity,
     PBs_RightSandPit: () => HasGravity && HasMorph,
     OasisBottom: () => HasGravity || HasHiJump,
+  },
+
+  LeftSandPitBottom: {
+    Missiles_LeftSandPit: () =>
+      HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
+    ReserveTank_LeftSandPit: () =>
+      HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
+    OasisBottom: () => CanMoveInWestMaridia || HasHiJump,
   },
 
   BotwoonHallwayLeft: {
@@ -29,11 +37,11 @@ export const eastmaridiaEdges = {
   },
 
   Missiles_LeftSandPit: {
-    OasisBottom: () => (HasGravity || HasHiJump) && HasMorph,
+    LeftSandPitBottom: () => HasGravity && HasMorph,
   },
 
   ReserveTank_LeftSandPit: {
-    OasisBottom: () => (HasGravity || HasHiJump) && HasMorph,
+    LeftSandPitBottom: () => HasGravity && HasMorph,
   },
 
   Missiles_RightSandPit: {

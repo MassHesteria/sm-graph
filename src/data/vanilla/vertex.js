@@ -183,6 +183,7 @@ export const vanillaVertices = {
     PlasmaSparkRoomBottom: "",
     OasisTop: "",
     OasisBottom: "",
+    LeftSandPitBottom: "",
     Missiles_LeftSandPit: "minor",
     ReserveTank_LeftSandPit: "major",
     Missiles_RightSandPit: "minor",

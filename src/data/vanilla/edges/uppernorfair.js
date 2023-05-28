@@ -61,7 +61,6 @@ export const uppernorfairEdges = {
     Missiles_Cathedral: () => CanHellRun,
     Missiles_BubbleMountain: true,
     Missiles_SpeedBooster: () => CanHellRun,
-    PreCrocomire: () => CanHellRun,
     Door_LavaDive: () => CanHellRun,
     Missiles_NorfairReserve1: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
@@ -70,7 +69,7 @@ export const uppernorfairEdges = {
   BubbleMountainBottomLeftDoor: {
     BubbleMountainMain: () => CanUsePowerBombs || CanUseBombs,
     BusinessCenterBottomRightDoor: () => HasSpeed,
-    PreCrocomire: () => CanHellRun,
+    PreCrocomire: () => CanHellRun || TotalTanks >= 2,
   },
 
   Missiles_Wave: {
@@ -133,10 +132,11 @@ export const uppernorfairEdges = {
 
   PreCrocomire: {
     Door_CrocEntry: () => CanOpenGreenDoors,
-    BubbleMountainBottomLeftDoor: () => CanHellRun,
+    BubbleMountainBottomLeftDoor: () => CanHellRun || TotalTanks >= 2,
     //TODO: Probably remove HasIce
     Missiles_CrocEscape: () =>
-      CanHellRun && (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
+      (CanHellRun || TotalTanks >= 2) &&
+      (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
   },
 
   Missiles_CrocEscape: {

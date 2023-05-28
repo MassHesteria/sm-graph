@@ -179,7 +179,7 @@ class ModeStandard {
     });
 
     minor("Missiles (Sand Pit Left)", (load) => {
-      return canAccessOuterMaridia(load) && (canDoSuitlessMaridia(load) || load.hasGravity);
+      return canAccessOuterMaridia(load) && load.hasGravity;
     });
 
     minor("Missiles (Sand Pit Right)", (load) => {
@@ -344,7 +344,7 @@ class ModeStandard {
     });
 
     minor("Supers (GT)", (load) => {
-      return canAccessLowerNorfair(load);
+      return canAccessLowerNorfair(load) && (load.canFly || load.hasSpringBall || load.hasSpeed);
     });
 
     minor("Missiles (Alpha PBs)", (load) => {

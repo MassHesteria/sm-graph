@@ -6,7 +6,7 @@ export const westmaridiaEdges = {
   MainStreet: {
     Door_MainStreet: true,
     Missiles_MainStreet: () => CanMoveInWestMaridia && HasSpeed,
-    Supers_Crab: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
+    Supers_Crab: () => CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall)),
     Missiles_MamaTurtle: () => CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall)),
     Door_MaridiaMap: () => CanOpenGreenDoors,
     Door_EverestTopRight: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
