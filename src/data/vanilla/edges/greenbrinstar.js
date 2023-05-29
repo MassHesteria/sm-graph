@@ -46,11 +46,11 @@ export const greenbrinstarEdges = {
 
   DachoraRoomLeft: {
     Door_GreenElevator: true,
-    DachoraRoomRight: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
+    DachoraRoomRight: () => CanDestroyBombWalls || HasSpeed,
   },
 
   DachoraRoomRight: {
-    DachoraRoomLeft: (samus) => samus.canDestroyBombWalls || samus.hasSpeed,
+    DachoraRoomLeft: () => CanDestroyBombWalls || HasSpeed,
     Missiles_BigPink: true,
   },
 
@@ -63,21 +63,21 @@ export const greenbrinstarEdges = {
   },
 
   PBs_Impossible: {
-    Missiles_BigPink: (samus) => samus.canPassBombPassages,
+    Missiles_BigPink: () => CanPassBombPassages,
   },
 
   Supers_SpoSpo: {
-    Missiles_BigPink: (samus) => samus.canPassBombPassages && samus.superPacks >= 1,
+    Missiles_BigPink: () => CanPassBombPassages && CanOpenGreenDoors,
   },
 
   Missiles_Charge: {
     Missiles_BigPink: true,
-    ChargeBeam: (samus) => samus.canPassBombPassages,
+    ChargeBeam: () => CanPassBombPassages,
     Missiles_Tube: () => CanOpenGreenDoors,
   },
 
   ChargeBeam: {
-    Missiles_Charge: (samus) => samus.canPassBombPassages,
+    Missiles_Charge: () => CanPassBombPassages,
     EnergyTank_Waterway: () => CanUsePowerBombs && CanOpenRedDoors && HasSpeed,
   },
 
@@ -96,7 +96,7 @@ export const greenbrinstarEdges = {
   },
 
   Door_NoobBridge: {
-    Missiles_Tube: (samus) => samus.superPacks >= 1 || samus.hasWave,
+    Missiles_Tube: (samus) => CanOpenRedDoors || samus.hasWave,
   },
 
   EnergyTank_WaveGate: {
