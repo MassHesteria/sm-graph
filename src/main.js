@@ -22,11 +22,19 @@ const getRandomSeed = () => {
   return RNG.NextInRange(1, 1000000);
 };
 
-let seed = getRandomSeed();
+const seed = getRandomSeed();
 let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
-let failIsGood = true;
+
+// Flag that tells the solver to expect invalid seeds. This is used
+// to confirm the solver properly detects unsolvable seeds.
+const expectFail = false;
+
+// Legacy mode will only place an item at a location if the loadout
+// that provided access to the location also provides an exit. The
+// new solver logic considers the item as part of the exit logic.
+const legacyMode = true;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
@@ -45,6 +53,7 @@ const solve = (seed, recall, full) => {
   const start_init = Date.now();
   const portals = mapPortals(1, false, false);
   const graph = createVanillaGraph(portals);
+  const failMode = !expectFail ? 0 : quiet ? 1 : 2;
 
   //-----------------------------------------------------------------
   // Augment the graph.
@@ -66,7 +75,8 @@ const solve = (seed, recall, full) => {
   startVertex.pathToStart = true;
   let samus = new Loadout();
   if (seed > 0) {
-    samus.hasCharge = true;
+    // Starter Charge is considered for Recall but not for Standard.
+    samus.hasCharge = recall;
   }
 
   //-----------------------------------------------------------------
@@ -83,7 +93,7 @@ const solve = (seed, recall, full) => {
 
   const placeItems = (seed) => {
     if (seed > 0) {
-      return generateSeed(seed, recall, full, failIsGood).forEach((i) =>
+      return generateSeed(seed, recall, full, failMode).forEach((i) =>
         placeItem(i.location.name, i.item.type)
       );
     } else {
@@ -133,20 +143,27 @@ const solve = (seed, recall, full) => {
     let items = [];
 
     itemLocations.forEach((p) => {
-      const load = samus.clone();
-      load.add(p.item);
-      //TODO: Handle boss criteria?
-      if (!canReachStart(graph, p, checkLoadout, load)) {
-        return;
+      if (legacyMode) {
+        if (!canReachStart(graph, p, checkLoadout, samus)) {
+          return;
+        }
+        samus.add(p.item);
+      } else {
+        const load = samus.clone();
+        load.add(p.item);
+        //TODO: Handle boss criteria?
+        if (!canReachStart(graph, p, checkLoadout, load)) {
+          return;
+        }
+        samus = load;
       }
 
-      samus = load;
       items.push(p.item);
       p.item = undefined;
     });
 
     if (items.length == 0) {
-      if (!quiet || !failIsGood) {
+      if (!quiet || !expectFail) {
         console.log("No round trip locations:", seed);
         itemLocations.forEach((i) => {
           console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
@@ -323,7 +340,7 @@ const solve = (seed, recall, full) => {
   //-----------------------------------------------------------------
 
   if (graph.filter((n) => n.from.item != undefined).length > 0) {
-    if (!failIsGood) {
+    if (!expectFail) {
       printUncollectedItems();
       //console.log(getRecallFlags(samus));
       searchAndCache(graph, startVertex, checkLoadout, samus)
@@ -348,7 +365,7 @@ const solve = (seed, recall, full) => {
 
   //console.log(portals);
 
-  if (!quiet || seed % 100 == 0) {
+  if (!quiet || seed % 1000 == 0) {
     console.log("Verifed", seed);
   }
 };
@@ -360,16 +377,16 @@ for (let i = startSeed; i <= endSeed; i++) {
     //solve(i, false, true); // Standard Full
     //solve(i, true, true); // Recall Full
 
-    if (failIsGood) {
+    if (expectFail) {
       console.log("Unexpected success", i);
       process.exit(1);
     }
   } catch (e) {
-    if (!failIsGood) {
+    if (!expectFail) {
       console.log(e);
       process.exit(1);
     }
-    if (!quiet) {
+    if (!quiet || i % 1000 == 0) {
       console.log("Expected failure", i);
     }
   }

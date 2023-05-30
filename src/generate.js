@@ -121,7 +121,7 @@ const mapLocation = (name) => {
   throw new Error("missing " + name);
 };
 
-export const generateSeed = (seed, recall, full, failIsGood) => {
+export const generateSeed = (seed, recall, full, failMode) => {
   const mode = recall
     ? new ModeRecall(seed, getLocations())
     : new ModeStandard(seed, getLocations());
@@ -131,7 +131,9 @@ export const generateSeed = (seed, recall, full, failIsGood) => {
 
   // Setup the initial loadout.
   let initLoad = new Loadout();
-  initLoad.hasCharge = true;
+
+  // Starter Charge is considered for Recall but not for Standard.
+  initLoad.hasCharge = recall;
 
   // Place the items.
   performVerifiedFill(
@@ -141,7 +143,7 @@ export const generateSeed = (seed, recall, full, failIsGood) => {
     getPrePool,
     initLoad,
     canPlaceItem,
-    failIsGood
+    failMode
   );
   mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
   return mode.nodes;

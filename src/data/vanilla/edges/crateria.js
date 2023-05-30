@@ -102,8 +102,7 @@ export const crateriaEdges = {
   },
 
   Supers_Climb: {
-    Climb: (samus) =>
-      HasGrapple || HasSpaceJump || (samus.energyTanks >= 2 && samus.totalTanks >= 3),
+    Climb: (samus) => HasGrapple || HasSpaceJump || (samus.energyTanks >= 2 && TotalTanks >= 3),
   },
 
   Missiles_OldMB: {

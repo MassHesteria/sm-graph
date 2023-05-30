@@ -123,7 +123,7 @@ export const performVerifiedFill = (
   getPrePool,
   initLoad,
   canPlaceItem,
-  failIsGood
+  failMode
 ) => {
   const rnd = new DotNetRandom(seed);
 
@@ -215,16 +215,28 @@ export const performVerifiedFill = (
       continue;
     }
 
-    let log = [];
-    if (failIsGood === verifyItemProgression(nodes, log)) {
-      continue;
-    }
-    if (failIsGood) {
-      nodes.forEach((n) => {
-        if (!log.some((e) => e.location == n.location)) {
-          console.log(`no access: ${n.item.name} at ${n.location.name}`);
-        }
-      });
+    if (failMode > 1) {
+      let log = [];
+      if (verifyItemProgression(initLoad, nodes, log)) {
+        continue;
+      }
+      console.log("--- No Access ---");
+      nodes
+        .filter((n) => !log.some((e) => e.location == n.location))
+        .map((n) => {
+          return `${n.item.name} at ${n.location.name}`;
+        })
+        .sort()
+        .forEach((e) => console.log(e));
+      console.log("----------------");
+    } else if (failMode == 1) {
+      if (verifyItemProgression(initLoad, nodes, null)) {
+        continue;
+      }
+    } else {
+      if (!verifyItemProgression(initLoad, nodes, null)) {
+        continue;
+      }
     }
 
     break;
@@ -235,8 +247,8 @@ export const performVerifiedFill = (
 // Verify seed can be completed.
 //-----------------------------------------------------------------
 
-export const verifyItemProgression = (nodes, log) => {
-  let load = new Loadout();
+export const verifyItemProgression = (initLoad, nodes, log) => {
+  let load = initLoad.clone();
   let copy = [...nodes];
 
   while (copy.length > 0) {
@@ -245,7 +257,6 @@ export const verifyItemProgression = (nodes, log) => {
       return false;
     }
     const node = copy.splice(nodeIndex, 1)[0];
-    //console.log({ item: node.item.name, location: node.location.name });
     if (log != null) {
       log.push({ item: node.item, location: node.location });
     }

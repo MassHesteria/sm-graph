@@ -144,13 +144,18 @@ class ModeStandard {
       return (
         load.canUsePowerBombs &&
         load.hasSpeed &&
-        load.energyTanks >= 2 &&
-        load.totalTanks >= 3
+        load.energyTanks >= 1 &&
+        ((load.energyTanks >= 2 && load.totalTanks >= 3) ||
+          load.hasGrapple ||
+          load.hasSpaceJump)
       );
     });
 
     major("Energy Tank (Crocomire)", (load) => {
-      return canAccessCrocomire(load);
+      return (
+        canAccessCrocomire(load) &&
+        (load.totalTanks >= 4 || load.hasGrapple || load.hasSpaceJump)
+      );
     });
 
     major("Grapple Beam", (load) => {
@@ -252,31 +257,29 @@ class ModeStandard {
     });
 
     minor("Missiles (Brin Reserve 1)", (load) => {
-      return load.canOpenRedDoors && load.canDestroyBombWalls && load.hasMorph;
+      return (
+        canAccessGreenBrinstar(load) && load.canOpenRedDoors && load.hasMorph
+      );
     });
 
     minor("Missiles (Brin Reserve 2)", (load) => {
-      return load.canOpenRedDoors && load.canPassBombPassages;
+      return (
+        canAccessGreenBrinstar(load) &&
+        load.canOpenRedDoors &&
+        load.canPassBombPassages
+      );
     });
 
     minor("Missiles (Brin Tube)", (load) => {
-      return (
-        load.canUsePowerBombs ||
-        (load.canPassBombPassages && load.canOpenGreenDoors)
-      );
+      return canAccessRedBrinstar(load) || load.canUsePowerBombs;
     });
 
     minor("Missiles (Charge)", (load) => {
-      return (
-        load.canUsePowerBombs ||
-        (load.canOpenRedDoors && (load.hasSpeed || load.canDestroyBombWalls))
-      );
+      return canAccessGreenBrinstar(load) && load.canOpenRedDoors;
     });
 
     minor("Missiles (Early Bridge)", (load) => {
-      return (
-        load.canOpenRedDoors && (load.hasSpeed || load.canDestroyBombWalls)
-      );
+      return canAccessGreenBrinstar(load) && load.canOpenRedDoors;
     });
 
     minor("Power Bombs (Etecoons)", (load) => {
@@ -289,16 +292,16 @@ class ModeStandard {
 
     major("Reserve Tank (Brinstar)", (load) => {
       return (
+        canAccessGreenBrinstar(load) &&
         load.canOpenRedDoors &&
-        (load.hasSpeed || load.canDestroyBombWalls) &&
         (load.hasMorph || load.hasSpeed)
       );
     });
 
     minor("Supers (Early Bridge)", (load) => {
       return (
+        canAccessGreenBrinstar(load) &&
         load.canOpenRedDoors &&
-        (load.hasSpeed || load.canDestroyBombWalls) &&
         (load.hasMorph || load.hasSpeed)
       );
     });
@@ -308,7 +311,11 @@ class ModeStandard {
     });
 
     minor("Supers (Spore Spawn)", (load) => {
-      return load.canPassBombPassages && load.superPacks > 0;
+      return (
+        canAccessGreenBrinstar(load) &&
+        load.canOpenGreenDoors &&
+        load.canPassBombPassages
+      );
     });
 
     major("Energy Tank (Kraid)", (load) => {
@@ -605,10 +612,15 @@ const canHellRun = (load) => {
   );
 };
 
+const canAccessGreenBrinstar = (load) => {
+  return load.canDestroyBombWalls || load.hasSpeed;
+};
+
 const canAccessRedBrinstar = (load) => {
   return (
-    load.superPacks >= 1 &&
-    (load.canUsePowerBombs || (load.canDestroyBombWalls && load.hasMorph))
+    load.hasMorph &&
+    load.canOpenGreenDoors &&
+    (canAccessGreenBrinstar(load) || load.canUsePowerBombs)
   );
 };
 
@@ -638,11 +650,9 @@ const canAccessKraid = (load) => {
 
 const canAccessCrocomire = (load) => {
   return (
-    canAccessHeatedNorfair(load) ||
-    (canAccessKraid(load) &&
-      load.canUsePowerBombs &&
-      load.hasSpeed &&
-      load.totalTanks >= 2)
+    canAccessRedBrinstar(load) &&
+    ((canHellRun(load) && load.canPassBombPassages) ||
+      (load.hasSpeed && load.totalTanks >= 2))
   );
 };
 

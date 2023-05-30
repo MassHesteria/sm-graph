@@ -22,7 +22,7 @@ export const greenbrinstarEdges = {
 
   Missiles_BrinstarReserve1: {
     ReserveTank_Brinstar: () => HasMorph,
-    Missiles_BrinstarReserve2: () => CanDestroyBombWalls,
+    Missiles_BrinstarReserve2: () => CanUseBombs || CanUsePowerBombs,
   },
 
   Missiles_BrinstarReserve2: {
@@ -58,7 +58,9 @@ export const greenbrinstarEdges = {
     DachoraRoomRight: true,
     Missiles_Charge: true,
     EnergyTank_WaveGate: (samus) => CanUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
+    //TODO:
     Supers_SpoSpo: () => CanOpenRedDoors,
+    //Supers_SpoSpo: () => CanPassBombPassages && CanOpenGreenDoors,
     PBs_Impossible: () => CanUsePowerBombs && CanOpenGreenDoors,
   },
 

@@ -40,41 +40,44 @@ export const lowernorfairEdges = {
     WorstRoomBottom: () => CanDestroyBombWalls,
     Missiles_MickeyMouse: () => CanDestroyBombWalls && HasMorph,
     Ruins: () => CanDestroyBombWalls,
-    RedKihunterShaft: true,
+    RedKihunterShaftTop: true,
   },
 
-  RedKihunterShaft: {
-    //TODO: Don't think this is right
-    EnergyTank_Firefleas: (samus) => CanUsePowerBombs || samus.superPacks >= 1,
+  RedKihunterShaftTop: {
+    Wasteland: () => CanUsePowerBombs,
+    EnergyTank_Firefleas: true,
     WorstRoomTop: (samus) =>
       (HasGravity && samus.energyTanks >= 3 && TotalTanks >= 6) || samus.energyTanks >= 6,
     Missiles_Maze: true,
+  },
+
+  Wasteland: {
     PBs_Shame: () => CanDestroyBombWalls,
+    Door_RidleyBoss: () => CanUsePowerBombs && CanOpenGreenDoors,
+    RedKihunterShaftTop: () => CanPassBombPassages,
   },
 
   EnergyTank_Firefleas: {
-    //TODO: Don't think this is right
-    RedKihunterShaft: (samus) => CanUsePowerBombs || samus.superPacks >= 1,
+    RedKihunterShaftTop: () => CanFly || HasHiJump || HasSpringBall,
   },
 
   Missiles_Maze: {
-    RedKihunterShaft: true,
+    RedKihunterShaftTop: true,
     PBs_Maze: () => CanPassBombPassages,
     Muskateers: () => HasMorph,
   },
 
   PBs_Maze: {
-    RedKihunterShaft: true,
+    RedKihunterShaftTop: true,
   },
 
   PBs_Shame: {
-    //don't think escaping ridley with 1 PB pack is in logic, but this line implies it
-    RedKihunterShaft: () => CanPassBombPassages,
-    Door_RidleyBoss: () => CanUsePowerBombs && CanOpenGreenDoors,
+    Wasteland: () => CanPassBombPassages,
   },
 
   Door_RidleyBoss: {
-    PBs_Shame: () => CanUsePowerBombs,
+    //don't think escaping ridley with 1 PB pack is in logic, but this line implies it
+    Wasteland: () => CanUsePowerBombs,
   },
 
   Missiles_MickeyMouse: {
