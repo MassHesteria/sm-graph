@@ -43,7 +43,7 @@ export const wreckedshipEdges = {
   Missiles_Attic: {
     ShipHallway: true,
     Missiles_Sky: true,
-    Missiles_OceanMiddle: (samus) => samus.superPacks >= 1 && HasMorph,
+    Missiles_OceanMiddle: () => SuperPacks >= 1 && HasMorph,
     GravitySuit: () =>
       HasMorph &&
       (CanPassBombPassages || HasSpringBall) &&
@@ -56,7 +56,7 @@ export const wreckedshipEdges = {
   },
 
   Missiles_OceanMiddle: {
-    Missiles_Attic: (samus) => HasMorph && samus.superPacks >= 1,
+    Missiles_Attic: () => HasMorph && SuperPacks >= 1,
     Missiles_Ocean: () => HasMorph,
   },
 

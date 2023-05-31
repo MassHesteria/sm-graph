@@ -20,6 +20,11 @@ export const getRecallFlags = (load) => {
     HasSpeed: load.hasSpeed,
     HasSpringBall: load.hasSpringBall,
     HasVaria: load.hasVaria,
+    HasWave: load.hasWave,
+    EnergyTanks: load.energyTanks,
+    MissilePacks: load.missilePacks,
+    PowerBombPacks: load.powerPacks,
+    SuperPacks: load.superPacks,
     TotalTanks: load.totalTanks,
     CanFly: load.canFly,
     CanHellRun:

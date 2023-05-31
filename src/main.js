@@ -239,6 +239,11 @@ const solve = (seed, recall, full) => {
       HasSpeed,
       HasSpringBall,
       HasVaria,
+      HasWave,
+      EnergyTanks,
+      MissilePacks,
+      PowerBombPacks,
+      SuperPacks,
       TotalTanks,
       CanFly,
       CanHellRun,
@@ -372,8 +377,8 @@ const solve = (seed, recall, full) => {
 
 for (let i = startSeed; i <= endSeed; i++) {
   try {
-    solve(i, false, false); // Standard MM
-    //solve(i, true, false); // Recall MM
+    //solve(i, false, false); // Standard MM
+    solve(i, true, false); // Recall MM
     //solve(i, false, true); // Standard Full
     //solve(i, true, true); // Recall Full
 

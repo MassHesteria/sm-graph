@@ -18,7 +18,7 @@ export const redbrinstarEdges = {
   },
 
   Door_AboveKraid: {
-    RedTowerBottom: (samus) => samus.superPacks >= 1,
+    RedTowerBottom: () => SuperPacks >= 1,
   },
 
   Door_KraidEntry: {
@@ -83,6 +83,6 @@ export const redbrinstarEdges = {
   },
 
   Door_MaridiaEscape: {
-    RedTowerElevatorRoom: (samus) => HasMorph && samus.superPacks >= 1,
+    RedTowerElevatorRoom: () => HasMorph && SuperPacks >= 1,
   },
 };

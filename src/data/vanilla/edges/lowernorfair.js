@@ -25,7 +25,7 @@ export const lowernorfairEdges = {
 
   PrePillars: {
     Ruins: () => CanUsePowerBombs,
-    ScrewAttack: (samus) => samus.superPacks >= 1 && CanDestroyBombWalls,
+    ScrewAttack: () => SuperPacks >= 1 && CanDestroyBombWalls,
     WorstRoomBottom: () => CanDestroyBombWalls || HasSpeed,
   },
 
@@ -46,8 +46,7 @@ export const lowernorfairEdges = {
   RedKihunterShaftTop: {
     Wasteland: () => CanUsePowerBombs,
     EnergyTank_Firefleas: true,
-    WorstRoomTop: (samus) =>
-      (HasGravity && samus.energyTanks >= 3 && TotalTanks >= 6) || samus.energyTanks >= 6,
+    WorstRoomTop: () => (HasGravity && EnergyTanks >= 3 && TotalTanks >= 6) || EnergyTanks >= 6,
     Missiles_Maze: true,
   },
 

@@ -94,26 +94,6 @@ class Loadout {
     return load.energyTanks + load.reserveTanks;
   }
 
-  getFlags() {
-    return {
-      CanUseBombs: this.canUseBombs,
-      CanUsePowerBombs: this.canUsePowerBombs,
-      CanOpenRedDoors: this.canOpenRedDoors,
-      CanOpenGreenDoors: this.canOpenGreenDoors,
-      HasGravity: this.hasGravity,
-      HasGrapple: this.hasGrapple,
-      HasHiJump: this.hasHiJump,
-      HasIce: this.hasIce,
-      HasMorph: this.hasMorph,
-      HasScrewAttack: this.hasScrewAttack,
-      HasSpaceJump: this.hasSpaceJump,
-      HasSpeed: this.hasSpeed,
-      HasSpringBall: this.hasSpringBall,
-      HasVaria: this.hasVaria,
-      TotalTanks: this.totalTanks,
-    };
-  }
-
   clone() {
     const state = { ...this };
     return new Loadout(state);

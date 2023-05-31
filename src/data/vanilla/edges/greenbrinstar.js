@@ -57,10 +57,8 @@ export const greenbrinstarEdges = {
   Missiles_BigPink: {
     DachoraRoomRight: true,
     Missiles_Charge: true,
-    EnergyTank_WaveGate: (samus) => CanUsePowerBombs && (samus.superPacks >= 1 || samus.hasWave),
-    //TODO:
+    EnergyTank_WaveGate: () => CanUsePowerBombs && (SuperPacks >= 1 || HasWave),
     Supers_SpoSpo: () => CanOpenRedDoors,
-    //Supers_SpoSpo: () => CanPassBombPassages && CanOpenGreenDoors,
     PBs_Impossible: () => CanUsePowerBombs && CanOpenGreenDoors,
   },
 
@@ -98,7 +96,7 @@ export const greenbrinstarEdges = {
   },
 
   Door_NoobBridge: {
-    Missiles_Tube: (samus) => CanOpenRedDoors || samus.hasWave,
+    Missiles_Tube: () => CanOpenRedDoors || HasWave,
   },
 
   EnergyTank_WaveGate: {

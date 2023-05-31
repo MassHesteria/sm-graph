@@ -32,25 +32,21 @@ export const crateriaEdges = {
   PreGauntlet: {
     //more specifically, the door from landing site to gauntlet
     Ship: () => CanDestroyBombWalls,
-    EnergyTank_Gauntlet: (samus) =>
-      CanUseBombs ||
-      (HasMorph && samus.powerPacks >= 2) ||
-      HasScrewAttack ||
-      (CanUsePowerBombs && HasSpeed && TotalTanks >= 2) /* TODO: remove this */,
+    EnergyTank_Gauntlet: () => CanUseBombs || (HasMorph && PowerBombPacks >= 2) || HasScrewAttack,
   },
 
   EnergyTank_Gauntlet: {
-    PreGauntlet: (samus) =>
+    PreGauntlet: () =>
       (CanUseBombs && TotalTanks >= 2) ||
-      (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1) ||
+      (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1) ||
       HasScrewAttack,
-    GauntletBackSideLeftDoor: (samus) =>
-      (CanUseBombs && TotalTanks >= 2) || (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1),
+    GauntletBackSideLeftDoor: () =>
+      (CanUseBombs && TotalTanks >= 2) || (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1),
   },
 
   GauntletBackSideLeftDoor: {
-    EnergyTank_Gauntlet: (samus) =>
-      (CanUseBombs && TotalTanks >= 2) || (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1),
+    EnergyTank_Gauntlet: () =>
+      (CanUseBombs && TotalTanks >= 2) || (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1),
     Missiles_GauntletLeft: true,
     Missiles_GauntletRight: true,
     EnergyTank_Terminator: true,
@@ -105,11 +101,11 @@ export const crateriaEdges = {
 
   ClimbSupersBottom: {
     Climb: () => CanPassBombPassages,
-    Supers_Climb: (samus) => HasSpeed && samus.energyTanks >= 1,
+    Supers_Climb: () => HasSpeed && EnergyTanks >= 1,
   },
 
   Supers_Climb: {
-    Climb: (samus) => HasGrapple || HasSpaceJump || (samus.energyTanks >= 2 && TotalTanks >= 3),
+    Climb: () => HasGrapple || HasSpaceJump || (EnergyTanks >= 2 && TotalTanks >= 3),
   },
 
   Missiles_OldMB: {

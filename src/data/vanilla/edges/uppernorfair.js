@@ -5,7 +5,7 @@ export const uppernorfairEdges = {
 
   BusinessCenter: {
     Door_ElevatorEntry: true,
-    Door_KraidMouth: (samus) => samus.superPacks >= 1,
+    Door_KraidMouth: () => SuperPacks >= 1,
     IceBeam: () => CanOpenGreenDoors && (HasVaria || TotalTanks >= 2),
     Missiles_CrumbleShaft: () => CanUsePowerBombs && CanHellRun,
     BusinessCenterTopRightDoor: true,
@@ -118,7 +118,7 @@ export const uppernorfairEdges = {
   },
 
   Door_KraidMouth: {
-    BusinessCenter: (samus) => samus.superPacks >= 1,
+    BusinessCenter: () => SuperPacks >= 1,
   },
 
   IceBeam: {

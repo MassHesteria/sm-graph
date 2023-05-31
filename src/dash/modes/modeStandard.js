@@ -419,7 +419,7 @@ class ModeStandard {
     minor("Missiles (Bubble Mountain)", (load) => {
       return (
         canAccessHeatedNorfair(load) ||
-        (load.hasSpeed && load.totalTanks >= 1 && load.canPassBombPassages)
+        (load.hasSpeed && load.canPassBombPassages)
       );
     });
 
