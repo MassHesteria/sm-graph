@@ -1,5 +1,6 @@
 import DotNetRandom from "../dotnet-random";
 import { majorItem, minorItem, Item } from "../items";
+import { getLocations } from "../locations";
 import ItemNode from "../logic";
 
 class ModeRecall {
@@ -193,7 +194,7 @@ class ModeRecall {
     });
 
     major("Energy Tank (Botwoon)", (load) => {
-      return canDefeatBotwoon(load);
+      return canAccessBotwoon(load);
     });
 
     minor("Missiles (Aqueduct)", (load) => {
@@ -440,7 +441,10 @@ class ModeRecall {
     });
 
     minor("Missiles (Bubble Mountain)", (load) => {
-      return canAccessHeatedNorfair(load);
+      return (
+        canAccessHeatedNorfair(load) ||
+        (load.hasSpeed && load.totalTanks >= 1 && load.canPassBombPassages)
+      );
     });
 
     minor("Missiles (Cathedral)", (load) => {
@@ -652,7 +656,8 @@ const canAccessCrocomire = (load) => {
   return (
     canAccessRedBrinstar(load) &&
     ((canHellRun(load) && load.canPassBombPassages) ||
-      (load.hasSpeed && load.totalTanks >= 2))
+      (load.hasSpeed &&
+        (load.hasVaria || load.hasHeatShield || load.totalTanks >= 2)))
   );
 };
 
@@ -662,17 +667,17 @@ const canDoSuitlessMaridia = (load) => {
   );
 };
 
-const canDefeatBotwoon = (load) => {
+const canAccessBotwoon = (load) => {
   return (
     canAccessRedBrinstar(load) &&
     load.canUsePowerBombs &&
-    (load.hasIce || load.hasSpeed || load.hasSpazer) &&
-    (load.hasGravity || (canDoSuitlessMaridia(load) && load.hasIce))
+    ((load.hasGravity && (load.hasIce || load.hasSpeed || load.hasSpazer)) ||
+      (canDoSuitlessMaridia(load) && (load.hasIce || load.hasSpazer)))
   );
 };
 
 const canDefeatDraygon = (load) => {
-  return canDefeatBotwoon(load) && load.hasGravity;
+  return canAccessBotwoon(load) && load.hasGravity;
 };
 
 const canAccessWreckedShip = (load) => {
@@ -695,6 +700,27 @@ const canEnterAndLeaveGauntlet = (load) => {
     load.hasScrewAttack ||
     (load.canUsePowerBombs && load.powerPacks >= 2 && load.totalTanks >= 1)
   );
+};
+
+export const LogicChecks = {
+  canHellRun,
+  canAccessRedBrinstar,
+  canAccessHeatedNorfair,
+  canAccessLowerNorfair,
+  canPassWorstRoom,
+  canAccessKraid,
+  canAccessCrocomire,
+  canDoSuitlessMaridia,
+  canAccessBotwoon,
+  canDefeatDraygon,
+  canAccessWreckedShip,
+  canAccessWestMaridia,
+  canEnterAndLeaveGauntlet,
+};
+
+export const Logic = {
+  LogicChecks,
+  LogicLocations: new ModeRecall(1, getLocations()).nodes,
 };
 
 export default ModeRecall;

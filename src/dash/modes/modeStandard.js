@@ -1,6 +1,7 @@
 import DotNetRandom from "../dotnet-random";
 import { majorItem, minorItem, Item } from "../items";
 import ItemNode from "../logic";
+import { getLocations } from "../locations";
 
 class ModeStandard {
   nodes = [];
@@ -178,7 +179,7 @@ class ModeStandard {
     });
 
     major("Energy Tank (Botwoon)", (load) => {
-      return canDefeatBotwoon(load);
+      return canAccessBotwoon(load);
     });
 
     minor("Missiles (Aqueduct)", (load) => {
@@ -416,7 +417,10 @@ class ModeStandard {
     });
 
     minor("Missiles (Bubble Mountain)", (load) => {
-      return canAccessHeatedNorfair(load);
+      return (
+        canAccessHeatedNorfair(load) ||
+        (load.hasSpeed && load.totalTanks >= 1 && load.canPassBombPassages)
+      );
     });
 
     minor("Missiles (Cathedral)", (load) => {
@@ -652,7 +656,7 @@ const canAccessCrocomire = (load) => {
   return (
     canAccessRedBrinstar(load) &&
     ((canHellRun(load) && load.canPassBombPassages) ||
-      (load.hasSpeed && load.totalTanks >= 2))
+      (load.hasSpeed && (load.hasVaria || load.totalTanks >= 2)))
   );
 };
 
@@ -662,17 +666,17 @@ const canDoSuitlessMaridia = (load) => {
   );
 };
 
-const canDefeatBotwoon = (load) => {
+const canAccessBotwoon = (load) => {
   return (
     canAccessRedBrinstar(load) &&
     load.canUsePowerBombs &&
-    (load.hasIce || load.hasSpeed) &&
-    (load.hasGravity || (canDoSuitlessMaridia(load) && load.hasIce))
+    ((load.hasGravity && (load.hasIce || load.hasSpeed)) ||
+      (canDoSuitlessMaridia(load) && load.hasIce))
   );
 };
 
 const canDefeatDraygon = (load) => {
-  return canDefeatBotwoon(load) && load.hasGravity;
+  return canAccessBotwoon(load) && load.hasGravity;
 };
 
 const canAccessWreckedShip = (load) => {
@@ -693,11 +697,32 @@ const canAccessInnerMaridia = (load) => {
 
 const canEnterAndLeaveGauntlet = (load) => {
   return (
-    load.canUseBombs ||
+    (load.canUseBombs && load.totalTanks >= 2) ||
     load.hasScrewAttack ||
-    (load.canUsePowerBombs && load.powerPacks >= 2) ||
-    (load.hasSpeed && load.canUsePowerBombs && load.totalTanks >= 2)
+    (load.canUsePowerBombs && load.powerPacks >= 2 && load.totalTanks >= 1)
   );
+};
+
+export const LogicChecks = {
+  canHellRun,
+  canAccessRedBrinstar,
+  canAccessHeatedNorfair,
+  canAccessLowerNorfair,
+  canPassWorstRoom,
+  canAccessKraid,
+  canAccessCrocomire,
+  canDoSuitlessMaridia,
+  canAccessBotwoon,
+  canDefeatDraygon,
+  canAccessWreckedShip,
+  canAccessOuterMaridia,
+  canAccessInnerMaridia,
+  canEnterAndLeaveGauntlet,
+};
+
+export const Logic = {
+  LogicChecks,
+  LogicLocations: new ModeStandard(1, getLocations()).nodes,
 };
 
 export default ModeStandard;

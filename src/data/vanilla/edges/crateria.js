@@ -41,12 +41,19 @@ export const crateriaEdges = {
 
   EnergyTank_Gauntlet: {
     PreGauntlet: (samus) =>
-      CanUseBombs & (TotalTanks >= 2) ||
+      (CanUseBombs && TotalTanks >= 2) ||
       (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1) ||
       HasScrewAttack,
-    Missiles_GauntletLeft: () => CanPassBombPassages,
-    Missiles_GauntletRight: () => CanPassBombPassages,
-    EnergyTank_Terminator: () => CanPassBombPassages,
+    GauntletBackSideLeftDoor: (samus) =>
+      (CanUseBombs && TotalTanks >= 2) || (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1),
+  },
+
+  GauntletBackSideLeftDoor: {
+    EnergyTank_Gauntlet: (samus) =>
+      (CanUseBombs && TotalTanks >= 2) || (HasMorph && samus.powerPacks >= 2 && TotalTanks >= 1),
+    Missiles_GauntletLeft: true,
+    Missiles_GauntletRight: true,
+    EnergyTank_Terminator: true,
   },
 
   Missiles_GauntletLeft: {
@@ -143,6 +150,7 @@ export const crateriaEdges = {
   EnergyTank_Ceiling: {
     MorphBall: true,
     Missiles_Beta: () => HasMorph,
+    BoulderRoom: () => CanUsePowerBombs,
     Missiles_BillyMays1: () => CanUsePowerBombs,
     Missiles_BillyMays2: () => CanUsePowerBombs,
   },
@@ -151,12 +159,17 @@ export const crateriaEdges = {
     TacoTankRoom: () => HasMorph,
   },
 
+  BoulderRoom: {
+    Missiles_BillyMays1: () => true,
+    Missiles_BillyMays2: () => true,
+    EnergyTank_Ceiling: () => CanUseBombs || CanUsePowerBombs || HasScrewAttack,
+  },
+
   Missiles_BillyMays1: {
-    EnergyTank_Ceiling: () => CanUsePowerBombs,
-    Missiles_BillyMays2: true,
+    BoulderRoom: true,
   },
 
   Missiles_BillyMays2: {
-    Missiles_BillyMays1: true,
+    BoulderRoom: true,
   },
 };

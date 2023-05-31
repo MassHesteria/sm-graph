@@ -18,9 +18,8 @@ export const eastmaridiaEdges = {
     Supers_Aqueduct: () => HasGravity,
     BotwoonHallwayLeft: () => HasGravity || CanDoSuitlessMaridia,
     LeftSandPitBottom: () => HasGravity,
-    Missiles_RightSandPit: () => HasGravity,
-    PBs_RightSandPit: () => HasGravity && HasMorph,
-    OasisBottom: () => HasGravity || HasHiJump,
+    RightSandPitBottom: () => HasGravity,
+    OasisBottom: () => HasGravity,
   },
 
   LeftSandPitBottom: {
@@ -28,7 +27,13 @@ export const eastmaridiaEdges = {
       HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
     ReserveTank_LeftSandPit: () =>
       HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
-    OasisBottom: () => CanMoveInWestMaridia || HasHiJump,
+    OasisBottom: () => HasGravity,
+  },
+
+  RightSandPitBottom: {
+    Missiles_RightSandPit: () => HasGravity,
+    PBs_RightSandPit: () => HasGravity && HasMorph,
+    OasisBottom: () => HasGravity,
   },
 
   BotwoonHallwayLeft: {
@@ -45,11 +50,11 @@ export const eastmaridiaEdges = {
   },
 
   Missiles_RightSandPit: {
-    OasisBottom: () => HasGravity || HasHiJump,
+    RightSandPitBottom: () => HasGravity,
   },
 
   PBs_RightSandPit: {
-    OasisBottom: () => (HasGravity || HasHiJump) && HasMorph,
+    RightSandPitBottom: () => HasGravity && HasMorph,
   },
 
   OasisBottom: {
@@ -67,7 +72,7 @@ export const eastmaridiaEdges = {
   PlasmaSparkRoomTop: {
     OasisTop: () => CanOpenGreenDoors,
     PrePlasmaBeam: () => CanDefeatDraygon,
-    MaridiaHighway: true,
+    MaridiaHighway: () => HasGravity || HasHiJump || HasSpaceJump,
   },
 
   PlasmaSparkRoomBottom: {
@@ -133,11 +138,11 @@ export const eastmaridiaEdges = {
   },
 
   Door_Highway: {
-    MaridiaHighway: () => HasGravity || HasHiJump,
+    MaridiaHighway: true,
   },
 
   MaridiaHighway: {
     Door_Highway: true,
-    PlasmaSparkRoomTop: () => HasGravity || HasHiJump,
+    PlasmaSparkRoomTop: () => HasGravity || HasHiJump || HasSpaceJump,
   },
 };

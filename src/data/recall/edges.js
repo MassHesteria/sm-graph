@@ -23,6 +23,11 @@ const WreckedShip_Bowling_Missiles_to_Reserve = {
   requires: () => CanUsePowerBombs,
 };
 
+const WreckedShip_RearExit_to_HighwayExit = {
+  edges: ["ShipRearExit", "Door_HighwayExit"],
+  requires: () => CanMoveInWestMaridia,
+};
+
 const WestMaridia_MainStreet_to_OasisBottom = {
   edges: ["MainStreet", "OasisBottom"],
   requires: () => CanOpenRedDoors && CanMoveInWestMaridia,
@@ -110,6 +115,7 @@ export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
   Crocomire_PostCroc_to_IndianaJones,
   LowerNorfair_WorstRoom_Bottom_to_Top,
   WreckedShip_Bowling_Missiles_to_Reserve,
+  WreckedShip_RearExit_to_HighwayExit,
   WestMaridia_MainStreet_to_OasisBottom,
   WestMaridia_OasisBottom_to_MainStreet,
   EastMaridia_OasisBottom_to_SpringBall,
