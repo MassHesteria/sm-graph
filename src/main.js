@@ -5,7 +5,7 @@ import { searchAndCache, mergeGraph, canReachStart, canReachVertex } from "./sea
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import { generateSeed } from "./generate.js";
+import { generateSeed, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { ClassicEdgeUpdates } from "./data/classic/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
@@ -36,6 +36,9 @@ const expectFail = false;
 // new solver logic considers the item as part of the exit logic.
 const legacyMode = true;
 
+// Read seed information from external files.
+const readExternal = false;
+
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
   endSeed = parseInt(process.argv[2]);
@@ -45,7 +48,7 @@ if (process.argv.length == 3) {
   quiet = true;
 }
 
-const solve = (seed, recall, full) => {
+const solve = (seed, recall, full, fileName) => {
   //-----------------------------------------------------------------
   // Setup the graph.
   //-----------------------------------------------------------------
@@ -92,13 +95,17 @@ const solve = (seed, recall, full) => {
   };
 
   const placeItems = (seed) => {
+    if (fileName != undefined && fileName.length > 0) {
+      return readSeed(fileName).forEach((i) => placeItem(i.location, i.item));
+    }
+
     if (seed > 0) {
       return generateSeed(seed, recall, full, failMode).forEach((i) =>
         placeItem(i.location.name, i.item.type)
       );
-    } else {
-      return vanillaItemPlacement.forEach((i) => placeItem(i.location, i.item));
     }
+
+    return vanillaItemPlacement.forEach((i) => placeItem(i.location, i.item));
   };
 
   placeItems(seed);
@@ -368,19 +375,21 @@ const solve = (seed, recall, full) => {
     );
   }
 
-  //console.log(portals);
-
-  if (!quiet || seed % 5000 == 0) {
+  if (!quiet || seed % 100 == 0) {
     console.log("Verifed", seed);
   }
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
   try {
-    solve(i, false, false); // Standard MM
-    solve(i, true, false); // Recall MM
-    solve(i, false, true); // Standard Full
-    solve(i, true, true); // Recall Full
+    if (readExternal) {
+      solve(i, false, false, `src/external/${i.toString().padStart(6, "0")}.json`);
+    } else {
+      solve(i, false, false); // Standard MM
+      solve(i, true, false); // Recall MM
+      solve(i, false, true); // Standard Full
+      solve(i, true, true); // Recall Full
+    }
 
     if (expectFail) {
       console.log("Unexpected success", i);
@@ -389,6 +398,7 @@ for (let i = startSeed; i <= endSeed; i++) {
   } catch (e) {
     if (!expectFail) {
       console.log(e);
+      console.log("Seed:", i);
       process.exit(1);
     }
     if (!quiet || i % 1000 == 0) {

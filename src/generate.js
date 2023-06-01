@@ -1,3 +1,4 @@
+import fs from "fs";
 import {
   performVerifiedFill,
   getFullPrePool,
@@ -6,6 +7,7 @@ import {
   isValidMajorMinor,
 } from "./dash/itemPlacement";
 import { getLocations } from "./dash/locations";
+import { Item } from "./dash/items";
 import Loadout from "./dash/loadout";
 import ModeStandard from "./dash/modes/modeStandard";
 import ModeRecall from "./dash/modes/modeRecall";
@@ -147,4 +149,24 @@ export const generateSeed = (seed, recall, full, failMode) => {
   );
   mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
   return mode.nodes;
+};
+
+export const readSeed = (fileName) => {
+  const getItem = (itemName) => {
+    let itemKey = 0;
+    Object.entries(Item).forEach((value) => {
+      if (value[0] == itemName) {
+        itemKey = value[1];
+      }
+    });
+    return itemKey;
+  };
+
+  const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
+  return seedInfo.itemLocations.map((i) => {
+    return {
+      location: mapLocation(i.location),
+      item: getItem(i.item),
+    };
+  });
 };
