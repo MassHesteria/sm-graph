@@ -95,9 +95,9 @@ export const eastmaridiaEdges = {
   },
 
   BotwoonHallwayRight: {
-    Aqueduct: () => (HasGravity && HasSpeed) || HasIce || CanDefeatBotwoon,
-    EnergyTank_Botwoon: () =>
-      CanDefeatBotwoon && HasMorph && (HasGravity || HasHiJump || HasSpringBall),
+    Aqueduct: () => (HasGravity && HasSpeed) || HasIce,
+    //TODO: Should we include charge/missile/super criteria for Botwoon?
+    EnergyTank_Botwoon: () => HasMorph && (HasGravity || HasHiJump || HasSpringBall),
     ColosseumTopLeft: () => HasGravity && (HasSpeed || HasMorph),
   },
 

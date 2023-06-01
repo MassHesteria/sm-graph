@@ -234,9 +234,13 @@ export const performVerifiedFill = (
         continue;
       }
     } else {
+      //let log = [];
       if (!verifyItemProgression(initLoad, nodes, null)) {
         continue;
       }
+      //console.log("--- Pseduo Order ---");
+      //log.forEach((n) => console.log(`${n.item.name} at ${n.location.name}`));
+      //console.log("--------------------");
     }
 
     break;

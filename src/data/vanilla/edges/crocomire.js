@@ -1,6 +1,6 @@
 export const crocomireEdges = {
   Door_Croc: {
-    PostCroc: () => CanDefeatCrocomire,
+    PostCroc: () => HasCharge || MissilePacks >= 2 || SuperPacks >= 2,
   },
 
   PostCroc: {

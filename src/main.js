@@ -127,11 +127,14 @@ const solve = (seed, recall, full) => {
     const isUnique = (value, index, array) => {
       return array.indexOf(value) === index;
     };
+    console.log("--- Uncollected ---");
     graph
       .filter((n) => n.from.item != undefined)
-      .map((n) => `Location: ${n.from.name} Item: ${ItemNames.get(n.from.item)}`)
+      .map((n) => `${ItemNames.get(n.from.item)} @ ${n.from.name}`)
       .filter(isUnique)
+      .sort()
       .forEach((n) => console.log(n));
+    console.log("-------------------");
   };
 
   //-----------------------------------------------------------------
@@ -169,6 +172,8 @@ const solve = (seed, recall, full) => {
           console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
         });
         printUncollectedItems();
+        //console.log(samus);
+        //searchAndCache(graph, startVertex, checkLoadout, samus).forEach((a) => console.log(a));
       }
       throw new Error("no round trip locations");
     } else if (!quiet) {
@@ -190,8 +195,6 @@ const solve = (seed, recall, full) => {
   };
 
   const bossData = {
-    CanDefeatBotwoon: true,
-    CanDefeatCrocomire: false,
     CanDefeatGoldTorizo: true,
     CanDefeatKraid: false,
     CanDefeatPhantoon: false,
@@ -254,8 +257,6 @@ const solve = (seed, recall, full) => {
     } = recall ? getRecallFlags(load) : getClassicFlags(load);
 
     const {
-      CanDefeatBotwoon,
-      CanDefeatCrocomire,
       CanDefeatGoldTorizo,
       CanDefeatKraid,
       CanDefeatPhantoon,
@@ -278,6 +279,8 @@ const solve = (seed, recall, full) => {
 
     // Find all accessible vertices
     const all = searchAndCache(graph, startVertex, checkLoadout, samus);
+    //console.log(samus);
+    //all.forEach((a) => console.log(a.name));
 
     // Find all uncollected item vertices
     const uncollected = all.filter((v) => v.item != undefined);
@@ -305,10 +308,7 @@ const solve = (seed, recall, full) => {
     };
 
     // Check for access to bosses
-    if (!bossData.CanDefeatCrocomire) {
-      bossData.CanDefeatCrocomire =
-        samus.hasCharge || samus.missilePacks >= 2 || samus.superPacks >= 2;
-    }
+    // TODO: I think we need to do the search again if a boss flag changes
     if (!bossData.CanDefeatKraid) {
       bossData.CanDefeatKraid = hasRoundTrip(bossVertices.Kraid);
     }
@@ -329,13 +329,13 @@ const solve = (seed, recall, full) => {
 
     // Handle collecting a single item if no "easy" items are available
     // TODO: Needs testing; not currently being executed
-    const first = uncollected[0];
+    //const first = uncollected[0];
 
-    samus.add(first.item);
-    if (!quiet) {
-      console.log(">", ItemNames.get(first.item), "\n");
-    }
-    first.item = undefined;
+    //samus.add(first.item);
+    //if (!quiet) {
+    //console.log(">", ItemNames.get(first.item), "\n");
+    //}
+    //first.item = undefined;
 
     throw new Error("one way ticket");
   }
@@ -370,17 +370,17 @@ const solve = (seed, recall, full) => {
 
   //console.log(portals);
 
-  if (!quiet || seed % 1000 == 0) {
+  if (!quiet || seed % 5000 == 0) {
     console.log("Verifed", seed);
   }
 };
 
 for (let i = startSeed; i <= endSeed; i++) {
   try {
-    //solve(i, false, false); // Standard MM
+    solve(i, false, false); // Standard MM
     solve(i, true, false); // Recall MM
-    //solve(i, false, true); // Standard Full
-    //solve(i, true, true); // Recall Full
+    solve(i, false, true); // Standard Full
+    solve(i, true, true); // Recall Full
 
     if (expectFail) {
       console.log("Unexpected success", i);

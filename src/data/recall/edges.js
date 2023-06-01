@@ -99,6 +99,11 @@ const UpperNorfair_PreCrocomire_to_CrocEscape = {
     (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
 };
 
+const UpperNorfair_PreCrocomire_to_CrocEntry = {
+  edges: ["PreCrocomire", "Door_CrocEntry"],
+  requires: true,
+};
+
 const LowerNorfair_ScrewAttack_to_PrePillars = {
   edges: ["ScrewAttack", "PrePillars"],
   requires: () =>
@@ -128,5 +133,6 @@ export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
   RedBrinstar_Xray_Item_to_Hallway,
   WestMaridia_MamaTurtle_to_EnergyTank,
   UpperNorfair_PreCrocomire_to_CrocEscape,
+  UpperNorfair_PreCrocomire_to_CrocEntry,
   LowerNorfair_ScrewAttack_to_PrePillars,
 ]);

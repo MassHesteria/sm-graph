@@ -86,11 +86,11 @@ export const lowernorfairEdges = {
 
   Missiles_GT: {
     Supers_GT: () => HasScrewAttack || CanUsePowerBombs,
-    ScrewAttack: true,
+    ScrewAttack: () => CanDefeatGoldTorizo,
   },
 
   Supers_GT: {
-    ScrewAttack: true,
+    ScrewAttack: () => CanDefeatGoldTorizo,
   },
 
   ScrewAttack: {

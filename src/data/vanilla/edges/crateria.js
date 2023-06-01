@@ -41,12 +41,16 @@ export const crateriaEdges = {
       (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1) ||
       HasScrewAttack,
     GauntletBackSideLeftDoor: () =>
-      (CanUseBombs && TotalTanks >= 2) || (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1),
+      (CanUseBombs && TotalTanks >= 2) ||
+      (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1) ||
+      (HasScrewAttack && CanPassBombPassages),
   },
 
   GauntletBackSideLeftDoor: {
     EnergyTank_Gauntlet: () =>
-      (CanUseBombs && TotalTanks >= 2) || (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1),
+      (CanUseBombs && TotalTanks >= 2) ||
+      (HasMorph && PowerBombPacks >= 2 && TotalTanks >= 1) ||
+      (HasScrewAttack && CanPassBombPassages),
     Missiles_GauntletLeft: true,
     Missiles_GauntletRight: true,
     EnergyTank_Terminator: true,

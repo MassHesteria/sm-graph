@@ -129,12 +129,15 @@ class ModeStandard {
       return load.canDestroyBombWalls;
     });
 
-    major("Morphing Ball", (load) => {
+    major("Morphing Ball", (_) => {
       return true;
     });
 
     minor("Power Bombs (Landing Site)", (load) => {
-      return load.canUsePowerBombs && (load.hasSpeed || load.canFly);
+      return (
+        load.canUsePowerBombs &&
+        ((load.hasSpeed && load.totalTanks >= 1) || load.canFly)
+      );
     });
 
     minor("Power Bombs (Morph)", (load) => {
@@ -418,8 +421,8 @@ class ModeStandard {
 
     minor("Missiles (Bubble Mountain)", (load) => {
       return (
-        canAccessHeatedNorfair(load) ||
-        (load.hasSpeed && load.canPassBombPassages)
+        canAccessRedBrinstar(load) &&
+        (canHellRun(load) || (load.hasSpeed && load.canPassBombPassages))
       );
     });
 

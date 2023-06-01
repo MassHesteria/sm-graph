@@ -144,7 +144,7 @@ class ModeRecall {
       return load.canDestroyBombWalls;
     });
 
-    major("Morphing Ball", (load) => {
+    major("Morphing Ball", (_) => {
       return true;
     });
 
@@ -442,8 +442,8 @@ class ModeRecall {
 
     minor("Missiles (Bubble Mountain)", (load) => {
       return (
-        canAccessHeatedNorfair(load) ||
-        (load.hasSpeed && load.canPassBombPassages)
+        canAccessRedBrinstar(load) &&
+        (canHellRun(load) || (load.hasSpeed && load.canPassBombPassages))
       );
     });
 
