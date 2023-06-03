@@ -9,6 +9,7 @@ import { generateSeed, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { ClassicEdgeUpdates } from "./data/classic/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
+import { SeasonEdgeUpdates } from "./data/season/edges.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 
@@ -34,10 +35,11 @@ const expectFail = false;
 // Legacy mode will only place an item at a location if the loadout
 // that provided access to the location also provides an exit. The
 // new solver logic considers the item as part of the exit logic.
-const legacyMode = true;
+const legacyMode = false;
 
 // Read seed information from external files.
-const readExternal = false;
+//const readFromFolder = "path/to/results";
+const readFromFolder = null;
 
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
@@ -48,31 +50,15 @@ if (process.argv.length == 3) {
   quiet = true;
 }
 
-const solve = (seed, recall, full, fileName) => {
+const solve = (seed, recall, full, edgeUpdates, fileName) => {
   //-----------------------------------------------------------------
   // Setup the graph.
   //-----------------------------------------------------------------
 
   const start_init = Date.now();
   const portals = mapPortals(1, false, false);
-  const graph = createVanillaGraph(portals);
+  const graph = createVanillaGraph(portals, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
-
-  //-----------------------------------------------------------------
-  // Augment the graph.
-  //-----------------------------------------------------------------
-
-  if (seed > 0) {
-    const EdgeUpdates = recall ? RecallEdgeUpdates : ClassicEdgeUpdates;
-    EdgeUpdates.forEach((c) => {
-      const [from, to] = c.edges;
-      const edge = graph.find((n) => n.from.name == from && n.to.name == to);
-      if (edge == null) {
-        throw new Error(`Could not find edge from ${from} to ${to}`);
-      }
-      edge.condition = c.requires;
-    });
-  }
 
   const startVertex = graph[0].from;
   startVertex.pathToStart = true;
@@ -382,13 +368,14 @@ const solve = (seed, recall, full, fileName) => {
 
 for (let i = startSeed; i <= endSeed; i++) {
   try {
-    if (readExternal) {
-      solve(i, false, false, `src/external/${i.toString().padStart(6, "0")}.json`);
+    if (readFromFolder != null) {
+      const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
+      solve(i, false, false, SeasonEdgeUpdates, fileName);
     } else {
-      solve(i, false, false); // Standard MM
-      solve(i, true, false); // Recall MM
-      solve(i, false, true); // Standard Full
-      solve(i, true, true); // Recall Full
+      solve(i, false, false, ClassicEdgeUpdates); // Standard MM
+      solve(i, true, false, RecallEdgeUpdates); // Recall MM
+      solve(i, false, true, ClassicEdgeUpdates); // Standard Full
+      solve(i, true, true, RecallEdgeUpdates); // Recall Full
     }
 
     if (expectFail) {

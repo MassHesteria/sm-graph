@@ -60,11 +60,12 @@ export const allEdges = Object.entries(getVanillaEdges())
     return acc.concat(cur);
   }, []);
 
-export const createVanillaGraph = (portalMapping) => {
+export const createVanillaGraph = (portalMapping, edgeUpdates) => {
   allVertices.forEach((v) => {
     v.item = undefined;
     v.pathToStart = false;
   });
+
   const findVertex = (name) => {
     const vertex = allVertices.find((v) => v.name == name);
     if (vertex == undefined) {
@@ -72,7 +73,8 @@ export const createVanillaGraph = (portalMapping) => {
     }
     return vertex;
   };
-  return allEdges
+
+  const edges = allEdges
     .map((e) => {
       return {
         from: findVertex(e.from),
@@ -98,4 +100,15 @@ export const createVanillaGraph = (portalMapping) => {
         };
       })
     );
+
+  edgeUpdates.forEach((c) => {
+    const [from, to] = c.edges;
+    const edge = edges.find((n) => n.from.name == from && n.to.name == to);
+    if (edge == null) {
+      throw new Error(`Could not find edge from ${from} to ${to}`);
+    }
+    edge.condition = c.requires;
+  });
+
+  return edges;
 };

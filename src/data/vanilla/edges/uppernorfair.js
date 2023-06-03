@@ -57,60 +57,87 @@ export const uppernorfairEdges = {
   },
 
   BubbleMountainMain: {
-    BubbleMountainBottomLeftDoor: () => CanUsePowerBombs || CanUseBombs,
-    Missiles_Cathedral: () => CanHellRun,
     Missiles_BubbleMountain: true,
+    BubbleMountainKingCacLedge: true,
+    BubbleMountainTopLeftDoor: () => CanFly || HasIce || HasSpringBall || HasHiJump,
+    BubbleMountainBottomLeftDoor: () => CanPassBombPassages,
+    Missiles_Cathedral: () => CanHellRun,
+  },
+
+  BubbleMountainKingCacLedge: {
+    BubbleMountainMain: true,
+    BubbleMountainTopLeftDoor: true, //NOTE: dboost in logic
     Missiles_SpeedBooster: () => CanHellRun,
-    Door_LavaDive: () => CanHellRun,
-    Missiles_NorfairReserve1: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
+    KronicBoostTop: () => CanHellRun,
+  },
+
+  BubbleMountainTopLeftDoor: {
+    BubbleMountainMain: true,
+    BubbleMountainKingCacLedge: true, //TODO: update?
+    Missiles_NorfairReserve1: () => CanOpenGreenDoors && CanHellRun,
   },
 
   BubbleMountainBottomLeftDoor: {
-    BubbleMountainMain: () => CanUsePowerBombs || CanUseBombs,
+    BubbleMountainMain: () => CanPassBombPassages,
     BusinessCenterBottomRightDoor: () => HasSpeed,
+    NutellaRefill: () => (CanHellRun || TotalTanks >= 2) && (HasWave || CanOpenGreenDoors),
+    KronicBoostTop: () => CanHellRun,
+  },
+
+  KronicBoostTop: {
+    BubbleMountainKingCacLedge: () => CanHellRun, //TODO: need to require more than normal tanks
+    BubbleMountainBottomLeftDoor: () => CanHellRun,
+    NutellaRefill: () =>
+      HasMorph && (HasWave || CanOpenGreenDoors) && (HasGrapple || HasSpaceJump) && CanHellRun,
+    Door_LavaDive: () => CanUsePowerBombs && CanHellRun,
+  },
+
+  NutellaRefill: {
+    BubbleMountainBottomLeftDoor: () => CanHellRun || TotalTanks >= 2,
+    KronicBoostTop: () => CanHellRun && HasMorph && (HasGrapple || HasSpaceJump),
     PreCrocomire: () => CanHellRun || TotalTanks >= 2,
   },
 
   Missiles_Wave: {
-    BubbleMountainMain: () => CanHellRun,
+    BubbleMountainKingCacLedge: () => CanHellRun,
     WaveBeam: () => CanHellRun,
   },
 
   WaveBeam: {
-    BubbleMountainMain: () => CanHellRun,
+    BubbleMountainKingCacLedge: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
   },
 
   Missiles_NorfairReserve1: {
-    BubbleMountainMain: true,
+    BubbleMountainTopLeftDoor: () => CanHellRun,
     Missiles_NorfairReserve2: () => CanHellRun,
   },
 
   Missiles_NorfairReserve2: {
     Missiles_NorfairReserve1: () => CanHellRun,
-    ReserveTank_Norfair: true,
+    ReserveTank_Norfair: () => CanHellRun,
   },
 
   ReserveTank_Norfair: {
-    Missiles_NorfairReserve2: true,
+    Missiles_NorfairReserve2: () => CanHellRun,
   },
 
   Door_SingleChamber: {
-    BubbleMountainMain: () => CanHellRun && CanDestroyBombWalls,
+    BubbleMountainKingCacLedge: () => CanHellRun && CanDestroyBombWalls,
   },
 
   Door_LavaDive: {
-    BubbleMountainMain: () => CanHellRun,
+    KronicBoostTop: () => CanHellRun,
   },
 
   Missiles_SpeedBooster: {
-    BubbleMountainMain: () => CanHellRun,
-    SpeedBooster: true,
+    BubbleMountainKingCacLedge: () => CanHellRun,
+    SpeedBooster: () => CanHellRun,
   },
 
   SpeedBooster: {
-    Missiles_SpeedBooster: true,
+    Missiles_SpeedBooster: () => CanHellRun,
   },
 
   Missiles_BubbleMountain: {
@@ -132,7 +159,7 @@ export const uppernorfairEdges = {
 
   PreCrocomire: {
     Door_CrocEntry: () => CanOpenGreenDoors,
-    BubbleMountainBottomLeftDoor: () => CanHellRun || TotalTanks >= 2,
+    NutellaRefill: () => CanHellRun || TotalTanks >= 2,
     //TODO: Probably remove HasIce
     Missiles_CrocEscape: () =>
       (CanHellRun || TotalTanks >= 2) &&

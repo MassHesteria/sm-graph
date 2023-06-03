@@ -6,7 +6,8 @@ export const crocomireEdges = {
   PostCroc: {
     Door_Croc: true,
     EnergyTank_Croc: () =>
-      //need to ask Kipp how many tanks should put this in logic
+      //TODO: need to ask Kipp how many tanks should put this in logic
+      //TODO: also need to account for varia/gravity in tank count
       (EnergyTanks >= 3 && TotalTanks >= 4) || HasSpaceJump || HasGrapple,
     //TODO: Standard logic allows access to Croc PBs without any movement items but
     //      we probably do not want that. In the first million, one seed failed: 893225.

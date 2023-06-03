@@ -4,9 +4,9 @@ import { CommonEdgeUpdates } from "../common/edges";
 // Edge definitions.
 //-----------------------------------------------------------------
 
-const UpperNorfair_BubbleMountain_Main_to_Reserve = {
-  edges: ["BubbleMountainMain", "Missiles_NorfairReserve1"],
-  requires: () => CanHellRun && (CanFly || HasGrapple || HasIce || HasSpringBall || HasHiJump),
+const UpperNorfair_BubbleMountain_KingCacLedge_to_TopLeftDoor = {
+  edges: ["BubbleMountainKingCacLedge", "BubbleMountainTopLeftDoor"],
+  requires: () => HasGrapple || CanFly,
 };
 
 //-----------------------------------------------------------------
@@ -14,5 +14,5 @@ const UpperNorfair_BubbleMountain_Main_to_Reserve = {
 //-----------------------------------------------------------------
 
 export const ClassicEdgeUpdates = CommonEdgeUpdates.concat([
-  UpperNorfair_BubbleMountain_Main_to_Reserve,
+  UpperNorfair_BubbleMountain_KingCacLedge_to_TopLeftDoor,
 ]);
