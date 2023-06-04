@@ -10,7 +10,7 @@ import { uppernorfairEdges } from "./edges/uppernorfair";
 import { lowernorfairEdges } from "./edges/lowernorfair";
 import { wreckedshipEdges } from "./edges/wreckedship";
 
-export const getVanillaEdges = () => {
+const getVanillaEdges = () => {
   return {
     Crateria: crateriaEdges,
     GreenBrinstar: greenbrinstarEdges,
@@ -40,7 +40,7 @@ const allVertices = Object.entries(vanillaVertices)
     return acc.concat(cur);
   }, []);
 
-export const allEdges = Object.entries(getVanillaEdges())
+const allEdges = Object.entries(getVanillaEdges())
   .map(([_, v]) => {
     return Object.entries(v)
       .map(([from, w]) => {
