@@ -95,8 +95,7 @@ const WestMaridia_MamaTurtle_to_EnergyTank = {
 const UpperNorfair_PreCrocomire_to_CrocEscape = {
   edges: ["PreCrocomire", "Missiles_CrocEscape"],
   requires: () =>
-    (CanHellRun || TotalTanks >= 2) &&
-    (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
+    HellRunTanks >= 2 && (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
 };
 
 const UpperNorfair_PreCrocomire_to_CrocEntry = {

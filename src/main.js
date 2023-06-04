@@ -12,6 +12,7 @@ import { RecallEdgeUpdates } from "./data/recall/edges.js";
 import { SeasonEdgeUpdates } from "./data/season/edges.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
+import { getSeasonFlags } from "./data/season/flags.js";
 
 //-----------------------------------------------------------------
 // Determine the seed.
@@ -50,7 +51,7 @@ if (process.argv.length == 3) {
   quiet = true;
 }
 
-const solve = (seed, recall, full, edgeUpdates, fileName) => {
+const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   //-----------------------------------------------------------------
   // Setup the graph.
   //-----------------------------------------------------------------
@@ -203,17 +204,6 @@ const solve = (seed, recall, full, edgeUpdates, fileName) => {
   };
 
   const checkLoadout = (condition, load) => {
-    //TODO: see if there's a better way to do this
-    /*return Function(
-      "samus",
-      `
-      "use strict";
-      const HasMorph = samus.hasMorph;
-      const CanHellRun = samus.totalTanks >= 4 || (samus.hasGravity && samus.totalTanks >= 3) || samus.hasVaria;
-      const CanDoSuitlessMaridia = samus.hasHiJump && samus.hasGrapple && (samus.hasIce || samus.hasSpringBall);
-      return (${condition.toString()})(samus)`
-    )(load);*/
-
     const {
       CanUseBombs,
       CanUsePowerBombs,
@@ -241,13 +231,14 @@ const solve = (seed, recall, full, edgeUpdates, fileName) => {
       PowerBombPacks,
       SuperPacks,
       TotalTanks,
+      HellRunTanks,
       CanFly,
       CanHellRun,
       CanDoSuitlessMaridia,
       CanPassBombPassages,
       CanDestroyBombWalls,
       CanMoveInWestMaridia,
-    } = recall ? getRecallFlags(load) : getClassicFlags(load);
+    } = getFlags(load);
 
     const {
       CanDefeatGoldTorizo,
@@ -361,7 +352,7 @@ const solve = (seed, recall, full, edgeUpdates, fileName) => {
     );
   }
 
-  if (!quiet || seed % 100 == 0) {
+  if (!quiet || seed % 5000 == 0) {
     console.log("Verifed", seed);
   }
 };
@@ -370,12 +361,12 @@ for (let i = startSeed; i <= endSeed; i++) {
   try {
     if (readFromFolder != null) {
       const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-      solve(i, false, false, SeasonEdgeUpdates, fileName);
+      solve(i, false, false, SeasonEdgeUpdates, getSeasonFlags, fileName);
     } else {
-      solve(i, false, false, ClassicEdgeUpdates); // Standard MM
-      solve(i, true, false, RecallEdgeUpdates); // Recall MM
-      solve(i, false, true, ClassicEdgeUpdates); // Standard Full
-      solve(i, true, true, RecallEdgeUpdates); // Recall Full
+      solve(i, false, false, ClassicEdgeUpdates, getClassicFlags); // Standard MM
+      solve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
+      solve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
+      solve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
     }
 
     if (expectFail) {

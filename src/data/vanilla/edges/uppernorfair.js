@@ -6,8 +6,8 @@ export const uppernorfairEdges = {
   BusinessCenter: {
     Door_ElevatorEntry: true,
     Door_KraidMouth: () => SuperPacks >= 1,
-    IceBeam: () => CanOpenGreenDoors && (HasVaria || TotalTanks >= 2),
-    Missiles_CrumbleShaft: () => CanUsePowerBombs && CanHellRun,
+    IceBeam: () => CanOpenGreenDoors && HellRunTanks >= 2,
+    Missiles_CrumbleShaft: () => CanUsePowerBombs && HellRunTanks >= 2,
     BusinessCenterTopRightDoor: true,
     BusinessCenterBottomRightDoor: true,
     EnergyTank_HiJump: () => CanOpenRedDoors,
@@ -75,13 +75,13 @@ export const uppernorfairEdges = {
   BubbleMountainTopLeftDoor: {
     BubbleMountainMain: true,
     BubbleMountainKingCacLedge: true, //TODO: update?
-    Missiles_NorfairReserve1: () => CanOpenGreenDoors && CanHellRun,
+    Missiles_NorfairReserve1: () => CanOpenGreenDoors && HellRunTanks >= 1,
   },
 
   BubbleMountainBottomLeftDoor: {
     BubbleMountainMain: () => CanPassBombPassages,
     BusinessCenterBottomRightDoor: () => HasSpeed,
-    NutellaRefill: () => (CanHellRun || TotalTanks >= 2) && (HasWave || CanOpenGreenDoors),
+    NutellaRefill: () => (HellRunTanks >= 1 && HasWave) || (HellRunTanks >= 2 && CanOpenGreenDoors),
     KronicBoostTop: () => CanHellRun,
   },
 
@@ -94,9 +94,9 @@ export const uppernorfairEdges = {
   },
 
   NutellaRefill: {
-    BubbleMountainBottomLeftDoor: () => CanHellRun || TotalTanks >= 2,
+    BubbleMountainBottomLeftDoor: () => HellRunTanks >= 1,
     KronicBoostTop: () => CanHellRun && HasMorph && (HasGrapple || HasSpaceJump),
-    PreCrocomire: () => CanHellRun || TotalTanks >= 2,
+    PreCrocomire: () => HellRunTanks >= 1,
   },
 
   Missiles_Wave: {
@@ -110,7 +110,7 @@ export const uppernorfairEdges = {
   },
 
   Missiles_NorfairReserve1: {
-    BubbleMountainTopLeftDoor: () => CanHellRun,
+    BubbleMountainTopLeftDoor: () => HellRunTanks >= 1,
     Missiles_NorfairReserve2: () => CanHellRun,
   },
 
@@ -133,11 +133,11 @@ export const uppernorfairEdges = {
 
   Missiles_SpeedBooster: {
     BubbleMountainKingCacLedge: () => CanHellRun,
-    SpeedBooster: () => CanHellRun,
+    SpeedBooster: true,
   },
 
   SpeedBooster: {
-    Missiles_SpeedBooster: () => CanHellRun,
+    Missiles_SpeedBooster: true,
   },
 
   Missiles_BubbleMountain: {
@@ -149,26 +149,26 @@ export const uppernorfairEdges = {
   },
 
   IceBeam: {
-    BusinessCenter: () => CanPassBombPassages && (HasVaria || TotalTanks >= 2),
+    BusinessCenter: () => CanPassBombPassages && HellRunTanks >= 2,
   },
 
   Missiles_CrumbleShaft: {
-    BusinessCenter: () => CanUsePowerBombs,
+    BusinessCenter: () => CanUsePowerBombs && HellRunTanks >= 3,
     PreCrocomire: () => HasVaria && HasSpeed,
   },
 
   PreCrocomire: {
     Door_CrocEntry: () => CanOpenGreenDoors,
-    NutellaRefill: () => CanHellRun || TotalTanks >= 2,
+    NutellaRefill: () => HellRunTanks >= 1,
     //TODO: Probably remove HasIce
     Missiles_CrocEscape: () =>
-      (CanHellRun || TotalTanks >= 2) &&
+      HellRunTanks >= 2 &&
       (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
   },
 
   Missiles_CrocEscape: {
     BusinessCenter: () => CanOpenGreenDoors,
-    PreCrocomire: () => HasMorph && (HasVaria || TotalTanks >= 2),
+    PreCrocomire: () => HasMorph && HellRunTanks >= 2,
   },
 
   Door_CrocEntry: {

@@ -1,4 +1,4 @@
-export const getClassicFlags = (load) => {
+export const getSeasonFlags = (load) => {
   return {
     CanUseBombs: load.canUseBombs,
     CanUsePowerBombs: load.canUsePowerBombs,
@@ -26,14 +26,9 @@ export const getClassicFlags = (load) => {
     PowerBombPacks: load.powerPacks,
     SuperPacks: load.superPacks,
     TotalTanks: load.totalTanks,
-    HellRunTanks:
-      load.hasVaria || load.hasHeatShield
-        ? 9999
-        : load.hasGravity
-        ? load.totalTanks * 2
-        : load.totalTanks,
+    HellRunTanks: load.hasVaria ? 9999 : load.totalTanks,
     CanFly: load.canFly,
-    CanHellRun: load.totalTanks >= 4 || (load.hasGravity && load.totalTanks >= 3) || load.hasVaria,
+    CanHellRun: load.totalTanks >= 4 || load.hasVaria,
     CanDoSuitlessMaridia: load.hasHiJump && load.hasGrapple && (load.hasIce || load.hasSpringBall),
     CanPassBombPassages: load.canPassBombPassages,
     CanDestroyBombWalls: load.canDestroyBombWalls,

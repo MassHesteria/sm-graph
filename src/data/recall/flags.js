@@ -26,6 +26,12 @@ export const getRecallFlags = (load) => {
     PowerBombPacks: load.powerPacks,
     SuperPacks: load.superPacks,
     TotalTanks: load.totalTanks,
+    HellRunTanks:
+      load.hasVaria || load.hasHeatShield
+        ? 9999
+        : load.hasGravity
+        ? load.totalTanks * 2
+        : load.totalTanks,
     CanFly: load.canFly,
     CanHellRun:
       load.totalTanks >= 4 ||
