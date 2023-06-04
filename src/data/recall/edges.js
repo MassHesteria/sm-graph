@@ -107,8 +107,8 @@ const LowerNorfair_ScrewAttack_to_PrePillars = {
   edges: ["ScrewAttack", "PrePillars"],
   requires: () =>
     ((HasSpaceJump || HasDoubleJump) && (HasScrewAttack || CanUsePowerBombs)) ||
-    ((CanUseBombs || HasSpringBall) && CanPassBombPassages) || // don't think bomb passage matters
-    (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
+    ((CanUseBombs || HasSpringBall) && CanPassBombPassages) ||
+    (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanKillGoldTorizo)),
 };
 
 //-----------------------------------------------------------------

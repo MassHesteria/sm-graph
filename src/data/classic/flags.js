@@ -1,4 +1,5 @@
 export const getClassicFlags = (load) => {
+  const canDamageBosses = load.hasCharge || load.canOpenRedDoors;
   return {
     CanUseBombs: load.canUseBombs,
     CanUsePowerBombs: load.canUsePowerBombs,
@@ -38,5 +39,13 @@ export const getClassicFlags = (load) => {
     CanPassBombPassages: load.canPassBombPassages,
     CanDestroyBombWalls: load.canDestroyBombWalls,
     CanMoveInWestMaridia: load.hasGravity,
+    CanKillKraid: canDamageBosses,
+    CanKillPhantoon: canDamageBosses,
+    CanKillDraygon: canDamageBosses,
+    CanKillRidley: load.hasVaria && canDamageBosses,
+    CanKillSporeSpawn: canDamageBosses,
+    CanKillCrocomire: canDamageBosses,
+    CanKillBotwoon: canDamageBosses,
+    CanKillGoldTorizo: load.hasVaria && canDamageBosses,
   };
 };

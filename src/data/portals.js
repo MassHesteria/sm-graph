@@ -26,10 +26,10 @@ export const portals = {
     ["Door_PreAqueduct", "Door_Aqueduct"],
   ],
   Bosses: [
-    ["Door_KraidBoss", "Boss_Kraid"],
-    ["Door_PhantoonBoss", "Boss_Phantoon"],
-    ["Door_DraygonBoss", "Boss_Draygon"],
-    ["Door_RidleyBoss", "Boss_Ridley"],
+    ["Door_KraidBoss", "Exit_Kraid"],
+    ["Door_PhantoonBoss", "Exit_Phantoon"],
+    ["Door_DraygonBoss", "Exit_Draygon"],
+    ["Door_RidleyBoss", "Exit_Ridley"],
   ],
 };
 

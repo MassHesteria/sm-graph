@@ -1,7 +1,7 @@
 import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
-import { searchAndCache, mergeGraph, canReachStart, canReachVertex } from "./search.js";
+import { searchAndCache, mergeGraph, canReachStart } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
@@ -148,7 +148,6 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
       } else {
         const load = samus.clone();
         load.add(p.item);
-        //TODO: Handle boss criteria?
         if (!canReachStart(graph, p, checkLoadout, load)) {
           return;
         }
@@ -189,11 +188,10 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   };
 
   const bossData = {
-    CanDefeatGoldTorizo: true,
-    CanDefeatKraid: false,
-    CanDefeatPhantoon: false,
-    CanDefeatDraygon: false,
-    CanDefeatRidley: false,
+    HasDefeatedKraid: false,
+    HasDefeatedPhantoon: false,
+    HasDefeatedDraygon: false,
+    HasDefeatedRidley: false,
   };
 
   const bossVertices = {
@@ -238,15 +236,18 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
       CanPassBombPassages,
       CanDestroyBombWalls,
       CanMoveInWestMaridia,
+      CanKillKraid,
+      CanKillPhantoon,
+      CanKillDraygon,
+      CanKillRidley,
+      CanKillSporeSpawn,
+      CanKillCrocomire,
+      CanKillBotwoon,
+      CanKillGoldTorizo,
     } = getFlags(load);
 
-    const {
-      CanDefeatGoldTorizo,
-      CanDefeatKraid,
-      CanDefeatPhantoon,
-      CanDefeatDraygon,
-      CanDefeatRidley,
-    } = bossData;
+    const { HasDefeatedKraid, HasDefeatedPhantoon, HasDefeatedDraygon, HasDefeatedRidley } =
+      bossData;
 
     return eval(`(${condition.toString()})(load)`);
   };
@@ -282,28 +283,24 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
       if (!all.includes(vertex)) {
         return false;
       }
-      if (vertex.item != undefined) {
-        const load = samus.clone();
-        load.add(vertex.item);
-        return canReachVertex(graph, vertex, startVertex, checkLoadout, load);
-      }
 
-      return canReachVertex(graph, vertex, startVertex, checkLoadout, samus);
+      return canReachStart(graph, vertex, checkLoadout, samus);
     };
 
-    // Check for access to bosses
-    // TODO: I think we need to do the search again if a boss flag changes
-    if (!bossData.CanDefeatKraid) {
-      bossData.CanDefeatKraid = hasRoundTrip(bossVertices.Kraid);
+    // Update defeated boss flags. Assume that if we can get to the boss
+    // and back to the start that we have defeated the boss since the
+    // logic for killing the boss is considered leaving the boss.
+    if (!bossData.HasDefeatedKraid) {
+      bossData.HasDefeatedKraid = hasRoundTrip(bossVertices.Kraid);
     }
-    if (!bossData.CanDefeatPhantoon) {
-      bossData.CanDefeatPhantoon = hasRoundTrip(bossVertices.Phantoon);
+    if (!bossData.HasDefeatedPhantoon) {
+      bossData.HasDefeatedPhantoon = hasRoundTrip(bossVertices.Phantoon);
     }
-    if (!bossData.CanDefeatDraygon) {
-      bossData.CanDefeatDraygon = hasRoundTrip(bossVertices.Draygon);
+    if (!bossData.HasDefeatedDraygon) {
+      bossData.HasDefeatedDraygon = hasRoundTrip(bossVertices.Draygon);
     }
-    if (!bossData.CanDefeatRidley) {
-      bossData.CanDefeatRidley = hasRoundTrip(bossVertices.Ridley);
+    if (!bossData.HasDefeatedRidley) {
+      bossData.HasDefeatedRidley = hasRoundTrip(bossVertices.Ridley);
     }
 
     // Collect all items where we can make a round trip back to the start

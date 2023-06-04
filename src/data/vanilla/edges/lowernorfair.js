@@ -86,18 +86,18 @@ export const lowernorfairEdges = {
 
   Missiles_GT: {
     Supers_GT: () => HasScrewAttack || CanUsePowerBombs,
-    ScrewAttack: () => CanDefeatGoldTorizo,
+    ScrewAttack: () => CanKillGoldTorizo,
   },
 
   Supers_GT: {
-    ScrewAttack: () => CanDefeatGoldTorizo,
+    ScrewAttack: () => CanKillGoldTorizo,
   },
 
   ScrewAttack: {
     Supers_GT: () => HasScrewAttack || CanUsePowerBombs,
     PrePillars: () =>
       (HasSpaceJump && (HasScrewAttack || CanUsePowerBombs)) ||
-      ((CanUseBombs || HasSpringBall) && CanPassBombPassages) || // don't think bomb passage matters
-      (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanDefeatGoldTorizo)), //does this exist?
+      ((CanUseBombs || HasSpringBall) && CanPassBombPassages) ||
+      (HasSpeed && ((HasHiJump && CanDestroyBombWalls) || CanKillGoldTorizo)),
   },
 };

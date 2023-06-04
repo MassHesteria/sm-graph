@@ -9,6 +9,7 @@ import { eastmaridiaEdges } from "./edges/eastmaridia";
 import { uppernorfairEdges } from "./edges/uppernorfair";
 import { lowernorfairEdges } from "./edges/lowernorfair";
 import { wreckedshipEdges } from "./edges/wreckedship";
+import { bossEdges } from "./edges/boss";
 
 const getVanillaEdges = () => {
   return {
@@ -22,6 +23,7 @@ const getVanillaEdges = () => {
     UpperNorfair: uppernorfairEdges,
     LowerNorfair: lowernorfairEdges,
     WreckedShip: wreckedshipEdges,
+    Bosses: bossEdges,
   };
 };
 

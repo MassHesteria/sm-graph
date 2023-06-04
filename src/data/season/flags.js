@@ -1,4 +1,5 @@
 export const getSeasonFlags = (load) => {
+  const canDamageBosses = load.hasCharge || load.canOpenRedDoors;
   return {
     CanUseBombs: load.canUseBombs,
     CanUsePowerBombs: load.canUsePowerBombs,
@@ -33,5 +34,13 @@ export const getSeasonFlags = (load) => {
     CanPassBombPassages: load.canPassBombPassages,
     CanDestroyBombWalls: load.canDestroyBombWalls,
     CanMoveInWestMaridia: load.hasGravity,
+    CanKillKraid: canDamageBosses,
+    CanKillPhantoon: canDamageBosses,
+    CanKillDraygon: canDamageBosses,
+    CanKillRidley: load.hasVaria && canDamageBosses,
+    CanKillSporeSpawn: canDamageBosses,
+    CanKillCrocomire: canDamageBosses,
+    CanKillBotwoon: canDamageBosses,
+    CanKillGoldTorizo: load.hasVaria && canDamageBosses,
   };
 };

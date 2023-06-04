@@ -71,7 +71,7 @@ export const eastmaridiaEdges = {
 
   PlasmaSparkRoomTop: {
     OasisTop: () => CanOpenGreenDoors,
-    PrePlasmaBeam: () => CanDefeatDraygon,
+    PrePlasmaBeam: () => HasDefeatedDraygon,
     MaridiaHighway: () => HasGravity || HasHiJump || HasSpaceJump,
   },
 
@@ -110,7 +110,7 @@ export const eastmaridiaEdges = {
   ColosseumTopLeft: {
     EnergyTank_Botwoon: () => HasMorph && (HasGravity || HasHiJump || HasSpringBall),
     ColosseumTopRight: () => HasGravity || HasSpaceJump || CanDoSuitlessMaridia,
-    PlasmaSparkRoomBottom: () => CanDefeatDraygon && (HasGravity || (HasHiJump && HasSpaceJump)),
+    PlasmaSparkRoomBottom: () => HasDefeatedDraygon && (HasGravity || (HasHiJump && HasSpaceJump)),
   },
 
   ColosseumTopRight: {
