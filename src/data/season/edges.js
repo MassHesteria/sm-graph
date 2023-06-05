@@ -68,6 +68,16 @@ const UpperNorfair_SpeedMissiles_to_KingCacLedge = {
   requires: () => HellRunTanks >= 4 || (HasSpeed && HellRunTanks >= 3),
 };
 
+const UpperNorfair_KingCacLedge_to_KronicBoostTop = {
+  edges: ["BubbleMountainKingCacLedge", "KronicBoostTop"],
+  requires: () => HellRunTanks >= 8,
+};
+
+const UpperNorfair_KronicBoostTop_to_KingCacLedge = {
+  edges: ["KronicBoostTop", "BubbleMountainKingCacLedge"],
+  requires: () => HellRunTanks >= 6,
+};
+
 //-----------------------------------------------------------------
 // Exports.
 //-----------------------------------------------------------------
@@ -82,4 +92,6 @@ export const SeasonEdgeUpdates = CommonEdgeUpdates.concat([
   WestMaridia_MamaTurtle_Missiles_to_EnergyTank,
   UpperNorfair_KingCacLedge_to_SpeedMissiles,
   UpperNorfair_SpeedMissiles_to_KingCacLedge,
+  UpperNorfair_KingCacLedge_to_KronicBoostTop,
+  UpperNorfair_KronicBoostTop_to_KingCacLedge,
 ]);

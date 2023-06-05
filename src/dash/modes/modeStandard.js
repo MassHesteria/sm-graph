@@ -659,7 +659,7 @@ const canAccessCrocomire = (load) => {
   return (
     canAccessRedBrinstar(load) &&
     ((canHellRun(load) && load.canPassBombPassages) ||
-      (load.hasSpeed && (load.hasVaria || load.totalTanks >= 2)))
+      (load.hasSpeed && (load.hasVaria || load.totalTanks >= 1)))
   );
 };
 

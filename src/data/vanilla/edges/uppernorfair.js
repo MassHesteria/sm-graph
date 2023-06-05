@@ -69,7 +69,7 @@ export const uppernorfairEdges = {
     BubbleMountainTopLeftDoor: true, //NOTE: dboost in logic
     Missiles_SpeedBooster: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
-    KronicBoostTop: () => CanHellRun,
+    KronicBoostTop: () => HasVaria && (HasGravity || TotalTanks >= 2),
   },
 
   BubbleMountainTopLeftDoor: {
@@ -86,7 +86,7 @@ export const uppernorfairEdges = {
   },
 
   KronicBoostTop: {
-    BubbleMountainKingCacLedge: () => CanHellRun, //TODO: need to require more than normal tanks
+    BubbleMountainKingCacLedge: () => HasVaria,
     BubbleMountainBottomLeftDoor: () => CanHellRun,
     NutellaRefill: () =>
       HasMorph && (HasWave || CanOpenGreenDoors) && (HasGrapple || HasSpaceJump) && CanHellRun,
