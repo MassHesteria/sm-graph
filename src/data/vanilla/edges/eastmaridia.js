@@ -73,10 +73,12 @@ export const eastmaridiaEdges = {
     OasisTop: () => CanOpenGreenDoors,
     PrePlasmaBeam: () => HasDefeatedDraygon,
     MaridiaHighway: () => HasGravity || HasHiJump || HasSpaceJump,
+    PlasmaSparkRoomBottom: true,
   },
 
   PlasmaSparkRoomBottom: {
     PlasmaSparkRoomTop: () => HasGravity,
+    ColosseumTopLeft: () => HasDefeatedDraygon && HasGravity,
   },
 
   PrePlasmaBeam: {

@@ -151,6 +151,19 @@ export const generateSeed = (seed, recall, full, failMode) => {
   return mode.nodes;
 };
 
+export const readBosses = (fileName) => {
+  if (fileName == undefined || fileName.length <= 0) {
+    return {
+      kraidBoss: "Kraid",
+      phantoonBoss: "Phantoon",
+      draygonBoss: "Draygon",
+      ridleyBoss: "Ridley",
+    };
+  }
+  const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
+  return seedInfo.bosses;
+};
+
 export const readSeed = (fileName) => {
   const getItem = (itemName) => {
     let itemKey = 0;

@@ -81,7 +81,7 @@ export const uppernorfairEdges = {
   BubbleMountainBottomLeftDoor: {
     BubbleMountainMain: () => CanPassBombPassages,
     BusinessCenterBottomRightDoor: () => HasSpeed,
-    NutellaRefill: () => (HellRunTanks >= 1 && HasWave) || (HellRunTanks >= 2 && CanOpenGreenDoors),
+    NutellaRefill: () => HellRunTanks >= 1 && (HasWave || CanOpenGreenDoors),
     KronicBoostTop: () => CanHellRun,
   },
 

@@ -29,6 +29,11 @@ const Crateria_Gauntlet_EnergyTank_to_BackSideLeftDoor = {
 
 const Crocomire_PostCroc_to_EnergyTank = {
   edges: ["PostCroc", "EnergyTank_Croc"],
+  requires: () => HasSpaceJump || HasGrapple || TotalTanks >= 2 || (HasVaria && TotalTanks >= 1),
+};
+
+const Crocomire_EnergyTank_to_PostCroc = {
+  edges: ["EnergyTank_Croc", "PostCroc"],
   requires: () => HasSpaceJump || HasGrapple || TotalTanks >= 3 || (HasVaria && TotalTanks >= 1),
 };
 
@@ -87,6 +92,7 @@ export const SeasonEdgeUpdates = CommonEdgeUpdates.concat([
   Crateria_Gauntlet_Pre_to_EnergyTank,
   Crateria_Gauntlet_EnergyTank_to_BackSideLeftDoor,
   Crocomire_PostCroc_to_EnergyTank,
+  Crocomire_EnergyTank_to_PostCroc,
   RedBrinstar_Xray_Hallway_to_Scope,
   RedBrinstar_Xray_Scope_to_Hallway,
   WestMaridia_MamaTurtle_Missiles_to_EnergyTank,

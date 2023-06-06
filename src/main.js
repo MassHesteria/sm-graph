@@ -5,7 +5,7 @@ import { searchAndCache, mergeGraph, canReachStart } from "./search.js";
 import { createVanillaGraph } from "./data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
-import { generateSeed, readSeed } from "./generate.js";
+import { generateSeed, readBosses, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
 import { ClassicEdgeUpdates } from "./data/classic/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
@@ -58,6 +58,25 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
 
   const start_init = Date.now();
   const portals = mapPortals(1, false, false);
+
+  const bosses = readBosses(fileName);
+
+  if (bosses != undefined) {
+    const setPortal = (from, to) => {
+      const temp = portals.find((p) => p[0] == from);
+      temp[1] = to;
+    };
+
+    setPortal("Door_KraidBoss", `Exit_${bosses.kraidBoss}`);
+    setPortal("Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`);
+    setPortal("Door_DraygonBoss", `Exit_${bosses.draygonBoss}`);
+    setPortal("Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`);
+
+    if (!quiet) {
+      console.log(bosses);
+    }
+  }
+
   const graph = createVanillaGraph(portals, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
 
@@ -292,15 +311,27 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
     // logic for killing the boss is considered leaving the boss.
     if (!bossData.HasDefeatedKraid) {
       bossData.HasDefeatedKraid = hasRoundTrip(bossVertices.Kraid);
+      if (!quiet && bossData.HasDefeatedKraid) {
+        console.log(chalk.magentaBright("Defeated Kraid"));
+      }
     }
     if (!bossData.HasDefeatedPhantoon) {
       bossData.HasDefeatedPhantoon = hasRoundTrip(bossVertices.Phantoon);
+      if (!quiet && bossData.HasDefeatedPhantoon) {
+        console.log(chalk.magentaBright("Defeated Phantoon"));
+      }
     }
     if (!bossData.HasDefeatedDraygon) {
       bossData.HasDefeatedDraygon = hasRoundTrip(bossVertices.Draygon);
+      if (!quiet && bossData.HasDefeatedDraygon) {
+        console.log(chalk.magentaBright("Defeated Draygon"));
+      }
     }
     if (!bossData.HasDefeatedRidley) {
       bossData.HasDefeatedRidley = hasRoundTrip(bossVertices.Ridley);
+      if (!quiet && bossData.HasDefeatedRidley) {
+        console.log(chalk.magentaBright("Defeated Ridley"));
+      }
     }
 
     // Collect all items where we can make a round trip back to the start
@@ -349,35 +380,39 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
     );
   }
 
-  if (!quiet || seed % 5000 == 0) {
+  if (!quiet || seed % 1000 == 0) {
     console.log("Verifed", seed);
   }
 };
 
-for (let i = startSeed; i <= endSeed; i++) {
+const trySolve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   try {
-    if (readFromFolder != null) {
-      const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-      solve(i, false, false, SeasonEdgeUpdates, getSeasonFlags, fileName);
-    } else {
-      solve(i, false, false, ClassicEdgeUpdates, getClassicFlags); // Standard MM
-      solve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
-      solve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
-      solve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
-    }
+    solve(seed, recall, full, edgeUpdates, getFlags, fileName);
 
     if (expectFail) {
-      console.log("Unexpected success", i);
+      console.log("Unexpected success", seed);
       process.exit(1);
     }
   } catch (e) {
     if (!expectFail) {
       console.log(e);
-      console.log("Seed:", i);
+      console.log("Seed:", seed);
       process.exit(1);
     }
-    if (!quiet || i % 1000 == 0) {
-      console.log("Expected failure", i);
+    if (!quiet || seed % 1000 == 0) {
+      console.log("Expected failure", seed);
     }
+  }
+};
+
+for (let i = startSeed; i <= endSeed; i++) {
+  if (readFromFolder != null) {
+    const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
+    trySolve(i, false, false, SeasonEdgeUpdates, getSeasonFlags, fileName);
+  } else {
+    trySolve(i, false, false, ClassicEdgeUpdates, getClassicFlags); // Standard MM
+    trySolve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
+    trySolve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
+    trySolve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
   }
 }
