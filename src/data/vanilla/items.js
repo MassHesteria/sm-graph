@@ -1,4 +1,39 @@
-import { Item } from "../../dash/items";
+import { Item, majorItem, minorItem } from "../../dash/items";
+
+const copyItem = (itemType, isMajor, num) => {
+  const arr = new Array(num);
+  const newItem = isMajor ? majorItem : minorItem;
+  for (let i = 0; i < num; i++) {
+    arr[i] = newItem(0x0, itemType, false);
+  }
+  return arr;
+};
+
+export const getVanillaItemPool = () => {
+  return [
+    majorItem(0x0, Item.Bombs),
+    majorItem(0x0, Item.Charge),
+    majorItem(0x0, Item.Ice),
+    majorItem(0x0, Item.HJB),
+    majorItem(0x0, Item.Speed),
+    majorItem(0x0, Item.Wave),
+    majorItem(0x0, Item.Spazer),
+    majorItem(0x0, Item.SpringBall),
+    majorItem(0x0, Item.Varia),
+    majorItem(0x0, Item.Plasma),
+    majorItem(0x0, Item.Grapple),
+    majorItem(0x0, Item.Morph),
+    majorItem(0x0, Item.Gravity),
+    majorItem(0x0, Item.Xray),
+    majorItem(0x0, Item.SpaceJump),
+    majorItem(0x0, Item.ScrewAttack),
+  ]
+    .concat(copyItem(Item.EnergyTank, true, 14))
+    .concat(copyItem(Item.Reserve, true, 4))
+    .concat(copyItem(Item.Missile, false, 46))
+    .concat(copyItem(Item.PowerBomb, false, 10))
+    .concat(copyItem(Item.Super, false, 10));
+};
 
 export const vanillaItemPlacement = [
   { location: "MorphBall", item: Item.Morph },

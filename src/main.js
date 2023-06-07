@@ -2,8 +2,8 @@ import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
 import { searchAndCache, mergeGraph, canReachStart } from "./search.js";
-import { createVanillaGraph } from "./data/vanilla/graph.js";
-import { vanillaItemPlacement } from "./data/vanilla/items.js";
+import { createGraph } from "./data/vanilla/graph.js";
+import { vanillaItemPlacement, getVanillaItemPool } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 import { generateSeed, readBosses, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
@@ -13,6 +13,8 @@ import { SeasonEdgeUpdates } from "./data/season/edges.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
+import { graphFill } from "./graphFill.js";
+import { getMajorMinorPrePool } from "./dash/itemPlacement.js";
 
 //-----------------------------------------------------------------
 // Determine the seed.
@@ -77,7 +79,7 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
     }
   }
 
-  const graph = createVanillaGraph(portals, edgeUpdates);
+  const graph = createGraph(portals, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
 
   const startVertex = graph[0].from;
@@ -87,12 +89,13 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
     // Starter Charge is considered for Recall but not for Standard.
     samus.hasCharge = recall;
   }
+  graphFill(seed, graph, getVanillaItemPool(), getMajorMinorPrePool, samus, true);
 
   //-----------------------------------------------------------------
   // Places items within the graph.
   //-----------------------------------------------------------------
 
-  const placeItem = (location, item) => {
+  /*const placeItem = (location, item) => {
     const part = graph.find((n) => n.from.name == location);
     if (part == null) {
       console.error("missing part", location);
@@ -114,7 +117,7 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
     return vanillaItemPlacement.forEach((i) => placeItem(i.location, i.item));
   };
 
-  placeItems(seed);
+  placeItems(seed);*/
 
   //-----------------------------------------------------------------
   // Print available item locations to the console.
@@ -411,8 +414,8 @@ for (let i = startSeed; i <= endSeed; i++) {
     trySolve(i, false, false, SeasonEdgeUpdates, getSeasonFlags, fileName);
   } else {
     trySolve(i, false, false, ClassicEdgeUpdates, getClassicFlags); // Standard MM
-    trySolve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
-    trySolve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
-    trySolve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
+    //trySolve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
+    //trySolve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
+    //trySolve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
   }
 }

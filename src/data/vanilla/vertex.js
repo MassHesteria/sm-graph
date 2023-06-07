@@ -210,18 +210,26 @@ export const vanillaVertices = {
     Missiles_IndianaJones: "minor",
     Missiles_Cosine: "minor",
   },
-  Special: {
+  Kraid: {
     Exit_Kraid: "",
     Boss_Kraid: "",
     VariaSuit: "major",
+  },
+  Phantoon: {
     Exit_Phantoon: "",
     Boss_Phantoon: "",
+  },
+  Draygon: {
     Exit_Draygon: "",
     Boss_Draygon: "",
     SpaceJump: "major",
+  },
+  Ridley: {
     Exit_Ridley: "",
     Boss_Ridley: "",
     EnergyTank_Ridley: "major",
+  },
+  Tourian: {
     Door_Tourian: "",
   },
 };

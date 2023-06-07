@@ -27,20 +27,23 @@ const getVanillaEdges = () => {
   };
 };
 
-const allVertices = Object.entries(vanillaVertices)
-  .map(([_, v]) => {
-    return Object.entries(v).map(([name, type]) => {
-      return {
-        name: name,
-        type: type,
-        item: undefined,
-        pathToStart: false,
-      };
-    });
-  })
-  .reduce((acc, cur) => {
-    return acc.concat(cur);
-  }, []);
+const getAllVertices = () => {
+  return Object.entries(vanillaVertices)
+    .map(([k, v]) => {
+      return Object.entries(v).map(([name, type]) => {
+        return {
+          name: name,
+          type: type,
+          area: k,
+          item: undefined,
+          pathToStart: false,
+        };
+      });
+    })
+    .reduce((acc, cur) => {
+      return acc.concat(cur);
+    }, []);
+};
 
 const allEdges = Object.entries(getVanillaEdges())
   .map(([_, v]) => {
@@ -62,19 +65,24 @@ const allEdges = Object.entries(getVanillaEdges())
     return acc.concat(cur);
   }, []);
 
-export const createVanillaGraph = (portalMapping, edgeUpdates) => {
-  allVertices.forEach((v) => {
-    v.item = undefined;
-    v.pathToStart = false;
-  });
+export const createGraph = (portalMapping, edgeUpdates) => {
+  //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
+
+  const allVertices = getAllVertices();
 
   const findVertex = (name) => {
     const vertex = allVertices.find((v) => v.name == name);
     if (vertex == undefined) {
-      throw new Error(`createVanillaGraph: could not find vertex, ${name}`);
+      throw new Error(`createGraph: could not find vertex, ${name}`);
     }
     return vertex;
   };
+
+  //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
 
   const edges = allEdges
     .map((e) => {
@@ -103,6 +111,11 @@ export const createVanillaGraph = (portalMapping, edgeUpdates) => {
       })
     );
 
+  //-----------------------------------------------------------------
+  // Apply specified edge updates. This could simply be a logic
+  // change or could include edits to the map.
+  //-----------------------------------------------------------------
+
   edgeUpdates.forEach((c) => {
     const [from, to] = c.edges;
     const edge = edges.find((n) => n.from.name == from && n.to.name == to);
@@ -112,5 +125,42 @@ export const createVanillaGraph = (portalMapping, edgeUpdates) => {
     edge.condition = c.requires;
   });
 
+  //-----------------------------------------------------------------
+  // Update boss areas.
+  //-----------------------------------------------------------------
+
+  //const updateArea = (entry, newArea) => {
+
+  //}
+
   return edges;
+};
+
+export const cloneGraph = (graph) => {
+  const newVertices = getAllVertices();
+  const remap = (vertex) => {
+    return newVertices.find((v) => v.name == vertex.name);
+  };
+
+  newVertices.forEach((v) => {
+    const orig = graph.map((o) => o.from).find((t) => t.name == v.name);
+    v.type = orig.type;
+    v.area = orig.area;
+    v.item = orig.item;
+    v.pathToStart = orig.pathToStart;
+  });
+
+  return graph.map((e) => {
+    return {
+      from: remap(e.from),
+      to: remap(e.to),
+      condition: e.condition,
+    };
+  });
+  //const newEdges = [...graph];
+  //newEdges.forEach((e) => {
+  //e.from = remap(e.from);
+  //e.to = remap(e.to);
+  //});
+  //return newEdges;
 };
