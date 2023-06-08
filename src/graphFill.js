@@ -1,12 +1,10 @@
 import DotNetRandom from "./dash/dotnet-random";
 import { Item } from "./dash/items";
-import { getClassicFlags } from "./data/classic/flags";
 import GraphSolver from "./graphSolver";
-import { canReachVertex } from "./search";
 import { cloneGraph } from "./data/vanilla/graph";
 
-export const graphFill = (seed, graph, itemPool, getPrePool, initLoad, restrictType) => {
-  const solver = new GraphSolver(graph, getClassicFlags);
+export const graphFill = (seed, graph, getFlags, itemPool, getPrePool, initLoad, restrictType) => {
+  const solver = new GraphSolver(graph, getFlags);
   const rnd = new DotNetRandom(seed);
 
   //-----------------------------------------------------------------
@@ -34,10 +32,7 @@ export const graphFill = (seed, graph, itemPool, getPrePool, initLoad, restrictT
     return array.indexOf(value) === index;
   };
   let shuffledLocations = itemVertices.filter(isUnique);
-  //shuffledLocations.forEach((l) => console.log(l.name));
-  //console.log("----");
   shuffle(shuffledLocations);
-  //shuffledLocations.forEach((l) => console.log(l.name));
 
   //-----------------------------------------------------------------
   //
@@ -148,12 +143,9 @@ export const graphFill = (seed, graph, itemPool, getPrePool, initLoad, restrictT
 
     placeItems(itemPool, nonPrefilled);
 
-    const tempSolver = new GraphSolver(cloneGraph(graph), getClassicFlags);
+    const tempSolver = new GraphSolver(cloneGraph(graph), getFlags);
     if (tempSolver.isValid(initLoad)) {
-      //console.log("Attempts", attempts);
       break;
     }
   }
-
-  //shuffledLocations.forEach((v) => console.log(v));
 };

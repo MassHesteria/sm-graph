@@ -12,8 +12,9 @@ import { SeasonEdgeUpdates } from "./data/season/edges.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
+import { getClassicItemPool } from "./data/classic/items.js";
 import { graphFill } from "./graphFill.js";
-import { getMajorMinorPrePool } from "./dash/itemPlacement.js";
+import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
 import GraphSolver from "./graphSolver.js";
 
 //-----------------------------------------------------------------
@@ -44,9 +45,9 @@ const legacyMode = false;
 //const readFromFolder = "path/to/results";
 const readFromFolder = null;
 
-const testVerifiedFill = true;
+const testVerifiedFill = false;
 
-const testGraphFill = false;
+const testGraphFill = true;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -166,15 +167,17 @@ const loadVerifiedFill = (seed, recall, full, edgeUpdates) => {
   return graph;
 };
 
-const loadGraphFill = (seed, edgeUpdates, full, getFlags) => {
+const loadGraphFill = (seed, full, edgeUpdates, getItemPool, getFlags) => {
   const portals = mapPortals(1, false, false);
   const graph = createGraph(portals, edgeUpdates);
   let samus = new Loadout();
-  if (seed > 0) {
-    // Starter Charge is considered for Recall but not for Standard.
-    samus.hasCharge = recall;
-  }
-  graphFill(seed, graph, getVanillaItemPool(), getMajorMinorPrePool, samus, !full);
+  //if (seed > 0) {
+  // Starter Charge is considered for Recall but not for Standard.
+  //samus.hasCharge = recall;
+  //}
+
+  const getPrePool = full ? getFullPrePool : getMajorMinorPrePool;
+  graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, !full);
   return graph;
 };
 
@@ -239,8 +242,16 @@ for (let i = startSeed; i <= endSeed; i++) {
     solve(i, loadVerifiedFill(i, false, true, ClassicEdgeUpdates), getClassicFlags);
   }
   if (testGraphFill) {
-    solve(i, loadGraphFill(i, false, ClassicEdgeUpdates, getClassicFlags), getClassicFlags);
-    solve(i, loadGraphFill(i, true, ClassicEdgeUpdates, getClassicFlags), getClassicFlags);
+    solve(
+      i,
+      loadGraphFill(i, false, ClassicEdgeUpdates, getClassicItemPool, getClassicFlags),
+      getClassicFlags
+    );
+    solve(
+      i,
+      loadGraphFill(i, true, ClassicEdgeUpdates, getClassicItemPool, getClassicFlags),
+      getClassicFlags
+    );
   }
 }
 
