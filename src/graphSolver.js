@@ -1,5 +1,4 @@
 import { canReachStart, canReachVertex, searchAndCache } from "./search";
-import { ItemNames } from "./dash/items";
 
 class GraphSolver {
   constructor(graph, getFlags, logMethods) {
@@ -8,13 +7,14 @@ class GraphSolver {
     this.startVertex = graph[0].from;
     if (logMethods != undefined) {
       this.printAvailableItems = logMethods.printAvailableItems;
+      this.printCollectedItems = logMethods.printCollectedItems;
       this.printDefeatedBoss = logMethods.printDefeatedBoss;
       this.printUncollectedItems = logMethods.printUncollectedItems;
       this.printMsg = logMethods.printMsg;
     }
   }
 
-  newChecker(load, bossData) {
+  checkFlags(load, bossData) {
     const {
       CanUseBombs,
       CanUsePowerBombs,
@@ -62,7 +62,7 @@ class GraphSolver {
     const { HasDefeatedKraid, HasDefeatedPhantoon, HasDefeatedDraygon, HasDefeatedRidley } =
       bossData;
 
-    return (condition, _) => eval(`(${condition.toString()})(load)`);
+    return (condition) => eval(`(${condition.toString()})()`);
   }
 
   isVertexAvailable(vertex, load, item, legacyMode = false) {
@@ -75,29 +75,15 @@ class GraphSolver {
       HasDefeatedRidley: false,
     };
 
-    if (
-      !canReachVertex(this.graph, this.startVertex, vertex, this.newChecker(load, bossData), load)
-    ) {
+    if (!canReachVertex(this.graph, this.startVertex, vertex, this.checkFlags(load, bossData))) {
       return false;
     }
     if (legacyMode || item == undefined) {
-      return canReachVertex(
-        this.graph,
-        vertex,
-        this.startVertex,
-        this.newChecker(load, bossData),
-        load
-      );
+      return canReachVertex(this.graph, vertex, this.startVertex, this.checkFlags(load, bossData));
     }
     let temp = load.clone();
     temp.add(item);
-    return canReachVertex(
-      this.graph,
-      vertex,
-      this.startVertex,
-      this.newChecker(temp, bossData),
-      temp
-    );
+    return canReachVertex(this.graph, vertex, this.startVertex, this.checkFlags(temp, bossData));
   }
 
   isValid(initLoad, legacyMode = false) {
@@ -117,6 +103,9 @@ class GraphSolver {
       Ridley: this.graph.find((n) => n.to.name == "Boss_Ridley").to,
     };
 
+    const findAll = () =>
+      searchAndCache(this.graph, this.startVertex, this.checkFlags(samus, bossData));
+
     //-----------------------------------------------------------------
     // Collects all items where there is a round trip back to the
     // ship. All these items are collected at the same time.
@@ -127,14 +116,14 @@ class GraphSolver {
 
       itemLocations.forEach((p) => {
         if (legacyMode) {
-          if (!canReachStart(this.graph, p, this.newChecker(samus, bossData), samus)) {
+          if (!canReachStart(this.graph, p, this.checkFlags(samus, bossData))) {
             return;
           }
           samus.add(p.item);
         } else {
           const load = samus.clone();
           load.add(p.item);
-          if (!canReachStart(this.graph, p, this.newChecker(load, bossData), load)) {
+          if (!canReachStart(this.graph, p, this.checkFlags(load, bossData))) {
             return;
           }
           samus = load;
@@ -149,19 +138,8 @@ class GraphSolver {
           this.printUncollectedItems(this.graph);
         }
         throw new Error("no round trip locations");
-      } else if (this.printMsg != undefined) {
-        let str = "";
-        items.forEach((item, idx) => {
-          const name = ItemNames.get(item);
-          str += `> ${name}`.padEnd(20, " ");
-          if ((idx + 1) % 5 == 0) {
-            str += "\n";
-          }
-        });
-        if (items.length % 5 != 0) {
-          str += "\n";
-        }
-        this.printMsg(str);
+      } else if (this.printCollectedItems) {
+        this.printCollectedItems(items);
       }
 
       return true;
@@ -169,12 +147,7 @@ class GraphSolver {
 
     try {
       while (true) {
-        const all = searchAndCache(
-          this.graph,
-          this.startVertex,
-          this.newChecker(samus, bossData),
-          samus
-        );
+        const all = findAll();
         const uncollected = all.filter((v) => v.item != undefined);
         if (uncollected.length == 0) {
           break;
@@ -193,7 +166,7 @@ class GraphSolver {
             return false;
           }
 
-          return canReachStart(this.graph, vertex, this.newChecker(samus, bossData), samus);
+          return canReachStart(this.graph, vertex, this.checkFlags(samus, bossData));
         };
 
         // Update defeated boss flags. Assume that if we can get to the boss
@@ -239,11 +212,6 @@ class GraphSolver {
       if (this.graph.filter((n) => n.from.item != undefined).length > 0) {
         if (this.printUncollectedItems != undefined) {
           this.printUncollectedItems(this.graph);
-        }
-        if (this.printMsg != undefined) {
-          searchAndCache(graph, startVertex, checkLoadout, samus)
-            .filter((a) => a.item != undefined)
-            .forEach((a) => this.printMsg(a));
         }
         throw new Error("Uncollected items");
       }

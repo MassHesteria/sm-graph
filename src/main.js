@@ -89,6 +89,21 @@ const printAvailableItems = (itemLocations) => {
   console.log(output);
 };
 
+const printCollectedItems = (items) => {
+  let str = "";
+  items.forEach((item, idx) => {
+    const name = ItemNames.get(item);
+    str += `> ${name}`.padEnd(20, " ");
+    if ((idx + 1) % 5 == 0) {
+      str += "\n";
+    }
+  });
+  if (items.length % 5 != 0) {
+    str += "\n";
+  }
+  console.log(str);
+};
+
 const printDefeatedBoss = (msg) => {
   console.log(chalk.magentaBright(msg));
 };
@@ -175,6 +190,7 @@ const solve = (seed, graph, getFlags, initLoad) => {
     ? undefined
     : {
         printAvailableItems: printAvailableItems,
+        printCollectedItems: printCollectedItems,
         printUncollectedItems: printUncollectedItems,
         printDefeatedBoss: printDefeatedBoss,
         printMsg: console.log,

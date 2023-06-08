@@ -2,7 +2,7 @@
 // Finds accessible vertices and caches open edges.
 //-----------------------------------------------------------------
 
-export const searchAndCache = (graph, vertex, test, load) => {
+export const searchAndCache = (graph, vertex, test) => {
   // Use breadth first search
   let queue = [vertex];
   let visited = [];
@@ -13,7 +13,7 @@ export const searchAndCache = (graph, vertex, test, load) => {
 
     const connections = graph.filter((c) => c.from == v);
     connections.forEach((c) => {
-      if (c.condition === true || test(c.condition, load)) {
+      if (c.condition === true || test(c.condition)) {
         // Cache that the edge is open
         c.condition = true;
         if (!visited.includes(c.to) && !queue.includes(c.to)) {
@@ -26,7 +26,7 @@ export const searchAndCache = (graph, vertex, test, load) => {
   return visited;
 };
 
-export const canReachStart = (graph, vertex, test, load) => {
+export const canReachStart = (graph, vertex, test) => {
   if (vertex.pathToStart) {
     return true;
   }
@@ -41,7 +41,7 @@ export const canReachStart = (graph, vertex, test, load) => {
     const connections = graph.filter((c) => c.from == v);
     for (let i = 0; i < connections.length; i++) {
       const c = connections[i];
-      if (c.condition === true || test(c.condition, load)) {
+      if (c.condition === true || test(c.condition)) {
         if (c.to.pathToStart) {
           c.from.pathToStart = true;
           return true;
@@ -55,7 +55,7 @@ export const canReachStart = (graph, vertex, test, load) => {
 
   return false;
 };
-export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
+export const canReachVertex = (graph, startVertex, endVertex, test) => {
   if (startVertex == endVertex) {
     return true;
   }
@@ -70,7 +70,7 @@ export const canReachVertex = (graph, startVertex, endVertex, test, load) => {
     const connections = graph.filter((c) => c.from == v);
     for (let i = 0; i < connections.length; i++) {
       const c = connections[i];
-      if (c.condition === true || test(c.condition, load)) {
+      if (c.condition === true || test(c.condition)) {
         if (c.to == endVertex) {
           return true;
         }
