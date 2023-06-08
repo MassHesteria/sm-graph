@@ -65,7 +65,7 @@ const allEdges = Object.entries(getVanillaEdges())
     return acc.concat(cur);
   }, []);
 
-export const createGraph = (portalMapping, edgeUpdates) => {
+export const createGraph = (portalMapping, edgeUpdates, startVertex) => {
   //-----------------------------------------------------------------
   //
   //-----------------------------------------------------------------
@@ -79,6 +79,16 @@ export const createGraph = (portalMapping, edgeUpdates) => {
     }
     return vertex;
   };
+
+  //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
+
+  if (startVertex != undefined) {
+    findVertex(startVertex).pathToStart = true;
+  } else {
+    findVertex("Ship").pathToStart = true;
+  }
 
   //-----------------------------------------------------------------
   //

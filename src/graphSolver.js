@@ -146,7 +146,7 @@ class GraphSolver {
 
       if (items.length == 0) {
         if (this.printUncollectedItems != undefined) {
-          this.printUncollectedItems();
+          this.printUncollectedItems(this.graph);
         }
         throw new Error("no round trip locations");
       } else if (this.printMsg != undefined) {
@@ -238,7 +238,7 @@ class GraphSolver {
 
       if (this.graph.filter((n) => n.from.item != undefined).length > 0) {
         if (this.printUncollectedItems != undefined) {
-          this.printUncollectedItems();
+          this.printUncollectedItems(this.graph);
         }
         if (this.printMsg != undefined) {
           searchAndCache(graph, startVertex, checkLoadout, samus)

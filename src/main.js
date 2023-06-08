@@ -44,6 +44,10 @@ const legacyMode = false;
 //const readFromFolder = "path/to/results";
 const readFromFolder = null;
 
+//-----------------------------------------------------------------
+// Process command line arguments.
+//-----------------------------------------------------------------
+
 if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
   endSeed = parseInt(process.argv[2]);
@@ -53,16 +57,59 @@ if (process.argv.length == 3) {
   quiet = true;
 }
 
-const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
-  //-----------------------------------------------------------------
-  // Setup the graph.
-  //-----------------------------------------------------------------
+//-----------------------------------------------------------------
+// Utility routines.
+//-----------------------------------------------------------------
 
-  const start_init = Date.now();
+const placeItem = (graph, location, item) => {
+  const part = graph.find((n) => n.from.name == location);
+  if (part == null) {
+    console.error("missing part", location);
+  }
+  part.from.item = item;
+};
+
+const printAvailableItems = (itemLocations) => {
+  if (quiet) {
+    return;
+  }
+  let output = chalk.yellow("Available: ");
+  itemLocations.forEach((p) => {
+    if (p.item == null) {
+      output += chalk.red("none");
+    } else {
+      output += chalk.green(ItemNames.get(p.item));
+    }
+    output += ` @ ${chalk.blue(p.name)} `;
+  });
+  console.log(output);
+};
+
+const printDefeatedBoss = (msg) => {
+  console.log(chalk.magentaBright(msg));
+};
+
+const printUncollectedItems = (graph) => {
+  const isUnique = (value, index, array) => {
+    return array.indexOf(value) === index;
+  };
+  console.log("--- Uncollected ---");
+  graph
+    .filter((n) => n.from.item != undefined)
+    .map((n) => `${ItemNames.get(n.from.item)} @ ${n.from.name}`)
+    .filter(isUnique)
+    .sort()
+    .forEach((n) => console.log(n));
+  console.log("-------------------");
+};
+
+//-----------------------------------------------------------------
+// Seed load routines.
+//-----------------------------------------------------------------
+
+const loadExternal = (fileName, edgeUpdates) => {
   const portals = mapPortals(1, false, false);
-
   const bosses = readBosses(fileName);
-
   if (bosses != undefined) {
     const setPortal = (from, to) => {
       const temp = portals.find((p) => p[0] == from);
@@ -78,89 +125,46 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
       console.log(bosses);
     }
   }
+  const graph = createGraph(portals, edgeUpdates);
+  readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
+  return graph;
+};
 
+const loadVanilla = () => {
+  const portals = mapPortals(1, false, false);
+  const graph = createGraph(portals, []);
+  vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
+  return graph;
+};
+
+const loadVerifiedFill = (seed, edgeUpdates) => {
+  const portals = mapPortals(1, false, false);
   const graph = createGraph(portals, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
+  generateSeed(seed, recall, full, failMode).forEach((i) =>
+    placeItem(i.location.name, i.item.type)
+  );
+  return graph;
+};
 
-  const startVertex = graph[0].from;
-  startVertex.pathToStart = true;
+const loadGraphFill = (seed, edgeUpdates, getFlags) => {
+  const portals = mapPortals(1, false, false);
+  const graph = createGraph(portals, edgeUpdates);
   let samus = new Loadout();
   if (seed > 0) {
     // Starter Charge is considered for Recall but not for Standard.
     samus.hasCharge = recall;
   }
   graphFill(seed, graph, getVanillaItemPool(), getMajorMinorPrePool, samus, true);
+  return graph;
+};
 
-  //-----------------------------------------------------------------
-  // Places items within the graph.
-  //-----------------------------------------------------------------
+//-----------------------------------------------------------------
+// Attempt to collect all items.
+//-----------------------------------------------------------------
 
-  /*const placeItem = (location, item) => {
-    const part = graph.find((n) => n.from.name == location);
-    if (part == null) {
-      console.error("missing part", location);
-    }
-    part.from.item = item;
-  };
-
-  const placeItems = (seed) => {
-    if (fileName != undefined && fileName.length > 0) {
-      return readSeed(fileName).forEach((i) => placeItem(i.location, i.item));
-    }
-
-    if (seed > 0) {
-      return generateSeed(seed, recall, full, failMode).forEach((i) =>
-        placeItem(i.location.name, i.item.type)
-      );
-    }
-
-    return vanillaItemPlacement.forEach((i) => placeItem(i.location, i.item));
-  };
-
-  placeItems(seed);*/
-
-  //-----------------------------------------------------------------
-  // Print routines.
-  //-----------------------------------------------------------------
-
-  const printAvailableItems = (itemLocations) => {
-    if (quiet) {
-      return;
-    }
-    let output = chalk.yellow("Available: ");
-    itemLocations.forEach((p) => {
-      if (p.item == null) {
-        output += chalk.red("none");
-      } else {
-        output += chalk.green(ItemNames.get(p.item));
-      }
-      output += ` @ ${chalk.blue(p.name)} `;
-    });
-    console.log(output);
-  };
-
-  const printDefeatedBoss = (msg) => {
-    console.log(chalk.magentaBright(msg));
-  };
-
-  const printUncollectedItems = () => {
-    const isUnique = (value, index, array) => {
-      return array.indexOf(value) === index;
-    };
-    console.log("--- Uncollected ---");
-    graph
-      .filter((n) => n.from.item != undefined)
-      .map((n) => `${ItemNames.get(n.from.item)} @ ${n.from.name}`)
-      .filter(isUnique)
-      .sort()
-      .forEach((n) => console.log(n));
-    console.log("-------------------");
-  };
-
-  //-----------------------------------------------------------------
-  // Attempt to collect all items.
-  //-----------------------------------------------------------------
-
+const solve = (seed, graph, getFlags, initLoad) => {
+  const start_init = Date.now();
   const start_run = Date.now();
 
   const logMethods = quiet
@@ -173,7 +177,7 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
       };
 
   let solver = new GraphSolver(graph, getFlags, logMethods);
-  if (!solver.isValid(samus, legacyMode)) {
+  if (!solver.isValid(initLoad, legacyMode)) {
     throw new Error("Invalid seed");
   }
 
@@ -195,7 +199,9 @@ const solve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   }
 };
 
-const trySolve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
+solve(0, loadVanilla(), getSeasonFlags, new Loadout());
+
+/*const trySolve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   try {
     solve(seed, recall, full, edgeUpdates, getFlags, fileName);
 
@@ -225,4 +231,4 @@ for (let i = startSeed; i <= endSeed; i++) {
     //trySolve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
     //trySolve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
   }
-}
+}*/
