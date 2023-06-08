@@ -44,6 +44,10 @@ const legacyMode = false;
 //const readFromFolder = "path/to/results";
 const readFromFolder = null;
 
+const testVerifiedFill = true;
+
+const testGraphFill = false;
+
 //-----------------------------------------------------------------
 // Process command line arguments.
 //-----------------------------------------------------------------
@@ -137,17 +141,17 @@ const loadVanilla = () => {
   return graph;
 };
 
-const loadVerifiedFill = (seed, edgeUpdates) => {
+const loadVerifiedFill = (seed, recall, full, edgeUpdates) => {
   const portals = mapPortals(1, false, false);
   const graph = createGraph(portals, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   generateSeed(seed, recall, full, failMode).forEach((i) =>
-    placeItem(i.location.name, i.item.type)
+    placeItem(graph, i.location.name, i.item.type)
   );
   return graph;
 };
 
-const loadGraphFill = (seed, edgeUpdates, getFlags) => {
+const loadGraphFill = (seed, edgeUpdates, full, getFlags) => {
   const portals = mapPortals(1, false, false);
   const graph = createGraph(portals, edgeUpdates);
   let samus = new Loadout();
@@ -155,7 +159,7 @@ const loadGraphFill = (seed, edgeUpdates, getFlags) => {
     // Starter Charge is considered for Recall but not for Standard.
     samus.hasCharge = recall;
   }
-  graphFill(seed, graph, getVanillaItemPool(), getMajorMinorPrePool, samus, true);
+  graphFill(seed, graph, getVanillaItemPool(), getMajorMinorPrePool, samus, !full);
   return graph;
 };
 
@@ -176,8 +180,9 @@ const solve = (seed, graph, getFlags, initLoad) => {
         printMsg: console.log,
       };
 
+  let tempLoad = initLoad == undefined ? new Loadout() : initLoad.clone();
   let solver = new GraphSolver(graph, getFlags, logMethods);
-  if (!solver.isValid(initLoad, legacyMode)) {
+  if (!solver.isValid(tempLoad, legacyMode)) {
     throw new Error("Invalid seed");
   }
 
@@ -199,7 +204,29 @@ const solve = (seed, graph, getFlags, initLoad) => {
   }
 };
 
-solve(0, loadVanilla(), getSeasonFlags, new Loadout());
+//-----------------------------------------------------------------
+// Solve the specified seeds.
+//-----------------------------------------------------------------
+
+if (startSeed == 0) {
+  solve(0, loadVanilla(), getSeasonFlags);
+  startSeed += 1;
+}
+
+for (let i = startSeed; i <= endSeed; i++) {
+  if (readFromFolder != null) {
+    const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
+    solve(i, loadExternal(fileName, SeasonEdgeUpdates), getSeasonFlags);
+  }
+  if (testVerifiedFill) {
+    solve(i, loadVerifiedFill(i, false, false, ClassicEdgeUpdates), getClassicFlags);
+    solve(i, loadVerifiedFill(i, false, true, ClassicEdgeUpdates), getClassicFlags);
+  }
+  if (testGraphFill) {
+    solve(i, loadGraphFill(i, false, ClassicEdgeUpdates, getClassicFlags), getClassicFlags);
+    solve(i, loadGraphFill(i, true, ClassicEdgeUpdates, getClassicFlags), getClassicFlags);
+  }
+}
 
 /*const trySolve = (seed, recall, full, edgeUpdates, getFlags, fileName) => {
   try {
