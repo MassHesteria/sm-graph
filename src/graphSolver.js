@@ -1,10 +1,17 @@
 import { canReachStart, canReachVertex, searchAndCache } from "./search";
+import { ItemNames } from "./dash/items";
 
 class GraphSolver {
-  constructor(graph, getFlags) {
+  constructor(graph, getFlags, logMethods) {
     this.graph = graph;
     this.getFlags = getFlags;
     this.startVertex = graph[0].from;
+    if (logMethods != undefined) {
+      this.printAvailableItems = logMethods.printAvailableItems;
+      this.printDefeatedBoss = logMethods.printDefeatedBoss;
+      this.printUncollectedItems = logMethods.printUncollectedItems;
+      this.printMsg = logMethods.printMsg;
+    }
   }
 
   newChecker(load, bossData) {
@@ -138,18 +145,11 @@ class GraphSolver {
       });
 
       if (items.length == 0) {
-        //if (!quiet || !expectFail) {
-        //console.log("No round trip locations:", seed);
-        //itemLocations.forEach((i) => {
-        //console.log(chalk.cyan(ItemNames.get(i.item)), "@", i.name);
-        //});
-        //printUncollectedItems();
-        //console.log(samus);
-        //searchAndCache(graph, startVertex, checkLoadout, samus).forEach((a) => console.log(a));
-        //}
+        if (this.printUncollectedItems != undefined) {
+          this.printUncollectedItems();
+        }
         throw new Error("no round trip locations");
-      }
-      /*else if (!quiet) {
+      } else if (this.printMsg != undefined) {
         let str = "";
         items.forEach((item, idx) => {
           const name = ItemNames.get(item);
@@ -161,8 +161,8 @@ class GraphSolver {
         if (items.length % 5 != 0) {
           str += "\n";
         }
-        console.log(str);
-      }*/
+        this.printMsg(str);
+      }
 
       return true;
     };
@@ -179,6 +179,10 @@ class GraphSolver {
         if (uncollected.length == 0) {
           break;
         }
+        if (this.printAvailableItems != undefined) {
+          this.printAvailableItems(uncollected);
+        }
+
         //-----------------------------------------------------------------
         // Determines if the graph would allow a round trip from the
         // specified vertex to the starting vertex.
@@ -197,35 +201,56 @@ class GraphSolver {
         // logic for killing the boss is considered leaving the boss.
         if (!bossData.HasDefeatedKraid) {
           bossData.HasDefeatedKraid = hasRoundTrip(bossVertices.Kraid);
+          if (bossData.HasDefeatedKraid && this.printDefeatedBoss != undefined) {
+            this.printDefeatedBoss("Defeated Kraid");
+          }
         }
         if (!bossData.HasDefeatedPhantoon) {
           bossData.HasDefeatedPhantoon = hasRoundTrip(bossVertices.Phantoon);
+          if (bossData.HasDefeatedPhantoon && this.printDefeatedBoss != undefined) {
+            this.printDefeatedBoss("Defeated Phantoon");
+          }
         }
         if (!bossData.HasDefeatedDraygon) {
           bossData.HasDefeatedDraygon = hasRoundTrip(bossVertices.Draygon);
+          if (bossData.HasDefeatedDraygon && this.printDefeatedBoss != undefined) {
+            this.printDefeatedBoss("Defeated Draygon");
+          }
         }
         if (!bossData.HasDefeatedRidley) {
           bossData.HasDefeatedRidley = hasRoundTrip(bossVertices.Ridley);
+          if (bossData.HasDefeatedRidley && this.printDefeatedBoss != undefined) {
+            this.printDefeatedBoss("Defeated Ridley");
+          }
         }
 
         // Collect all items where we can make a round trip back to the start
         if (collectEasyItems(uncollected)) {
           continue;
         }
+
         throw new Error("one way ticket");
       }
+
+      //-----------------------------------------------------------------
+      // Check for uncollected items. This indicates an invalid graph.
+      //-----------------------------------------------------------------
+
       if (this.graph.filter((n) => n.from.item != undefined).length > 0) {
-        //if (!expectFail) {
-        //printUncollectedItems();
-        //console.log(getRecallFlags(samus));
-        //searchAndCache(graph, startVertex, checkLoadout, samus)
-        //.filter((a) => a.item != undefined)
-        //.forEach((a) => console.log(a));
-        //}
+        if (this.printUncollectedItems != undefined) {
+          this.printUncollectedItems();
+        }
+        if (this.printMsg != undefined) {
+          searchAndCache(graph, startVertex, checkLoadout, samus)
+            .filter((a) => a.item != undefined)
+            .forEach((a) => this.printMsg(a));
+        }
         throw new Error("Uncollected items");
       }
     } catch (e) {
-      //console.log(e);
+      if (this.printMsg) {
+        this.printMsg(e);
+      }
       return false;
     }
     return true;
