@@ -9,6 +9,9 @@ import DotNetRandom from "./dash/dotnet-random.js";
 import { ClassicEdgeUpdates } from "./data/classic/edges.js";
 import { RecallEdgeUpdates } from "./data/recall/edges.js";
 import { SeasonEdgeUpdates } from "./data/season/edges.js";
+import { ClassicVertexUpdates } from "./data/classic/vertex.js";
+import { RecallVertexUpdates } from "./data/recall/vertex.js";
+import { SeasonVertexUpdates } from "./data/season/vertex.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
@@ -127,7 +130,7 @@ const printUncollectedItems = (graph) => {
 // Seed load routines.
 //-----------------------------------------------------------------
 
-const loadExternal = (fileName, edgeUpdates) => {
+const loadExternal = (fileName, vertexUpdates, edgeUpdates) => {
   const portals = mapPortals(1, false, false);
   const bosses = readBosses(fileName);
   if (bosses != undefined) {
@@ -145,21 +148,21 @@ const loadExternal = (fileName, edgeUpdates) => {
       console.log(bosses);
     }
   }
-  const graph = createGraph(portals, edgeUpdates);
+  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVanilla = () => {
   const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, []);
+  const graph = createGraph(portals, [], []);
   vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
-const loadVerifiedFill = (seed, recall, full, edgeUpdates) => {
+const loadVerifiedFill = (seed, recall, full, vertexUpdates, edgeUpdates) => {
   const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, edgeUpdates);
+  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   generateSeed(seed, recall, full, failMode).forEach((i) =>
     placeItem(graph, i.location.name, i.item.type)
@@ -167,9 +170,9 @@ const loadVerifiedFill = (seed, recall, full, edgeUpdates) => {
   return graph;
 };
 
-const loadGraphFill = (seed, full, edgeUpdates, getItemPool, getFlags) => {
+const loadGraphFill = (seed, full, vertexUpdates, edgeUpdates, getItemPool, getFlags) => {
   const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, edgeUpdates);
+  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
   let samus = new Loadout();
   //if (seed > 0) {
   // Starter Charge is considered for Recall but not for Standard.
@@ -235,21 +238,43 @@ if (startSeed == 0) {
 for (let i = startSeed; i <= endSeed; i++) {
   if (readFromFolder != null) {
     const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-    solve(i, loadExternal(fileName, SeasonEdgeUpdates), getSeasonFlags);
+    solve(i, loadExternal(fileName, SeasonVertexUpdates, SeasonEdgeUpdates), getSeasonFlags);
   }
   if (testVerifiedFill) {
-    solve(i, loadVerifiedFill(i, false, false, ClassicEdgeUpdates), getClassicFlags);
-    solve(i, loadVerifiedFill(i, false, true, ClassicEdgeUpdates), getClassicFlags);
-  }
-  if (testGraphFill) {
     solve(
       i,
-      loadGraphFill(i, false, ClassicEdgeUpdates, getClassicItemPool, getClassicFlags),
+      loadVerifiedFill(i, false, false, ClassicVertexUpdates, ClassicEdgeUpdates),
       getClassicFlags
     );
     solve(
       i,
-      loadGraphFill(i, true, ClassicEdgeUpdates, getClassicItemPool, getClassicFlags),
+      loadVerifiedFill(i, false, true, ClassicVertexUpdates, ClassicEdgeUpdates),
+      getClassicFlags
+    );
+  }
+  if (testGraphFill) {
+    solve(
+      i,
+      loadGraphFill(
+        i,
+        false,
+        ClassicVertexUpdates,
+        ClassicEdgeUpdates,
+        getClassicItemPool,
+        getClassicFlags
+      ),
+      getClassicFlags
+    );
+    solve(
+      i,
+      loadGraphFill(
+        i,
+        true,
+        ClassicVertexUpdates,
+        ClassicEdgeUpdates,
+        getClassicItemPool,
+        getClassicFlags
+      ),
       getClassicFlags
     );
   }

@@ -1,3 +1,9 @@
+import { CommonVertexUpdates } from "../common/vertex";
+
+//-----------------------------------------------------------------
+// Vertex definitions.
+//-----------------------------------------------------------------
+
 const LowerNorfair_Missiles_MickeyMouse = {
   name: "Missiles_MickeyMouse",
   type: "major",
@@ -13,8 +19,12 @@ const WreckedShip_Missiles_Sky = {
   type: "major",
 };
 
-export const recallVertices = [
+//-----------------------------------------------------------------
+// Exports.
+//-----------------------------------------------------------------
+
+export const RecallVertexUpdates = CommonVertexUpdates.concat([
   Kraid_EnergyTank,
   LowerNorfair_Missiles_MickeyMouse,
   WreckedShip_Missiles_Sky,
-];
+]);

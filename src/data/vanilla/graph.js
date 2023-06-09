@@ -65,7 +65,7 @@ const allEdges = Object.entries(getVanillaEdges())
     return acc.concat(cur);
   }, []);
 
-export const createGraph = (portalMapping, edgeUpdates, startVertex) => {
+export const createGraph = (portalMapping, vertexUpdates, edgeUpdates, startVertex) => {
   //-----------------------------------------------------------------
   //
   //-----------------------------------------------------------------
@@ -79,6 +79,15 @@ export const createGraph = (portalMapping, edgeUpdates, startVertex) => {
     }
     return vertex;
   };
+
+  //-----------------------------------------------------------------
+  // Apply specified vertex updates. Currently restricted to type
+  // but may include other options eventually.
+  //-----------------------------------------------------------------
+
+  vertexUpdates.forEach((v) => {
+    findVertex(v.name).type = v.type;
+  });
 
   //-----------------------------------------------------------------
   //
