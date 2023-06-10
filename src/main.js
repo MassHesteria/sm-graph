@@ -127,6 +127,8 @@ const printUncollectedItems = (graph) => {
   console.log("-------------------");
 };
 
+const starterCharge = new Loadout({ hasCharge: true });
+
 //-----------------------------------------------------------------
 //
 //-----------------------------------------------------------------
@@ -193,15 +195,9 @@ const loadVerifiedFill = (seed, recall, full) => {
   return graph;
 };
 
-const loadGraphFill = (seed, layout, restrictType, getItemPool, getFlags) => {
+const loadGraphFill = (seed, layout, restrictType, getItemPool, getFlags, initLoad) => {
   const graph = loadGraph(layout);
-  let samus = new Loadout();
-
-  // Starter Charge is considered for Recall but not for Standard.
-  if (layout == MapLayout.DashRecall) {
-    samus.hasCharge = true;
-  }
-
+  const samus = initLoad == undefined ? new Loadout() : initLoad.clone();
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, restrictType);
   return graph;
@@ -225,9 +221,9 @@ const solve = (seed, graph, getFlags, initLoad) => {
         printMsg: console.log,
       };
 
-  let tempLoad = initLoad == undefined ? new Loadout() : initLoad.clone();
+  let samus = initLoad == undefined ? new Loadout() : initLoad.clone();
   let solver = new GraphSolver(graph, getFlags, logMethods);
-  if (!solver.isValid(tempLoad, legacyMode)) {
+  if (!solver.isValid(samus, legacyMode)) {
     throw new Error("Invalid seed");
   }
 
@@ -282,13 +278,29 @@ for (let i = startSeed; i <= endSeed; i++) {
     );
     solve(
       i,
-      loadGraphFill(i, MapLayout.DashRecall, true, getRecallItemPool, getRecallFlags),
-      getRecallFlags
+      loadGraphFill(
+        i,
+        MapLayout.DashRecall,
+        true,
+        getRecallItemPool,
+        getRecallFlags,
+        starterCharge
+      ),
+      getRecallFlags,
+      starterCharge
     );
     solve(
       i,
-      loadGraphFill(i, MapLayout.DashRecall, false, getRecallItemPool, getRecallFlags),
-      getRecallFlags
+      loadGraphFill(
+        i,
+        MapLayout.DashRecall,
+        false,
+        getRecallItemPool,
+        getRecallFlags,
+        starterCharge
+      ),
+      getRecallFlags,
+      starterCharge
     );
   }
 }
