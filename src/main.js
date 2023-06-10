@@ -16,6 +16,7 @@ import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
 import { getClassicItemPool } from "./data/classic/items.js";
+import { getRecallItemPool } from "./data/recall/items.js";
 import { graphFill } from "./graphFill.js";
 import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
 import GraphSolver from "./graphSolver.js";
@@ -127,12 +128,18 @@ const printUncollectedItems = (graph) => {
 };
 
 //-----------------------------------------------------------------
-// Seed load routines.
+//
 //-----------------------------------------------------------------
 
-const loadExternal = (fileName, vertexUpdates, edgeUpdates) => {
+const MapLayout = {
+  Vanilla: 0,
+  Standard: 1,
+  DashClassic: 2,
+  DashRecall: 3,
+};
+
+const loadGraph = (layout, bosses) => {
   const portals = mapPortals(1, false, false);
-  const bosses = readBosses(fileName);
   if (bosses != undefined) {
     const setPortal = (from, to) => {
       const temp = portals.find((p) => p[0] == from);
@@ -148,21 +155,37 @@ const loadExternal = (fileName, vertexUpdates, edgeUpdates) => {
       console.log(bosses);
     }
   }
-  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
+
+  if (layout == MapLayout.Standard) {
+    return createGraph(portals, SeasonVertexUpdates, SeasonEdgeUpdates);
+  }
+  if (layout == MapLayout.DashClassic) {
+    return createGraph(portals, ClassicVertexUpdates, ClassicEdgeUpdates);
+  }
+  if (layout == MapLayout.DashRecall) {
+    return createGraph(portals, RecallVertexUpdates, RecallEdgeUpdates);
+  }
+};
+
+//-----------------------------------------------------------------
+// Seed load routines.
+//-----------------------------------------------------------------
+
+const loadExternal = (fileName) => {
+  const graph = loadGraph(MapLayout.Standard, readBosses(fileName));
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVanilla = () => {
-  const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, [], []);
+  const graph = loadGraph(MapLayout.Vanilla);
   vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
-const loadVerifiedFill = (seed, recall, full, vertexUpdates, edgeUpdates) => {
-  const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
+const loadVerifiedFill = (seed, recall, full) => {
+  const layout = recall ? MapLayout.DashRecall : MapLayout.DashClassic;
+  const graph = loadGraph(layout);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   generateSeed(seed, recall, full, failMode).forEach((i) =>
     placeItem(graph, i.location.name, i.item.type)
@@ -170,17 +193,17 @@ const loadVerifiedFill = (seed, recall, full, vertexUpdates, edgeUpdates) => {
   return graph;
 };
 
-const loadGraphFill = (seed, full, vertexUpdates, edgeUpdates, getItemPool, getFlags) => {
-  const portals = mapPortals(1, false, false);
-  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
+const loadGraphFill = (seed, layout, restrictType, getItemPool, getFlags) => {
+  const graph = loadGraph(layout);
   let samus = new Loadout();
-  //if (seed > 0) {
-  // Starter Charge is considered for Recall but not for Standard.
-  //samus.hasCharge = recall;
-  //}
 
-  const getPrePool = full ? getFullPrePool : getMajorMinorPrePool;
-  graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, !full);
+  // Starter Charge is considered for Recall but not for Standard.
+  if (layout == MapLayout.DashRecall) {
+    samus.hasCharge = true;
+  }
+
+  const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
+  graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, restrictType);
   return graph;
 };
 
@@ -238,44 +261,34 @@ if (startSeed == 0) {
 for (let i = startSeed; i <= endSeed; i++) {
   if (readFromFolder != null) {
     const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-    solve(i, loadExternal(fileName, SeasonVertexUpdates, SeasonEdgeUpdates), getSeasonFlags);
+    solve(i, loadExternal(fileName), getSeasonFlags);
   }
   if (testVerifiedFill) {
-    solve(
-      i,
-      loadVerifiedFill(i, false, false, ClassicVertexUpdates, ClassicEdgeUpdates),
-      getClassicFlags
-    );
-    solve(
-      i,
-      loadVerifiedFill(i, false, true, ClassicVertexUpdates, ClassicEdgeUpdates),
-      getClassicFlags
-    );
+    solve(i, loadVerifiedFill(i, false, false), getClassicFlags);
+    solve(i, loadVerifiedFill(i, true, false), getRecallFlags);
+    solve(i, loadVerifiedFill(i, false, true), getClassicFlags);
+    solve(i, loadVerifiedFill(i, true, true), getRecallFlags);
   }
   if (testGraphFill) {
     solve(
       i,
-      loadGraphFill(
-        i,
-        false,
-        ClassicVertexUpdates,
-        ClassicEdgeUpdates,
-        getClassicItemPool,
-        getClassicFlags
-      ),
+      loadGraphFill(i, MapLayout.DashClassic, true, getClassicItemPool, getClassicFlags),
       getClassicFlags
     );
     solve(
       i,
-      loadGraphFill(
-        i,
-        true,
-        ClassicVertexUpdates,
-        ClassicEdgeUpdates,
-        getClassicItemPool,
-        getClassicFlags
-      ),
+      loadGraphFill(i, MapLayout.DashClassic, false, getClassicItemPool, getClassicFlags),
       getClassicFlags
+    );
+    solve(
+      i,
+      loadGraphFill(i, MapLayout.DashRecall, true, getRecallItemPool, getRecallFlags),
+      getRecallFlags
+    );
+    solve(
+      i,
+      loadGraphFill(i, MapLayout.DashRecall, false, getRecallItemPool, getRecallFlags),
+      getRecallFlags
     );
   }
 }
@@ -299,15 +312,4 @@ for (let i = startSeed; i <= endSeed; i++) {
     }
   }
 };
-
-for (let i = startSeed; i <= endSeed; i++) {
-  if (readFromFolder != null) {
-    const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-    trySolve(i, false, false, SeasonEdgeUpdates, getSeasonFlags, fileName);
-  } else {
-    trySolve(i, false, false, ClassicEdgeUpdates, getClassicFlags); // Standard MM
-    //trySolve(i, true, false, RecallEdgeUpdates, getRecallFlags); // Recall MM
-    //trySolve(i, false, true, ClassicEdgeUpdates, getClassicFlags); // Standard Full
-    //trySolve(i, true, true, RecallEdgeUpdates, getRecallFlags); // Recall Full
-  }
 }*/
