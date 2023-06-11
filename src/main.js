@@ -17,6 +17,7 @@ import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
 import { getClassicItemPool } from "./data/classic/items.js";
 import { getRecallItemPool } from "./data/recall/items.js";
+import { getSeasonItemPool } from "./data/season/items.js";
 import { graphFill } from "./graphFill.js";
 import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
 import GraphSolver from "./graphSolver.js";
@@ -235,7 +236,7 @@ const loadGraphFill = (seed, seedType, restrictType, bossShuffle) => {
       ? [MapLayout.DashClassic, getClassicItemPool, getClassicFlags]
       : seedType == SeedType.DashRecall
       ? [MapLayout.DashRecall, getRecallItemPool, getRecallFlags]
-      : [MapLayout.Standard, getVanillaItemPool, getSeasonFlags];
+      : [MapLayout.Standard, getSeasonItemPool, getSeasonFlags];
 
   const [vertexUpdates, edgeUpdates] =
     layout == MapLayout.DashClassic
@@ -367,6 +368,12 @@ for (let i = startSeed; i <= endSeed; i++) {
 
     const d = loadGraphFill(i, SeedType.DashRecall, false, true);
     solve(i, "Graph Recall Full", d, getRecallFlags, starterCharge);
+
+    const e = loadGraphFill(i, SeedType.Standard, true, true);
+    solve(i, "Graph Season M/M", e, getSeasonFlags);
+
+    const f = loadGraphFill(i, SeedType.Standard, false, true);
+    solve(i, "Graph Season Full", f, getSeasonFlags);
   }
   if (!quiet || i % 1000 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
