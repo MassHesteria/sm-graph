@@ -96,11 +96,15 @@ class GraphSolver {
       HasDefeatedRidley: false,
     };
 
-    const bossVertices = {
-      Kraid: this.graph.find((n) => n.to.name == "Boss_Kraid").to,
-      Phantoon: this.graph.find((n) => n.to.name == "Boss_Phantoon").to,
-      Draygon: this.graph.find((n) => n.to.name == "Boss_Draygon").to,
-      Ridley: this.graph.find((n) => n.to.name == "Boss_Ridley").to,
+    const bossEdges = {
+      Kraid: this.graph.find((n) => n.to.name == "Exit_Kraid" && n.from.name.startsWith("Door_")),
+      Phantoon: this.graph.find(
+        (n) => n.to.name == "Exit_Phantoon" && n.from.name.startsWith("Door_")
+      ),
+      Draygon: this.graph.find(
+        (n) => n.to.name == "Exit_Draygon" && n.from.name.startsWith("Door_")
+      ),
+      Ridley: this.graph.find((n) => n.to.name == "Exit_Ridley" && n.from.name.startsWith("Door_")),
     };
 
     const findAll = () =>
@@ -173,27 +177,27 @@ class GraphSolver {
         // and back to the start that we have defeated the boss since the
         // logic for killing the boss is considered leaving the boss.
         if (!bossData.HasDefeatedKraid) {
-          bossData.HasDefeatedKraid = hasRoundTrip(bossVertices.Kraid);
+          bossData.HasDefeatedKraid = hasRoundTrip(bossEdges.Kraid.to);
           if (bossData.HasDefeatedKraid && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss("Defeated Kraid");
+            this.printDefeatedBoss(`Defeated Kraid @ ${bossEdges.Kraid.from.name}`);
           }
         }
         if (!bossData.HasDefeatedPhantoon) {
-          bossData.HasDefeatedPhantoon = hasRoundTrip(bossVertices.Phantoon);
+          bossData.HasDefeatedPhantoon = hasRoundTrip(bossEdges.Phantoon.to);
           if (bossData.HasDefeatedPhantoon && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss("Defeated Phantoon");
+            this.printDefeatedBoss(`Defeated Phantoon @ ${bossEdges.Phantoon.from.name}`);
           }
         }
         if (!bossData.HasDefeatedDraygon) {
-          bossData.HasDefeatedDraygon = hasRoundTrip(bossVertices.Draygon);
+          bossData.HasDefeatedDraygon = hasRoundTrip(bossEdges.Draygon.to);
           if (bossData.HasDefeatedDraygon && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss("Defeated Draygon");
+            this.printDefeatedBoss(`Defeated Draygon @ ${bossEdges.Draygon.from.name}`);
           }
         }
         if (!bossData.HasDefeatedRidley) {
-          bossData.HasDefeatedRidley = hasRoundTrip(bossVertices.Ridley);
+          bossData.HasDefeatedRidley = hasRoundTrip(bossEdges.Ridley.to);
           if (bossData.HasDefeatedRidley && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss("Defeated Ridley");
+            this.printDefeatedBoss(`Defeated Ridley @ ${bossEdges.Ridley.from.name}`);
           }
         }
 

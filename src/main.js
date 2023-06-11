@@ -2,7 +2,7 @@ import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
 import { createGraph } from "./data/vanilla/graph.js";
-import { vanillaItemPlacement } from "./data/vanilla/items.js";
+import { getVanillaItemPool, vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 import { generateSeed, readBosses, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
@@ -22,6 +22,30 @@ import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
 import GraphSolver from "./graphSolver.js";
 
 //-----------------------------------------------------------------
+// Constants.
+//-----------------------------------------------------------------
+
+const SeedType = {
+  Standard: 1,
+  DashClassic: 2,
+  DashRecall: 3,
+};
+
+const MapLayout = {
+  Vanilla: 0,
+  Standard: 1,
+  DashClassic: 2,
+  DashRecall: 3,
+};
+
+const TestMode = {
+  None: 0,
+  Success: 1,
+  Failure: 2,
+  Both: 3,
+};
+
+//-----------------------------------------------------------------
 // Determine the seed.
 //-----------------------------------------------------------------
 
@@ -36,19 +60,12 @@ let quiet = false;
 let startSeed = seed;
 let endSeed = seed;
 
-const TestMode = {
-  None: 0,
-  Success: 1,
-  Failure: 2,
-  Both: 3,
-};
-
 // Read seed information from external files.
 //const readFromFolder = "path/to/results";
 const readFromFolder = null;
 
-//
-const verifiedFillMode = TestMode.Success;
+// Enables checking seeds produced with the legacy solver.
+const verifiedFillMode = TestMode.None;
 
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
@@ -166,18 +183,13 @@ const printUncollectedItems = (graph) => {
 const starterCharge = new Loadout({ hasCharge: true });
 
 //-----------------------------------------------------------------
-//
+// Seed load routines.
 //-----------------------------------------------------------------
 
-const MapLayout = {
-  Vanilla: 0,
-  Standard: 1,
-  DashClassic: 2,
-  DashRecall: 3,
-};
+const loadExternal = (fileName) => {
+  const portals = mapPortals(0, false, false);
+  const bosses = readBosses(fileName);
 
-const loadGraph = (layout, bosses) => {
-  const portals = mapPortals(1, false, false);
   if (bosses != undefined) {
     const setPortal = (from, to) => {
       const temp = portals.find((p) => p[0] == from);
@@ -193,37 +205,23 @@ const loadGraph = (layout, bosses) => {
       console.log(bosses);
     }
   }
-
-  if (layout == MapLayout.Standard) {
-    return createGraph(portals, SeasonVertexUpdates, SeasonEdgeUpdates);
-  }
-  if (layout == MapLayout.DashClassic) {
-    return createGraph(portals, ClassicVertexUpdates, ClassicEdgeUpdates);
-  }
-  if (layout == MapLayout.DashRecall) {
-    return createGraph(portals, RecallVertexUpdates, RecallEdgeUpdates);
-  }
-};
-
-//-----------------------------------------------------------------
-// Seed load routines.
-//-----------------------------------------------------------------
-
-const loadExternal = (fileName) => {
-  const graph = loadGraph(MapLayout.Standard, readBosses(fileName));
+  const graph = createGraph(portals, SeasonVertexUpdates, SeasonEdgeUpdates);
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVanilla = () => {
-  const graph = loadGraph(MapLayout.Vanilla);
+  const portals = mapPortals(0, false, false);
+  const graph = createGraph(portals, [], []);
   vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
-  const layout = recall ? MapLayout.DashRecall : MapLayout.DashClassic;
-  const graph = loadGraph(layout);
+  const portals = mapPortals(0, false, false);
+  const graph = recall
+    ? createGraph(portals, RecallVertexUpdates, RecallEdgeUpdates)
+    : createGraph(portals, ClassicVertexUpdates, ClassicEdgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   generateSeed(seed, recall, full, failMode).forEach((i) =>
     placeItem(graph, i.location.name, i.item.type)
@@ -231,9 +229,25 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
   return graph;
 };
 
-const loadGraphFill = (seed, layout, restrictType, getItemPool, getFlags, initLoad) => {
-  const graph = loadGraph(layout);
-  const samus = initLoad == undefined ? new Loadout() : initLoad.clone();
+const loadGraphFill = (seed, seedType, restrictType, bossShuffle) => {
+  const [layout, getItemPool, getFlags] =
+    seedType == SeedType.DashClassic
+      ? [MapLayout.DashClassic, getClassicItemPool, getClassicFlags]
+      : seedType == SeedType.DashRecall
+      ? [MapLayout.DashRecall, getRecallItemPool, getRecallFlags]
+      : [MapLayout.Standard, getVanillaItemPool, getSeasonFlags];
+
+  const [vertexUpdates, edgeUpdates] =
+    layout == MapLayout.DashClassic
+      ? [ClassicVertexUpdates, ClassicEdgeUpdates]
+      : layout == MapLayout.DashRecall
+      ? [RecallVertexUpdates, RecallEdgeUpdates]
+      : [SeasonVertexUpdates, SeasonEdgeUpdates];
+
+  const portals = mapPortals(seed, false, bossShuffle);
+  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
+
+  const samus = seedType == SeedType.DashRecall ? starterCharge : new Loadout();
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, restrictType);
   return graph;
@@ -342,30 +356,16 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmFailure(i, "Legacy Recall Full", d, getRecallFlags, starterCharge);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const a = loadGraphFill(i, MapLayout.DashClassic, true, getClassicItemPool, getClassicFlags);
+    const a = loadGraphFill(i, SeedType.DashClassic, true, true);
     solve(i, "Graph Classic M/M", a, getClassicFlags);
 
-    const b = loadGraphFill(i, MapLayout.DashClassic, false, getClassicItemPool, getClassicFlags);
+    const b = loadGraphFill(i, SeedType.DashClassic, false, true);
     solve(i, "Graph Classic Full", b, getClassicFlags);
 
-    const c = loadGraphFill(
-      i,
-      MapLayout.DashRecall,
-      true,
-      getRecallItemPool,
-      getRecallFlags,
-      starterCharge
-    );
+    const c = loadGraphFill(i, SeedType.DashRecall, true, true);
     solve(i, "Graph Recall M/M", c, getRecallFlags, starterCharge);
 
-    const d = loadGraphFill(
-      i,
-      MapLayout.DashRecall,
-      false,
-      getRecallItemPool,
-      getRecallFlags,
-      starterCharge
-    );
+    const d = loadGraphFill(i, SeedType.DashRecall, false, true);
     solve(i, "Graph Recall Full", d, getRecallFlags, starterCharge);
   }
   if (!quiet || i % 1000 == 0) {

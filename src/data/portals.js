@@ -52,7 +52,9 @@ const shufflePortals = (seed, unshuffled) => {
   };
 
   const left = unshuffled.map((b) => b[0]);
-  shuffle(left);
+  while (left.every((value, index) => value == unshuffled[index][0])) {
+    shuffle(left);
+  }
   const shuffled = new Array(left.length);
   for (let i = 0; i < left.length; i++) {
     shuffled[i] = [left[i], unshuffled[i][1]];
@@ -69,7 +71,7 @@ const getBossPortals = (seed) => {
 };
 
 export const mapPortals = (seed, area, boss) => {
-  const areaSeed = area ? seed + 2e9 : 0;
-  const bossSeed = boss ? seed + 1e9 : 0;
+  const areaSeed = seed > 0 && area ? seed + 2e9 : 0;
+  const bossSeed = seed > 0 && boss ? seed + 1e9 : 0;
   return getAreaPortals(areaSeed).concat(getBossPortals(bossSeed));
 };
