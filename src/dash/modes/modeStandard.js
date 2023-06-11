@@ -433,6 +433,7 @@ class ModeStandard {
     minor("Missiles (Croc Escape)", (load) => {
       return (
         canAccessCrocomire(load) &&
+        (load.hasVaria || load.totalTanks >= 2) &&
         (load.canFly ||
           load.hasGrapple ||
           load.hasIce ||

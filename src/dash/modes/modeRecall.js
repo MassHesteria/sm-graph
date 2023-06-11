@@ -454,6 +454,10 @@ class ModeRecall {
     minor("Missiles (Croc Escape)", (load) => {
       return (
         canAccessCrocomire(load) &&
+        (load.hasVaria ||
+          load.hasHeatShield ||
+          (load.hasGravity && load.totalTanks >= 1) ||
+          load.totalTanks >= 2) &&
         (load.canFly ||
           load.hasGrapple ||
           load.hasDoubleJump ||
