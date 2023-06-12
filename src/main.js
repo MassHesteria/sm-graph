@@ -328,7 +328,6 @@ for (let i = startSeed; i <= endSeed; i++) {
   if (readFromFolder != null) {
     const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
     solve(i, "External", loadExternal(fileName), getSeasonFlags);
-    num += 1;
   }
   if ((verifiedFillMode & TestMode.Success) > 0) {
     const a = loadVerifiedFill(i, false, false);
