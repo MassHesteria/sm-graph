@@ -2,7 +2,7 @@ import { ItemNames } from "./dash/items.js";
 import Loadout from "./dash/loadout.js";
 import chalk from "chalk";
 import { createGraph } from "./data/vanilla/graph.js";
-import { getVanillaItemPool, vanillaItemPlacement } from "./data/vanilla/items.js";
+import { vanillaItemPlacement } from "./data/vanilla/items.js";
 import { mapPortals } from "./data/portals.js";
 import { generateSeed, readBosses, readSeed } from "./generate.js";
 import DotNetRandom from "./dash/dotnet-random.js";
@@ -15,29 +15,18 @@ import { SeasonVertexUpdates } from "./data/season/vertex.js";
 import { getClassicFlags } from "./data/classic/flags.js";
 import { getRecallFlags } from "./data/recall/flags.js";
 import { getSeasonFlags } from "./data/season/flags.js";
-import { getClassicItemPool } from "./data/classic/items.js";
-import { getRecallItemPool } from "./data/recall/items.js";
-import { getSeasonItemPool } from "./data/season/items.js";
 import { graphFill } from "./graphFill.js";
 import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
 import GraphSolver from "./graphSolver.js";
+import { getItemPool } from "./items.js";
+import { ClassicPreset } from "./data/classic/preset.js";
+import { RecallPreset } from "./data/recall/preset.js";
+import { SeasonPreset } from "./data/season/preset.js";
+import { BeamMode, MapLayout } from "./params.js";
 
 //-----------------------------------------------------------------
 // Constants.
 //-----------------------------------------------------------------
-
-const SeedType = {
-  Standard: 1,
-  DashClassic: 2,
-  DashRecall: 3,
-};
-
-const MapLayout = {
-  Vanilla: 0,
-  Standard: 1,
-  DashClassic: 2,
-  DashRecall: 3,
-};
 
 const TestMode = {
   None: 0,
@@ -66,7 +55,7 @@ let endSeed = seed;
 const readFromFolder = null;
 
 // Enables checking seeds produced with the legacy solver.
-const verifiedFillMode = TestMode.None;
+const verifiedFillMode = TestMode.Success;
 
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
@@ -230,27 +219,28 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
   return graph;
 };
 
-const loadGraphFill = (seed, seedType, restrictType, bossShuffle) => {
-  const [layout, getItemPool, getFlags] =
-    seedType == SeedType.DashClassic
-      ? [MapLayout.DashClassic, getClassicItemPool, getClassicFlags]
-      : seedType == SeedType.DashRecall
-      ? [MapLayout.DashRecall, getRecallItemPool, getRecallFlags]
-      : [MapLayout.Standard, getSeasonItemPool, getSeasonFlags];
+const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
+  const { mapLayout, itemPoolParams, settings } = preset;
 
-  const [vertexUpdates, edgeUpdates] =
-    layout == MapLayout.DashClassic
-      ? [ClassicVertexUpdates, ClassicEdgeUpdates]
-      : layout == MapLayout.DashRecall
-      ? [RecallVertexUpdates, RecallEdgeUpdates]
-      : [SeasonVertexUpdates, SeasonEdgeUpdates];
+  const [vertexUpdates, edgeUpdates, getFlags] =
+    mapLayout == MapLayout.DashClassic
+      ? [ClassicVertexUpdates, ClassicEdgeUpdates, getClassicFlags]
+      : mapLayout == MapLayout.DashRecall
+      ? [RecallVertexUpdates, RecallEdgeUpdates, getRecallFlags]
+      : [SeasonVertexUpdates, SeasonEdgeUpdates, getSeasonFlags];
 
   const portals = mapPortals(seed, false, bossShuffle);
   const graph = createGraph(portals, vertexUpdates, edgeUpdates);
 
-  const samus = seedType == SeedType.DashRecall ? starterCharge : new Loadout();
+  const samus = settings.beamMode == BeamMode.Vanilla ? new Loadout() : starterCharge;
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
-  graphFill(seed, graph, getFlags, getItemPool(seed), getPrePool, samus, restrictType);
+  const itemPool = getItemPool(
+    seed,
+    itemPoolParams.numMajors,
+    itemPoolParams.minorDistribution,
+    itemPoolParams.extraMajors
+  );
+  graphFill(seed, graph, getFlags, itemPool, getPrePool, samus, restrictType);
   return graph;
 };
 
@@ -356,22 +346,22 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmFailure(i, "Legacy Recall Full", d, getRecallFlags, starterCharge);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const a = loadGraphFill(i, SeedType.DashClassic, true, true);
+    const a = loadGraphFill(i, ClassicPreset, true, true);
     solve(i, "Graph Classic M/M", a, getClassicFlags);
 
-    const b = loadGraphFill(i, SeedType.DashClassic, false, true);
+    const b = loadGraphFill(i, ClassicPreset, false, true);
     solve(i, "Graph Classic Full", b, getClassicFlags);
 
-    const c = loadGraphFill(i, SeedType.DashRecall, true, true);
+    const c = loadGraphFill(i, RecallPreset, true, true);
     solve(i, "Graph Recall M/M", c, getRecallFlags, starterCharge);
 
-    const d = loadGraphFill(i, SeedType.DashRecall, false, true);
+    const d = loadGraphFill(i, RecallPreset, false, true);
     solve(i, "Graph Recall Full", d, getRecallFlags, starterCharge);
 
-    const e = loadGraphFill(i, SeedType.Standard, true, true);
+    const e = loadGraphFill(i, SeasonPreset, true, true);
     solve(i, "Graph Season M/M", e, getSeasonFlags);
 
-    const f = loadGraphFill(i, SeedType.Standard, false, true);
+    const f = loadGraphFill(i, SeasonPreset, false, true);
     solve(i, "Graph Season Full", f, getSeasonFlags);
   }
   if (!quiet || i % 1000 == 0) {
