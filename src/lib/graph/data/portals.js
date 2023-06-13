@@ -1,37 +1,4 @@
-import DotNetRandom from "../dash/dotnet-random";
-
-export const portals = {
-  Areas: [
-    // Crateria / Blue Brinstar
-    ["Door_RetroPBs", "Door_GreenHills"],
-    ["Door_Moat", "Door_Ocean"],
-    ["Door_G4", "Door_Tourian"],
-    ["Door_Kago", "Door_GreenElevator"],
-    ["Door_Crabs", "Door_RedElevator"],
-    // Wrecked Ship
-    ["Door_HighwayExit", "Door_Highway"],
-    // Green / Pink Brinstar
-    ["Door_NoobBridge", "Door_RedTower"],
-    // Red Brinstar
-    ["Door_MaridiaEscape", "Door_RedFish"],
-    ["Door_MaridiaTube", "Door_MainStreet"],
-    ["Door_KraidEntry", "Door_ElevatorEntry"],
-    ["Door_AboveKraid", "Door_MaridiaMap"],
-    // Upper Norfair
-    ["Door_KraidMouth", "Door_KraidsLair"],
-    ["Door_CrocEntry", "Door_Croc"],
-    ["Door_SingleChamber", "Door_Muskateers"],
-    ["Door_LavaDive", "Door_RidleyMouth"],
-    // West Maridia
-    ["Door_PreAqueduct", "Door_Aqueduct"],
-  ],
-  Bosses: [
-    ["Door_KraidBoss", "Exit_Kraid"],
-    ["Door_PhantoonBoss", "Exit_Phantoon"],
-    ["Door_DraygonBoss", "Exit_Draygon"],
-    ["Door_RidleyBoss", "Exit_Ridley"],
-  ],
-};
+import DotNetRandom from "../../dotnet-random";
 
 const shufflePortals = (seed, unshuffled) => {
   if (seed == 0) {
@@ -63,11 +30,41 @@ const shufflePortals = (seed, unshuffled) => {
 };
 
 const getAreaPortals = (seed) => {
-  return shufflePortals(seed, portals.Areas);
+  const areas = [
+    // Crateria / Blue Brinstar
+    ["Door_RetroPBs", "Door_GreenHills"],
+    ["Door_Moat", "Door_Ocean"],
+    ["Door_G4", "Door_Tourian"],
+    ["Door_Kago", "Door_GreenElevator"],
+    ["Door_Crabs", "Door_RedElevator"],
+    // Wrecked Ship
+    ["Door_HighwayExit", "Door_Highway"],
+    // Green / Pink Brinstar
+    ["Door_NoobBridge", "Door_RedTower"],
+    // Red Brinstar
+    ["Door_MaridiaEscape", "Door_RedFish"],
+    ["Door_MaridiaTube", "Door_MainStreet"],
+    ["Door_KraidEntry", "Door_ElevatorEntry"],
+    ["Door_AboveKraid", "Door_MaridiaMap"],
+    // Upper Norfair
+    ["Door_KraidMouth", "Door_KraidsLair"],
+    ["Door_CrocEntry", "Door_Croc"],
+    ["Door_SingleChamber", "Door_Muskateers"],
+    ["Door_LavaDive", "Door_RidleyMouth"],
+    // West Maridia
+    ["Door_PreAqueduct", "Door_Aqueduct"],
+  ];
+  return shufflePortals(seed, areas);
 };
 
 const getBossPortals = (seed) => {
-  return shufflePortals(seed, portals.Bosses);
+  const bosses = [
+    ["Door_KraidBoss", "Exit_Kraid"],
+    ["Door_PhantoonBoss", "Exit_Phantoon"],
+    ["Door_DraygonBoss", "Exit_Draygon"],
+    ["Door_RidleyBoss", "Exit_Ridley"],
+  ];
+  return shufflePortals(seed, bosses);
 };
 
 export const mapPortals = (seed, area, boss) => {

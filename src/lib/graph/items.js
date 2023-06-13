@@ -1,8 +1,13 @@
-import DotNetRandom from "./dash/dotnet-random";
-import { Item, majorItem, minorItem } from "./dash/items";
+import DotNetRandom from "../dotnet-random";
+import { Item, majorItem, minorItem } from "../items";
 import { MinorDistributionMode } from "./params";
 
-export const getItemPool = (seed, numMajors, minorDistribution, extraMajors) => {
+export const getItemPool = (
+  seed,
+  numMajors,
+  minorDistribution,
+  extraMajors
+) => {
   const rnd = new DotNetRandom(seed);
 
   let itemPool = [
@@ -69,7 +74,8 @@ export const getItemPool = (seed, numMajors, minorDistribution, extraMajors) => 
   if (minorDistribution.mode == MinorDistributionMode.Dash) {
     const { supers, powerbombs } = minorDistribution;
     const numSupers = supers.min + rnd.Next(supers.max - supers.min + 1);
-    const numPBs = powerbombs.min + rnd.Next(powerbombs.max - powerbombs.min + 1);
+    const numPBs =
+      powerbombs.min + rnd.Next(powerbombs.max - powerbombs.min + 1);
     const numMissiles = 100 - (itemPool.length - 3) - numSupers - numPBs;
 
     setAmountInPool(Item.Missile, numMissiles);
@@ -82,7 +88,11 @@ export const getItemPool = (seed, numMajors, minorDistribution, extraMajors) => 
     let itemCount = itemPool.length;
 
     const { missiles, supers, powerbombs } = minorDistribution;
-    const distribution = [missiles, missiles + supers, missiles + supers + powerbombs];
+    const distribution = [
+      missiles,
+      missiles + supers,
+      missiles + supers + powerbombs,
+    ];
     while (itemCount < 100) {
       const draw = rnd.Next(distribution[distribution.length - 1]);
       if (draw < distribution[0]) {
@@ -100,8 +110,6 @@ export const getItemPool = (seed, numMajors, minorDistribution, extraMajors) => 
   } else {
     throw new Error("Invalid minor distribution");
   }
-
-  //TODO: set minors
 
   return itemPool;
 };

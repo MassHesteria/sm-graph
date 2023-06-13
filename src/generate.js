@@ -5,12 +5,13 @@ import {
   getMajorMinorPrePool,
   isEmptyNode,
   isValidMajorMinor,
-} from "./dash/itemPlacement";
-import { getLocations } from "./dash/locations";
-import { Item } from "./dash/items";
-import Loadout from "./dash/loadout";
-import ModeStandard from "./dash/modes/modeStandard";
-import ModeRecall from "./dash/modes/modeRecall";
+  verifyItemProgression,
+} from "./lib/itemPlacement";
+import { getLocations } from "./lib/locations";
+import { Item } from "./lib/items";
+import Loadout from "./lib/loadout";
+import ModeStandard from "./lib/modes/modeStandard";
+import ModeRecall from "./lib/modes/modeRecall";
 
 const mapLocation = (name) => {
   const mappings = [
@@ -148,6 +149,13 @@ export const generateSeed = (seed, recall, full, failMode) => {
     failMode
   );
   mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
+
+  //let log = [];
+  //verifyItemProgression(initLoad, mode.nodes, log);
+  //console.log("** old verify **");
+  //log.forEach((e) => console.log(`${e.item.name} @ ${e.location.name}`));
+  //console.log("****************");
+
   return mode.nodes;
 };
 

@@ -1,4 +1,4 @@
-import { Item } from "../../dash/items";
+import { Item } from "../../../items";
 import { BeamMode, MapLayout, MinorDistributionMode } from "../../params";
 
 export const RecallPreset = {

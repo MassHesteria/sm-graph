@@ -1,28 +1,29 @@
-import { ItemNames } from "./dash/items.js";
-import Loadout from "./dash/loadout.js";
+import { ItemNames } from "./lib/items.js";
+import Loadout from "./lib/loadout.js";
+import { createGraph } from "./lib/graph/data/vanilla/graph.js";
+import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
+import { mapPortals } from "./lib/graph/data/portals.js";
+import { ClassicEdgeUpdates } from "./lib/graph/data/classic/edges.js";
+import { RecallEdgeUpdates } from "./lib/graph/data/recall/edges.js";
+import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges.js";
+import { ClassicVertexUpdates } from "./lib/graph/data/classic/vertex.js";
+import { RecallVertexUpdates } from "./lib/graph/data/recall/vertex.js";
+import { SeasonVertexUpdates } from "./lib/graph/data/season/vertex.js";
+import { getClassicFlags } from "./lib/graph/data/classic/flags.js";
+import { getRecallFlags } from "./lib/graph/data/recall/flags.js";
+import { getSeasonFlags } from "./lib/graph/data/season/flags.js";
+import { graphFill } from "./lib/graph/fill.js";
+import { getFullPrePool, getMajorMinorPrePool } from "./lib/itemPlacement.js";
+import GraphSolver from "./lib/graph/solver.js";
+import { getItemPool } from "./lib/graph/items.js";
+import { ClassicPreset } from "./lib/graph/data/classic/preset.js";
+import { RecallPreset } from "./lib/graph/data/recall/preset.js";
+import { SeasonPreset } from "./lib/graph/data/season/preset.js";
+import { BeamMode, MapLayout } from "./lib/graph/params.js";
+
+import fs from "fs";
 import chalk from "chalk";
-import { createGraph } from "./data/vanilla/graph.js";
-import { vanillaItemPlacement } from "./data/vanilla/items.js";
-import { mapPortals } from "./data/portals.js";
 import { generateSeed, readBosses, readSeed } from "./generate.js";
-import DotNetRandom from "./dash/dotnet-random.js";
-import { ClassicEdgeUpdates } from "./data/classic/edges.js";
-import { RecallEdgeUpdates } from "./data/recall/edges.js";
-import { SeasonEdgeUpdates } from "./data/season/edges.js";
-import { ClassicVertexUpdates } from "./data/classic/vertex.js";
-import { RecallVertexUpdates } from "./data/recall/vertex.js";
-import { SeasonVertexUpdates } from "./data/season/vertex.js";
-import { getClassicFlags } from "./data/classic/flags.js";
-import { getRecallFlags } from "./data/recall/flags.js";
-import { getSeasonFlags } from "./data/season/flags.js";
-import { graphFill } from "./graphFill.js";
-import { getFullPrePool, getMajorMinorPrePool } from "./dash/itemPlacement.js";
-import GraphSolver from "./graphSolver.js";
-import { getItemPool } from "./items.js";
-import { ClassicPreset } from "./data/classic/preset.js";
-import { RecallPreset } from "./data/recall/preset.js";
-import { SeasonPreset } from "./data/season/preset.js";
-import { BeamMode, MapLayout } from "./params.js";
 
 //-----------------------------------------------------------------
 // Constants.
@@ -39,20 +40,17 @@ const TestMode = {
 // Determine the seed.
 //-----------------------------------------------------------------
 
-const getRandomSeed = () => {
-  const timestamp = Math.floor(new Date().getTime() / 1000);
-  const RNG = new DotNetRandom(timestamp);
-  return RNG.NextInRange(1, 1000000);
-};
-
-const seed = getRandomSeed();
+let startSeed = 0;
+let endSeed = 0;
 let quiet = false;
-let startSeed = seed;
-let endSeed = seed;
 
 // Read seed information from external files.
-//const readFromFolder = "path/to/results";
-const readFromFolder = null;
+const readFromFolders = [
+  //"path/to/results",
+  //"path/to/results",
+  //"path/to/results",
+  //"path/to/results",
+];
 
 // Enables checking seeds produced with the legacy solver.
 const verifiedFillMode = TestMode.Success;
@@ -60,7 +58,7 @@ const verifiedFillMode = TestMode.Success;
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
 // a bit of a sanity check.
-const graphFillMode = TestMode.Success;
+const graphFillMode = TestMode.None;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -73,6 +71,9 @@ if (process.argv.length == 3) {
   startSeed = parseInt(process.argv[2]);
   endSeed = parseInt(process.argv[3]);
   quiet = true;
+} else {
+  console.log("Please specify a seed");
+  process.exit(1);
 }
 
 //-----------------------------------------------------------------
@@ -232,7 +233,10 @@ const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
   const portals = mapPortals(seed, false, bossShuffle);
   const graph = createGraph(portals, vertexUpdates, edgeUpdates);
 
-  const samus = settings.beamMode == BeamMode.Vanilla ? new Loadout() : starterCharge;
+  const samus =
+    settings.beamMode == BeamMode.Vanilla || settings.beamMode == BeamMode.DashClassic
+      ? new Loadout()
+      : starterCharge;
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   const itemPool = getItemPool(
     seed,
@@ -295,7 +299,7 @@ const confirmFailure = (seed, title, graph, getFlags, initLoad, legacyMode = tru
 // Solve the specified seeds.
 //-----------------------------------------------------------------
 
-let modes = readFromFolder == null ? "" : "external ";
+let modes = readFromFolders.length > 0 ? "external " : "";
 if (verifiedFillMode == TestMode.Both) {
   modes += "verifiedBoth ";
 } else {
@@ -315,10 +319,13 @@ if (startSeed == 0) {
 }
 
 for (let i = startSeed; i <= endSeed; i++) {
-  if (readFromFolder != null) {
-    const fileName = `${readFromFolder}/${i.toString().padStart(6, "0")}.json`;
-    solve(i, "External", loadExternal(fileName), getSeasonFlags);
-  }
+  readFromFolders.forEach((f) => {
+    const fileName = `${f}/${i.toString().padStart(6, "0")}.json`;
+    if (!fs.existsSync(fileName)) {
+      return;
+    }
+    solve(i, fileName, loadExternal(fileName), getSeasonFlags);
+  });
   if ((verifiedFillMode & TestMode.Success) > 0) {
     const a = loadVerifiedFill(i, false, false);
     solve(i, "Legacy Classic M/M", a, getClassicFlags, undefined, true);

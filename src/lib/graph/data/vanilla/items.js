@@ -1,4 +1,4 @@
-import { Item } from "../../dash/items";
+import { Item } from "../../../items";
 
 export const vanillaItemPlacement = [
   { location: "MorphBall", item: Item.Morph },

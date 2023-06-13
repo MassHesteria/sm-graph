@@ -1,9 +1,17 @@
-import DotNetRandom from "./dash/dotnet-random";
-import { Item } from "./dash/items";
-import GraphSolver from "./graphSolver";
+import DotNetRandom from "../dotnet-random";
+import { Item } from "../items";
+import GraphSolver from "./solver";
 import { cloneGraph } from "./data/vanilla/graph";
 
-export const graphFill = (seed, graph, getFlags, itemPool, getPrePool, initLoad, restrictType) => {
+export const graphFill = (
+  seed,
+  graph,
+  getFlags,
+  itemPool,
+  getPrePool,
+  initLoad,
+  restrictType
+) => {
   const solver = new GraphSolver(graph, getFlags);
   const rnd = new DotNetRandom(seed);
 
@@ -90,7 +98,9 @@ export const graphFill = (seed, graph, getFlags, itemPool, getPrePool, initLoad,
     const itemIndex = itemPool.findIndex((i) => i.type == itemType);
     const item = itemPool.splice(itemIndex, 1)[0];
     const available = shuffledLocations.find(
-      (v) => canPlaceItem(item, v) && solver.isVertexAvailable(v, prefillLoadout, itemType)
+      (v) =>
+        canPlaceItem(item, v) &&
+        solver.isVertexAvailable(v, prefillLoadout, itemType)
     );
 
     available.item = itemType;
