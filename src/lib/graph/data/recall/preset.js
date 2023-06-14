@@ -2,6 +2,7 @@ import { Item } from "../../../items";
 import {
   BeamMode,
   MapLayout,
+  MajorDistributionMode,
   MinorDistributionMode,
   SuitMode,
 } from "../../params";
@@ -9,21 +10,23 @@ import {
 export const RecallPreset = {
   mapLayout: MapLayout.DashRecall,
   itemPoolParams: {
-    numMajors: 36,
+    majorDistribution: {
+      mode: MajorDistributionMode.Recall,
+      extraItems: [
+        Item.DoubleJump,
+        Item.PressureValve,
+        Item.HeatShield,
+        Item.BeamUpgrade,
+        Item.BeamUpgrade,
+        Item.BeamUpgrade,
+        Item.BeamUpgrade,
+      ],
+    },
     minorDistribution: {
       mode: MinorDistributionMode.Dash,
       supers: { min: 15, max: 18 },
       powerbombs: { min: 15, max: 18 },
     },
-    extraMajors: [
-      Item.DoubleJump,
-      Item.PressureValve,
-      Item.HeatShield,
-      Item.BeamUpgrade,
-      Item.BeamUpgrade,
-      Item.BeamUpgrade,
-      Item.BeamUpgrade,
-    ],
   },
   settings: {
     beamMode: BeamMode.DashRecallV1,

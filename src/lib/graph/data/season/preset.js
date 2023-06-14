@@ -1,6 +1,7 @@
 import {
   BeamMode,
   MapLayout,
+  MajorDistributionMode,
   MinorDistributionMode,
   SuitMode,
 } from "../../params";
@@ -8,14 +9,16 @@ import {
 export const SeasonPreset = {
   mapLayout: MapLayout.Standard,
   itemPoolParams: {
-    numMajors: 34,
+    majorDistribution: {
+      mode: MajorDistributionMode.Standard,
+      extraItems: [],
+    },
     minorDistribution: {
       mode: MinorDistributionMode.Standard,
       missiles: 3,
       supers: 2,
       powerbombs: 1,
     },
-    extraMajors: [],
   },
   settings: {
     beamMode: BeamMode.Vanilla,

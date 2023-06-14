@@ -1,10 +1,10 @@
-import { ClassicPreset } from "../data/classic/preset";
-import { RecallPreset } from "../data/recall/preset";
-import { SeasonPreset } from "../data/season/preset";
-import ModeStandard from "../dash/modes/modeStandard";
-import ModeRecall from "../dash/modes/modeRecall";
-import { getLocations } from "../dash/locations";
-import { getItemPool } from "../items";
+import { ClassicPreset } from "../lib/graph/data/classic/preset";
+import { RecallPreset } from "../lib/graph/data/recall/preset";
+import { SeasonPreset } from "../lib/graph/data/season/preset";
+import ModeStandard from "../lib/modes/modeStandard";
+import ModeRecall from "../lib/modes/modeRecall";
+import { getLocations } from "../lib/locations";
+import { getItemPool } from "../lib/graph/items";
 
 export const UnitTest_getItemPool = (quiet) => {
   const showItem = (i) => console.log(i.name);
@@ -18,9 +18,8 @@ export const UnitTest_getItemPool = (quiet) => {
     print("---- New ----");
     const uni = getItemPool(
       seed,
-      itemPoolParams.numMajors,
-      itemPoolParams.minorDistribution,
-      itemPoolParams.extraMajors
+      itemPoolParams.majorDistribution,
+      itemPoolParams.minorDistribution
     );
 
     print("---- Old ----");

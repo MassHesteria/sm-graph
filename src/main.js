@@ -3,10 +3,10 @@ import Loadout from "./lib/loadout.js";
 import { createGraph } from "./lib/graph/data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
-import { ClassicEdgeUpdates } from "./lib/graph/data/classic/edges.js";
+import { CommonEdgeUpdates } from "./lib/graph/data/common/edges.js";
 import { RecallEdgeUpdates } from "./lib/graph/data/recall/edges.js";
 import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges.js";
-import { ClassicVertexUpdates } from "./lib/graph/data/classic/vertex.js";
+import { CommonVertexUpdates } from "./lib/graph/data/common/vertex.js";
 import { RecallVertexUpdates } from "./lib/graph/data/recall/vertex.js";
 import { SeasonVertexUpdates } from "./lib/graph/data/season/vertex.js";
 import { graphFill } from "./lib/graph/fill.js";
@@ -17,7 +17,7 @@ import { ClassicPreset } from "./lib/graph/data/classic/preset.js";
 import { RecallPreset } from "./lib/graph/data/recall/preset.js";
 import { SeasonPreset } from "./lib/graph/data/season/preset.js";
 import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
-import { BeamMode, MapLayout } from "./lib/graph/params.js";
+import { MapLayout } from "./lib/graph/params.js";
 
 import fs from "fs";
 import chalk from "chalk";
@@ -208,7 +208,7 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
   const portals = mapPortals(0, false, false);
   const graph = recall
     ? createGraph(portals, RecallVertexUpdates, RecallEdgeUpdates)
-    : createGraph(portals, ClassicVertexUpdates, ClassicEdgeUpdates);
+    : createGraph(portals, CommonVertexUpdates, CommonEdgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   generateSeed(seed, recall, full, failMode).forEach((i) =>
     placeItem(graph, i.location.name, i.item.type)
@@ -221,7 +221,7 @@ const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
 
   const [vertexUpdates, edgeUpdates] =
     mapLayout == MapLayout.DashClassic
-      ? [ClassicVertexUpdates, ClassicEdgeUpdates]
+      ? [CommonVertexUpdates, CommonEdgeUpdates]
       : mapLayout == MapLayout.DashRecall
       ? [RecallVertexUpdates, RecallEdgeUpdates]
       : [SeasonVertexUpdates, SeasonEdgeUpdates];
@@ -232,9 +232,8 @@ const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   const itemPool = getItemPool(
     seed,
-    itemPoolParams.numMajors,
-    itemPoolParams.minorDistribution,
-    itemPoolParams.extraMajors
+    itemPoolParams.majorDistribution,
+    itemPoolParams.minorDistribution
   );
   graphFill(seed, graph, itemPool, getPrePool, settings, restrictType);
   return graph;

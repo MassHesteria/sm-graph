@@ -5,6 +5,11 @@ export const MapLayout = {
   DashRecall: 3,
 };
 
+export const MajorDistributionMode = {
+  Standard: 0,
+  Recall: 1,
+};
+
 export const MinorDistributionMode = {
   Standard: 0,
   Dash: 1,

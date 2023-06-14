@@ -1,13 +1,8 @@
 import DotNetRandom from "../dotnet-random";
 import { Item, majorItem, minorItem } from "../items";
-import { MinorDistributionMode } from "./params";
+import { MajorDistributionMode, MinorDistributionMode } from "./params";
 
-export const getItemPool = (
-  seed,
-  numMajors,
-  minorDistribution,
-  extraMajors
-) => {
+export const getItemPool = (seed, majorDistribution, minorDistribution) => {
   const rnd = new DotNetRandom(seed);
 
   let itemPool = [
@@ -34,7 +29,7 @@ export const getItemPool = (
     majorItem(0x2f801d, Item.ScrewAttack),
   ];
 
-  extraMajors.forEach((i) => {
+  majorDistribution.extraItems.forEach((i) => {
     if (i == Item.DoubleJump) {
       itemPool.push(majorItem(0x2f8029, Item.DoubleJump));
     } else if (i == Item.PressureValve) {
@@ -64,6 +59,8 @@ export const getItemPool = (
     }
   };
 
+  const numMajors =
+    majorDistribution.mode == MajorDistributionMode.Recall ? 36 : 34;
   const poolMajors = itemPool.filter((i) => i.isMajor).length;
   const numReserves = Math.max(1, numMajors - poolMajors - 13) + 1;
   const numEnergyTanks = numMajors - (poolMajors - 1) - numReserves + 1;

@@ -1,6 +1,7 @@
 import {
   BeamMode,
   MapLayout,
+  MajorDistributionMode,
   MinorDistributionMode,
   SuitMode,
 } from "../../params";
@@ -8,13 +9,15 @@ import {
 export const VanillaPreset = {
   mapLayout: MapLayout.Vanilla,
   itemPoolParams: {
-    numMajors: 34,
+    majorDistribution: {
+      mode: MajorDistributionMode.Standard,
+      extraItems: [],
+    },
     minorDistribution: {
       mode: MinorDistributionMode.Dash,
       supers: { min: 10, max: 10 },
       powerbombs: { min: 10, max: 10 },
     },
-    extraMajors: [],
   },
   settings: {
     beamMode: BeamMode.Vanilla,

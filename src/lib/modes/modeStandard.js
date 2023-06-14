@@ -450,25 +450,11 @@ class ModeStandard {
     });
 
     minor("Missiles (Norfair Reserve 1)", (load) => {
-      return (
-        canAccessHeatedNorfair(load) &&
-        (load.canFly ||
-          load.hasGrapple ||
-          load.hasIce ||
-          load.hasSpringBall ||
-          load.hasHiJump)
-      );
+      return canAccessHeatedNorfair(load);
     });
 
     minor("Missiles (Norfair Reserve 2)", (load) => {
-      return (
-        canAccessHeatedNorfair(load) &&
-        (load.canFly ||
-          load.hasGrapple ||
-          load.hasIce ||
-          load.hasSpringBall ||
-          load.hasHiJump)
-      );
+      return canAccessHeatedNorfair(load);
     });
 
     minor("Missiles (Speed)", (load) => {
@@ -480,14 +466,7 @@ class ModeStandard {
     });
 
     major("Reserve Tank (Norfair)", (load) => {
-      return (
-        canAccessHeatedNorfair(load) &&
-        (load.canFly ||
-          load.hasGrapple ||
-          load.hasIce ||
-          load.hasSpringBall ||
-          load.hasHiJump)
-      );
+      return canAccessHeatedNorfair(load);
     });
 
     major("Speed Booster", (load) => {
