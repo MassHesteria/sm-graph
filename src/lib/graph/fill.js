@@ -2,14 +2,14 @@ import DotNetRandom from "../dotnet-random";
 import { Item } from "../items";
 import GraphSolver from "./solver";
 import { cloneGraph } from "./data/vanilla/graph";
-import { BeamMode } from "./params";
 import Loadout from "../loadout";
+import { getFullPrePool, getMajorMinorPrePool } from "../itemPlacement.js";
+import { getItemPool } from "./items";
 
 export const graphFill = (
   seed,
   graph,
-  itemPool,
-  getPrePool,
+  itemPoolParams,
   settings,
   restrictType
 ) => {
@@ -90,9 +90,17 @@ export const graphFill = (
   };
 
   //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
+
+  const { majorDistribution, minorDistribution } = itemPoolParams;
+  const itemPool = getItemPool(seed, majorDistribution, minorDistribution);
+
+  //-----------------------------------------------------------------
   // Prefill locations with early items.
   //-----------------------------------------------------------------
 
+  const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   let prefillLoadout = new Loadout();
 
   getPrePool(rnd).forEach((itemType) => {

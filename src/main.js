@@ -1,23 +1,15 @@
 import { ItemNames } from "./lib/items.js";
 import Loadout from "./lib/loadout.js";
-import { createGraph } from "./lib/graph/data/vanilla/graph.js";
+import { loadGraph } from "./lib/graph/data/vanilla/graph.js";
 import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
-import { CommonEdgeUpdates } from "./lib/graph/data/common/edges.js";
-import { RecallEdgeUpdates } from "./lib/graph/data/recall/edges.js";
-import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges.js";
-import { CommonVertexUpdates } from "./lib/graph/data/common/vertex.js";
-import { RecallVertexUpdates } from "./lib/graph/data/recall/vertex.js";
-import { SeasonVertexUpdates } from "./lib/graph/data/season/vertex.js";
 import { graphFill } from "./lib/graph/fill.js";
-import { getFullPrePool, getMajorMinorPrePool } from "./lib/itemPlacement.js";
 import GraphSolver from "./lib/graph/solver.js";
-import { getItemPool } from "./lib/graph/items.js";
 import { ClassicPreset } from "./lib/graph/data/classic/preset.js";
 import { RecallPreset } from "./lib/graph/data/recall/preset.js";
 import { SeasonPreset } from "./lib/graph/data/season/preset.js";
 import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
-import { MapLayout } from "./lib/graph/params.js";
+import { MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
 
 import fs from "fs";
 import chalk from "chalk";
@@ -192,24 +184,31 @@ const loadExternal = (fileName) => {
       console.log(bosses);
     }
   }
-  const graph = createGraph(portals, SeasonVertexUpdates, SeasonEdgeUpdates);
+  const graph = loadGraph(
+    0,
+    MapLayout.Standard,
+    MajorDistributionMode.Standard,
+    false,
+    false,
+    portals
+  );
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVanilla = () => {
-  const portals = mapPortals(0, false, false);
-  const graph = createGraph(portals, [], []);
+  const graph = loadGraph(0, MapLayout.Vanilla, MajorDistributionMode.Standard);
   vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
   return graph;
 };
 
 const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
-  const portals = mapPortals(0, false, false);
-  const graph = recall
-    ? createGraph(portals, RecallVertexUpdates, RecallEdgeUpdates)
-    : createGraph(portals, CommonVertexUpdates, CommonEdgeUpdates);
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
+  const [mapLayout, majorDistributionMode] = recall
+    ? [MapLayout.DashRecall, MajorDistributionMode.Recall]
+    : [MapLayout.DashClassic, MajorDistributionMode.Standard];
+
+  const graph = loadGraph(0, mapLayout, majorDistributionMode);
   generateSeed(seed, recall, full, failMode).forEach((i) =>
     placeItem(graph, i.location.name, i.item.type)
   );
@@ -218,24 +217,10 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
 
 const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
   const { mapLayout, itemPoolParams, settings } = preset;
+  const { majorDistribution } = itemPoolParams;
 
-  const [vertexUpdates, edgeUpdates] =
-    mapLayout == MapLayout.DashClassic
-      ? [CommonVertexUpdates, CommonEdgeUpdates]
-      : mapLayout == MapLayout.DashRecall
-      ? [RecallVertexUpdates, RecallEdgeUpdates]
-      : [SeasonVertexUpdates, SeasonEdgeUpdates];
-
-  const portals = mapPortals(seed, false, bossShuffle);
-  const graph = createGraph(portals, vertexUpdates, edgeUpdates);
-
-  const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
-  const itemPool = getItemPool(
-    seed,
-    itemPoolParams.majorDistribution,
-    itemPoolParams.minorDistribution
-  );
-  graphFill(seed, graph, itemPool, getPrePool, settings, restrictType);
+  const graph = loadGraph(seed, mapLayout, majorDistribution.mode, false, bossShuffle);
+  graphFill(seed, graph, itemPoolParams, settings, restrictType);
   return graph;
 };
 

@@ -10,6 +10,13 @@ import { uppernorfairEdges } from "./edges/uppernorfair";
 import { lowernorfairEdges } from "./edges/lowernorfair";
 import { wreckedshipEdges } from "./edges/wreckedship";
 import { bossEdges } from "./edges/boss";
+import { MapLayout, MajorDistributionMode } from "../../params";
+import { SeasonVertexUpdates } from "../season/vertex";
+import { RecallVertexUpdates } from "../recall/vertex";
+import { SeasonEdgeUpdates } from "../season/edges";
+import { RecallEdgeUpdates } from "../recall/edges";
+import { CommonEdgeUpdates } from "../common/edges";
+import { mapPortals } from "../portals";
 
 const getVanillaEdges = () => {
   return {
@@ -65,7 +72,12 @@ const allEdges = Object.entries(getVanillaEdges())
     return acc.concat(cur);
   }, []);
 
-export const createGraph = (portalMapping, vertexUpdates, edgeUpdates, startVertex) => {
+export const createGraph = (
+  portalMapping,
+  vertexUpdates,
+  edgeUpdates,
+  startVertex
+) => {
   //-----------------------------------------------------------------
   //
   //-----------------------------------------------------------------
@@ -182,4 +194,42 @@ export const cloneGraph = (graph) => {
   //e.to = remap(e.to);
   //});
   //return newEdges;
+};
+
+const getEdgeUpdates = (mapLayout) => {
+  switch (mapLayout) {
+    case MapLayout.Vanilla:
+      return [];
+    case MapLayout.DashClassic:
+      return CommonEdgeUpdates;
+    case MapLayout.DashRecall:
+      return RecallEdgeUpdates;
+    default:
+      return SeasonEdgeUpdates;
+  }
+};
+
+export const loadGraph = (
+  seed,
+  mapLayout,
+  majorDistributionMode,
+  areaShuffle = false,
+  bossShuffle = false,
+  portals = undefined
+) => {
+  const edgeUpdates = getEdgeUpdates(mapLayout);
+  const vertexUpdates =
+    majorDistributionMode == MajorDistributionMode.Standard
+      ? SeasonVertexUpdates
+      : RecallVertexUpdates;
+
+  if (portals != undefined) {
+    return createGraph(portals, vertexUpdates, edgeUpdates);
+  }
+
+  return createGraph(
+    mapPortals(seed, areaShuffle, bossShuffle),
+    vertexUpdates,
+    edgeUpdates
+  );
 };
