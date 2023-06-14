@@ -1,4 +1,9 @@
-import { BeamMode, MapLayout, MinorDistributionMode } from "../../params";
+import {
+  BeamMode,
+  MapLayout,
+  MinorDistributionMode,
+  SuitMode,
+} from "../../params";
 
 export const ClassicPreset = {
   mapLayout: MapLayout.DashClassic,
@@ -13,5 +18,6 @@ export const ClassicPreset = {
   },
   settings: {
     beamMode: BeamMode.DashClassic,
+    suitMode: SuitMode.Dash,
   },
 };

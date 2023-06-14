@@ -2,17 +2,18 @@ import DotNetRandom from "../dotnet-random";
 import { Item } from "../items";
 import GraphSolver from "./solver";
 import { cloneGraph } from "./data/vanilla/graph";
+import { BeamMode } from "./params";
+import Loadout from "../loadout";
 
 export const graphFill = (
   seed,
   graph,
-  getFlags,
   itemPool,
   getPrePool,
-  initLoad,
+  settings,
   restrictType
 ) => {
-  const solver = new GraphSolver(graph, getFlags);
+  const solver = new GraphSolver(graph, settings);
   const rnd = new DotNetRandom(seed);
 
   //-----------------------------------------------------------------
@@ -92,7 +93,7 @@ export const graphFill = (
   // Prefill locations with early items.
   //-----------------------------------------------------------------
 
-  let prefillLoadout = initLoad.clone();
+  let prefillLoadout = new Loadout();
 
   getPrePool(rnd).forEach((itemType) => {
     const itemIndex = itemPool.findIndex((i) => i.type == itemType);
@@ -100,7 +101,7 @@ export const graphFill = (
     const available = shuffledLocations.find(
       (v) =>
         canPlaceItem(item, v) &&
-        solver.isVertexAvailable(v, prefillLoadout, itemType)
+        solver.isVertexAvailable(v, prefillLoadout, itemType, settings)
     );
 
     available.item = itemType;
@@ -153,8 +154,8 @@ export const graphFill = (
 
     placeItems(itemPool, nonPrefilled);
 
-    const tempSolver = new GraphSolver(cloneGraph(graph), getFlags);
-    if (tempSolver.isValid(initLoad)) {
+    const tempSolver = new GraphSolver(cloneGraph(graph), settings);
+    if (tempSolver.isValid(new Loadout())) {
       break;
     }
   }

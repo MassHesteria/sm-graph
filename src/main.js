@@ -9,9 +9,6 @@ import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges.js";
 import { ClassicVertexUpdates } from "./lib/graph/data/classic/vertex.js";
 import { RecallVertexUpdates } from "./lib/graph/data/recall/vertex.js";
 import { SeasonVertexUpdates } from "./lib/graph/data/season/vertex.js";
-import { getClassicFlags } from "./lib/graph/data/classic/flags.js";
-import { getRecallFlags } from "./lib/graph/data/recall/flags.js";
-import { getSeasonFlags } from "./lib/graph/data/season/flags.js";
 import { graphFill } from "./lib/graph/fill.js";
 import { getFullPrePool, getMajorMinorPrePool } from "./lib/itemPlacement.js";
 import GraphSolver from "./lib/graph/solver.js";
@@ -19,6 +16,7 @@ import { getItemPool } from "./lib/graph/items.js";
 import { ClassicPreset } from "./lib/graph/data/classic/preset.js";
 import { RecallPreset } from "./lib/graph/data/recall/preset.js";
 import { SeasonPreset } from "./lib/graph/data/season/preset.js";
+import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
 import { BeamMode, MapLayout } from "./lib/graph/params.js";
 
 import fs from "fs";
@@ -58,7 +56,7 @@ const verifiedFillMode = TestMode.Success;
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
 // a bit of a sanity check.
-const graphFillMode = TestMode.None;
+const graphFillMode = TestMode.Success;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -171,8 +169,6 @@ const printUncollectedItems = (graph) => {
   console.log("-------------------");
 };
 
-const starterCharge = new Loadout({ hasCharge: true });
-
 //-----------------------------------------------------------------
 // Seed load routines.
 //-----------------------------------------------------------------
@@ -223,20 +219,16 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
 const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
   const { mapLayout, itemPoolParams, settings } = preset;
 
-  const [vertexUpdates, edgeUpdates, getFlags] =
+  const [vertexUpdates, edgeUpdates] =
     mapLayout == MapLayout.DashClassic
-      ? [ClassicVertexUpdates, ClassicEdgeUpdates, getClassicFlags]
+      ? [ClassicVertexUpdates, ClassicEdgeUpdates]
       : mapLayout == MapLayout.DashRecall
-      ? [RecallVertexUpdates, RecallEdgeUpdates, getRecallFlags]
-      : [SeasonVertexUpdates, SeasonEdgeUpdates, getSeasonFlags];
+      ? [RecallVertexUpdates, RecallEdgeUpdates]
+      : [SeasonVertexUpdates, SeasonEdgeUpdates];
 
   const portals = mapPortals(seed, false, bossShuffle);
   const graph = createGraph(portals, vertexUpdates, edgeUpdates);
 
-  const samus =
-    settings.beamMode == BeamMode.Vanilla || settings.beamMode == BeamMode.DashClassic
-      ? new Loadout()
-      : starterCharge;
   const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
   const itemPool = getItemPool(
     seed,
@@ -244,7 +236,7 @@ const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
     itemPoolParams.minorDistribution,
     itemPoolParams.extraMajors
   );
-  graphFill(seed, graph, getFlags, itemPool, getPrePool, samus, restrictType);
+  graphFill(seed, graph, itemPool, getPrePool, settings, restrictType);
   return graph;
 };
 
@@ -254,7 +246,7 @@ const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
 
 let num = 0;
 
-const solve = (seed, title, graph, getFlags, initLoad, legacyMode = false) => {
+const solve = (seed, title, graph, settings, legacyMode = false) => {
   if (!quiet) {
     console.log(
       chalk.blueBright(`\n********* Solving ${title} ********************************\n`)
@@ -272,9 +264,8 @@ const solve = (seed, title, graph, getFlags, initLoad, legacyMode = false) => {
         printMsg: console.log,
       };
 
-  let samus = initLoad == undefined ? new Loadout() : initLoad.clone();
-  let solver = new GraphSolver(graph, getFlags, logMethods);
-  if (!solver.isValid(samus, legacyMode)) {
+  let solver = new GraphSolver(graph, settings, logMethods);
+  if (!solver.isValid(new Loadout(), legacyMode)) {
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
 
@@ -285,9 +276,9 @@ const solve = (seed, title, graph, getFlags, initLoad, legacyMode = false) => {
   num += 1;
 };
 
-const confirmFailure = (seed, title, graph, getFlags, initLoad, legacyMode = true) => {
+const confirmFailure = (seed, title, graph, settings, legacyMode = true) => {
   try {
-    solve(seed, title + " Failure", graph, getFlags, initLoad, legacyMode);
+    solve(seed, title + " Failure", graph, settings, legacyMode);
   } catch (e) {
     num += 1;
     return;
@@ -312,7 +303,7 @@ let start = Date.now();
 let step = start;
 
 if (startSeed == 0) {
-  solve(0, loadVanilla(), getSeasonFlags);
+  solve(0, "Vanilla", loadVanilla(), VanillaPreset.settings);
   console.log(`Verified 0 [ vanilla ] ${Date.now() - step} ms`);
   step = Date.now();
   startSeed += 1;
@@ -324,54 +315,54 @@ for (let i = startSeed; i <= endSeed; i++) {
     if (!fs.existsSync(fileName)) {
       return;
     }
-    solve(i, fileName, loadExternal(fileName), getSeasonFlags);
+    solve(i, fileName, loadExternal(fileName), SeasonPreset.settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
     const a = loadVerifiedFill(i, false, false);
-    solve(i, "Legacy Classic M/M", a, getClassicFlags, undefined, true);
+    solve(i, "Legacy Classic M/M", a, ClassicPreset.settings, true);
 
     const b = loadVerifiedFill(i, false, true);
-    solve(i, "Legacy Classic Full", b, getClassicFlags, undefined, true);
+    solve(i, "Legacy Classic Full", b, ClassicPreset.settings, true);
 
     const c = loadVerifiedFill(i, true, false);
-    solve(i, "Legacy Recall M/M", c, getRecallFlags, starterCharge);
+    solve(i, "Legacy Recall M/M", c, RecallPreset.settings, true);
 
     const d = loadVerifiedFill(i, true, true);
-    solve(i, "Legacy Recall Full", d, getRecallFlags, starterCharge);
+    solve(i, "Legacy Recall Full", d, RecallPreset.settings, true);
   }
   if ((verifiedFillMode & TestMode.Failure) > 0) {
     const a = loadVerifiedFill(i, false, false, true);
-    confirmFailure(i, "Legacy Classic M/M", a, getClassicFlags);
+    confirmFailure(i, "Legacy Classic M/M", a, ClassicPreset.settings);
 
     const b = loadVerifiedFill(i, false, true, true);
-    confirmFailure(i, "Legacy Classic Full", b, getClassicFlags);
+    confirmFailure(i, "Legacy Classic Full", b, ClassicPreset.settings);
 
     const c = loadVerifiedFill(i, true, false, true);
-    confirmFailure(i, "Legacy Recall M/M", c, getRecallFlags, starterCharge);
+    confirmFailure(i, "Legacy Recall M/M", c, RecallPreset.settings);
 
     const d = loadVerifiedFill(i, true, true, true);
-    confirmFailure(i, "Legacy Recall Full", d, getRecallFlags, starterCharge);
+    confirmFailure(i, "Legacy Recall Full", d, RecallPreset.settings);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
     const a = loadGraphFill(i, ClassicPreset, true, true);
-    solve(i, "Graph Classic M/M", a, getClassicFlags);
+    solve(i, "Graph Classic M/M", a, ClassicPreset.settings);
 
     const b = loadGraphFill(i, ClassicPreset, false, true);
-    solve(i, "Graph Classic Full", b, getClassicFlags);
+    solve(i, "Graph Classic Full", b, ClassicPreset.settings);
 
     const c = loadGraphFill(i, RecallPreset, true, true);
-    solve(i, "Graph Recall M/M", c, getRecallFlags, starterCharge);
+    solve(i, "Graph Recall M/M", c, RecallPreset.settings);
 
     const d = loadGraphFill(i, RecallPreset, false, true);
-    solve(i, "Graph Recall Full", d, getRecallFlags, starterCharge);
+    solve(i, "Graph Recall Full", d, RecallPreset.settings);
 
     const e = loadGraphFill(i, SeasonPreset, true, true);
-    solve(i, "Graph Season M/M", e, getSeasonFlags);
+    solve(i, "Graph Season M/M", e, SeasonPreset.settings);
 
     const f = loadGraphFill(i, SeasonPreset, false, true);
-    solve(i, "Graph Season Full", f, getSeasonFlags);
+    solve(i, "Graph Season Full", f, SeasonPreset.settings);
   }
-  if (!quiet || i % 1000 == 0) {
+  if (!quiet || i % 100 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
     step = Date.now();
   }

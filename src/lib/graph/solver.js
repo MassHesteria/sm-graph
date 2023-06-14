@@ -1,9 +1,9 @@
 import { canReachStart, canReachVertex, searchAndCache } from "./search";
 
 class GraphSolver {
-  constructor(graph, getFlags, logMethods) {
+  constructor(graph, settings, logMethods) {
     this.graph = graph;
-    this.getFlags = getFlags;
+    this.settings = settings;
     this.startVertex = graph[0].from;
     if (logMethods != undefined) {
       this.printAvailableItems = logMethods.printAvailableItems;
@@ -57,10 +57,14 @@ class GraphSolver {
       CanKillCrocomire,
       CanKillBotwoon,
       CanKillGoldTorizo,
-    } = this.getFlags(load);
+    } = load.getFlags(this.settings);
 
-    const { HasDefeatedKraid, HasDefeatedPhantoon, HasDefeatedDraygon, HasDefeatedRidley } =
-      bossData;
+    const {
+      HasDefeatedKraid,
+      HasDefeatedPhantoon,
+      HasDefeatedDraygon,
+      HasDefeatedRidley,
+    } = bossData;
 
     return (condition) => eval(`(${condition.toString()})()`);
   }
@@ -75,15 +79,32 @@ class GraphSolver {
       HasDefeatedRidley: false,
     };
 
-    if (!canReachVertex(this.graph, this.startVertex, vertex, this.checkFlags(load, bossData))) {
+    if (
+      !canReachVertex(
+        this.graph,
+        this.startVertex,
+        vertex,
+        this.checkFlags(load, bossData)
+      )
+    ) {
       return false;
     }
     if (legacyMode || item == undefined) {
-      return canReachVertex(this.graph, vertex, this.startVertex, this.checkFlags(load, bossData));
+      return canReachVertex(
+        this.graph,
+        vertex,
+        this.startVertex,
+        this.checkFlags(load, bossData)
+      );
     }
     let temp = load.clone();
     temp.add(item);
-    return canReachVertex(this.graph, vertex, this.startVertex, this.checkFlags(temp, bossData));
+    return canReachVertex(
+      this.graph,
+      vertex,
+      this.startVertex,
+      this.checkFlags(temp, bossData)
+    );
   }
 
   isValid(initLoad, legacyMode = false) {
@@ -97,18 +118,26 @@ class GraphSolver {
     };
 
     const bossEdges = {
-      Kraid: this.graph.find((n) => n.to.name == "Exit_Kraid" && n.from.name.startsWith("Door_")),
+      Kraid: this.graph.find(
+        (n) => n.to.name == "Exit_Kraid" && n.from.name.startsWith("Door_")
+      ),
       Phantoon: this.graph.find(
         (n) => n.to.name == "Exit_Phantoon" && n.from.name.startsWith("Door_")
       ),
       Draygon: this.graph.find(
         (n) => n.to.name == "Exit_Draygon" && n.from.name.startsWith("Door_")
       ),
-      Ridley: this.graph.find((n) => n.to.name == "Exit_Ridley" && n.from.name.startsWith("Door_")),
+      Ridley: this.graph.find(
+        (n) => n.to.name == "Exit_Ridley" && n.from.name.startsWith("Door_")
+      ),
     };
 
     const findAll = () =>
-      searchAndCache(this.graph, this.startVertex, this.checkFlags(samus, bossData));
+      searchAndCache(
+        this.graph,
+        this.startVertex,
+        this.checkFlags(samus, bossData)
+      );
 
     //-----------------------------------------------------------------
     // Collects all items where there is a round trip back to the
@@ -170,7 +199,11 @@ class GraphSolver {
             return false;
           }
 
-          return canReachStart(this.graph, vertex, this.checkFlags(samus, bossData));
+          return canReachStart(
+            this.graph,
+            vertex,
+            this.checkFlags(samus, bossData)
+          );
         };
 
         // Update defeated boss flags. Assume that if we can get to the boss
@@ -178,26 +211,46 @@ class GraphSolver {
         // logic for killing the boss is considered leaving the boss.
         if (!bossData.HasDefeatedKraid) {
           bossData.HasDefeatedKraid = hasRoundTrip(bossEdges.Kraid.to);
-          if (bossData.HasDefeatedKraid && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss(`Defeated Kraid @ ${bossEdges.Kraid.from.name}`);
+          if (
+            bossData.HasDefeatedKraid &&
+            this.printDefeatedBoss != undefined
+          ) {
+            this.printDefeatedBoss(
+              `Defeated Kraid @ ${bossEdges.Kraid.from.name}`
+            );
           }
         }
         if (!bossData.HasDefeatedPhantoon) {
           bossData.HasDefeatedPhantoon = hasRoundTrip(bossEdges.Phantoon.to);
-          if (bossData.HasDefeatedPhantoon && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss(`Defeated Phantoon @ ${bossEdges.Phantoon.from.name}`);
+          if (
+            bossData.HasDefeatedPhantoon &&
+            this.printDefeatedBoss != undefined
+          ) {
+            this.printDefeatedBoss(
+              `Defeated Phantoon @ ${bossEdges.Phantoon.from.name}`
+            );
           }
         }
         if (!bossData.HasDefeatedDraygon) {
           bossData.HasDefeatedDraygon = hasRoundTrip(bossEdges.Draygon.to);
-          if (bossData.HasDefeatedDraygon && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss(`Defeated Draygon @ ${bossEdges.Draygon.from.name}`);
+          if (
+            bossData.HasDefeatedDraygon &&
+            this.printDefeatedBoss != undefined
+          ) {
+            this.printDefeatedBoss(
+              `Defeated Draygon @ ${bossEdges.Draygon.from.name}`
+            );
           }
         }
         if (!bossData.HasDefeatedRidley) {
           bossData.HasDefeatedRidley = hasRoundTrip(bossEdges.Ridley.to);
-          if (bossData.HasDefeatedRidley && this.printDefeatedBoss != undefined) {
-            this.printDefeatedBoss(`Defeated Ridley @ ${bossEdges.Ridley.from.name}`);
+          if (
+            bossData.HasDefeatedRidley &&
+            this.printDefeatedBoss != undefined
+          ) {
+            this.printDefeatedBoss(
+              `Defeated Ridley @ ${bossEdges.Ridley.from.name}`
+            );
           }
         }
 

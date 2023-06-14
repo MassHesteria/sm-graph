@@ -1,4 +1,9 @@
-import { BeamMode, MapLayout, MinorDistributionMode } from "../../params";
+import {
+  BeamMode,
+  MapLayout,
+  MinorDistributionMode,
+  SuitMode,
+} from "../../params";
 
 export const SeasonPreset = {
   mapLayout: MapLayout.Standard,
@@ -14,5 +19,6 @@ export const SeasonPreset = {
   },
   settings: {
     beamMode: BeamMode.Vanilla,
+    suitMode: SuitMode.Standard,
   },
 };

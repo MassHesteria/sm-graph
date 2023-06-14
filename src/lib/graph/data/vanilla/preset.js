@@ -1,4 +1,9 @@
-import { BeamMode, MapLayout, MinorDistributionMode } from "../../params";
+import {
+  BeamMode,
+  MapLayout,
+  MinorDistributionMode,
+  SuitMode,
+} from "../../params";
 
 export const VanillaPreset = {
   mapLayout: MapLayout.Vanilla,
@@ -13,5 +18,6 @@ export const VanillaPreset = {
   },
   settings: {
     beamMode: BeamMode.Vanilla,
+    suitMode: SuitMode.Vanilla,
   },
 };

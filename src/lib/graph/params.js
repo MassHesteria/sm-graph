@@ -16,3 +16,9 @@ export const BeamMode = {
   DashRecallV1: 2,
   DashRecallV2: 3,
 };
+
+export const SuitMode = {
+  Vanilla: 0,
+  Standard: 1,
+  Dash: 2,
+};

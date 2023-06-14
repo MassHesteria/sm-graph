@@ -1,5 +1,10 @@
 import { Item } from "../../../items";
-import { BeamMode, MapLayout, MinorDistributionMode } from "../../params";
+import {
+  BeamMode,
+  MapLayout,
+  MinorDistributionMode,
+  SuitMode,
+} from "../../params";
 
 export const RecallPreset = {
   mapLayout: MapLayout.DashRecall,
@@ -22,5 +27,6 @@ export const RecallPreset = {
   },
   settings: {
     beamMode: BeamMode.DashRecallV1,
+    suitMode: SuitMode.Dash,
   },
 };
