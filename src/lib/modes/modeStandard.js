@@ -480,7 +480,10 @@ class ModeStandard {
     major("Energy Tank (Mama Turtle)", (load) => {
       return (
         canAccessOuterMaridia(load) &&
-        (load.canFly || load.hasSpeed || load.hasGrapple)
+        (load.canFly ||
+          (load.hasSpeed && load.hasGravity) ||
+          load.hasSpringBall ||
+          load.hasGrapple)
       );
     });
 

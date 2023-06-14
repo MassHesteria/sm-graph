@@ -507,7 +507,11 @@ class ModeRecall {
         (load.hasGravity ||
           load.hasPressureValve ||
           (load.hasHiJump && (load.hasIce || load.hasSpringBall))) &&
-        (load.canFly || load.hasSpeed || load.hasGrapple || load.hasDoubleJump)
+        (load.canFly ||
+          (load.hasSpeed && (load.hasGravity || load.hasPressureValve)) ||
+          load.hasSpringBall ||
+          load.hasGrapple ||
+          load.hasDoubleJump)
       );
     });
 

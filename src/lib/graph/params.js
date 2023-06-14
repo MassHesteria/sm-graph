@@ -1,8 +1,7 @@
 export const MapLayout = {
   Vanilla: 0,
   Standard: 1,
-  DashClassic: 2,
-  DashRecall: 3,
+  Recall: 3,
 };
 
 export const MajorDistributionMode = {
@@ -18,8 +17,7 @@ export const MinorDistributionMode = {
 export const BeamMode = {
   Vanilla: 0,
   DashClassic: 1,
-  DashRecallV1: 2,
-  DashRecallV2: 3,
+  DashRecall: 2,
 };
 
 export const SuitMode = {

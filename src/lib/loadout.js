@@ -208,15 +208,13 @@ class Loadout {
   }
 
   getFlags(settings) {
-    const starterChargeInLogic =
-      settings.beamMode == BeamMode.DashRecallV1 ||
-      settings.beamMode == BeamMode.DashRecallV2;
+    const starterChargeInLogic = settings.beamMode == BeamMode.DashRecall;
     const canDamageBosses =
       starterChargeInLogic || this.hasCharge || this.canOpenRedDoors;
     const isHeatProof =
       this.hasVaria ||
       this.hasHeatShield ||
-      settings.suitMode == SuitMode.Vanilla;
+      settings.suitMode == SuitMode.Vanilla && this.hasGravity;
     return {
       CanUseBombs: this.canUseBombs,
       CanUsePowerBombs: this.canUsePowerBombs,

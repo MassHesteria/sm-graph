@@ -8,7 +8,7 @@ import {
 } from "../../params";
 
 export const RecallPreset = {
-  mapLayout: MapLayout.DashRecall,
+  mapLayout: MapLayout.Recall,
   itemPoolParams: {
     majorDistribution: {
       mode: MajorDistributionMode.Recall,
@@ -29,7 +29,7 @@ export const RecallPreset = {
     },
   },
   settings: {
-    beamMode: BeamMode.DashRecallV1,
+    beamMode: BeamMode.DashRecall,
     suitMode: SuitMode.Dash,
   },
 };

@@ -32,8 +32,11 @@ export const lowernorfairEdges = {
   WorstRoomBottom: {
     PrePillars: () => CanDestroyBombWalls,
     WorstRoomTop: () =>
-      (HasScrewAttack && HasSpaceJump) ||
-      (CanPassBombPassages && (CanFly || HasSpringBall || HasHiJump)),
+      //TODO: include killing pirates
+      CanUseBombs ||
+      (HasScrewAttack && (HasSpaceJump || HasDoubleJump)) ||
+      (CanUsePowerBombs &&
+        (HasHiJump || HasSpringBall || HasSpaceJump || HasDoubleJump)),
   },
 
   WorstRoomTop: {
@@ -46,7 +49,8 @@ export const lowernorfairEdges = {
   RedKihunterShaftTop: {
     Wasteland: () => CanUsePowerBombs,
     EnergyTank_Firefleas: true,
-    WorstRoomTop: () => (HasGravity && EnergyTanks >= 3 && TotalTanks >= 6) || EnergyTanks >= 6,
+    WorstRoomTop: () =>
+      (HasGravity && EnergyTanks >= 3 && TotalTanks >= 6) || EnergyTanks >= 6,
     Missiles_Maze: true,
   },
 

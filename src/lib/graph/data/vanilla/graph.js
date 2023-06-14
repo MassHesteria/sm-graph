@@ -15,7 +15,6 @@ import { SeasonVertexUpdates } from "../season/vertex";
 import { RecallVertexUpdates } from "../recall/vertex";
 import { SeasonEdgeUpdates } from "../season/edges";
 import { RecallEdgeUpdates } from "../recall/edges";
-import { CommonEdgeUpdates } from "../common/edges";
 import { mapPortals } from "../portals";
 
 const getVanillaEdges = () => {
@@ -200,9 +199,7 @@ const getEdgeUpdates = (mapLayout) => {
   switch (mapLayout) {
     case MapLayout.Vanilla:
       return [];
-    case MapLayout.DashClassic:
-      return CommonEdgeUpdates;
-    case MapLayout.DashRecall:
+    case MapLayout.Recall:
       return RecallEdgeUpdates;
     default:
       return SeasonEdgeUpdates;

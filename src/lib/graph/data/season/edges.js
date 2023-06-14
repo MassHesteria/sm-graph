@@ -6,7 +6,8 @@ import { CommonEdgeUpdates } from "../common/edges";
 
 const Crateria_ClimbSupers_to_Climb = {
   edges: ["Supers_Climb", "Climb"],
-  requires: () => HasGrapple || HasSpaceJump || (EnergyTanks >= 1 && TotalTanks >= 2),
+  requires: () =>
+    HasGrapple || HasSpaceJump || (EnergyTanks >= 1 && TotalTanks >= 2),
 };
 
 const Crateria_Gauntlet_Pre_to_EnergyTank = {
@@ -29,12 +30,20 @@ const Crateria_Gauntlet_EnergyTank_to_BackSideLeftDoor = {
 
 const Crocomire_PostCroc_to_EnergyTank = {
   edges: ["PostCroc", "EnergyTank_Croc"],
-  requires: () => HasSpaceJump || HasGrapple || TotalTanks >= 2 || (HasVaria && TotalTanks >= 1),
+  requires: () =>
+    HasSpaceJump ||
+    HasGrapple ||
+    TotalTanks >= 2 ||
+    (HasVaria && TotalTanks >= 1),
 };
 
 const Crocomire_EnergyTank_to_PostCroc = {
   edges: ["EnergyTank_Croc", "PostCroc"],
-  requires: () => HasSpaceJump || HasGrapple || TotalTanks >= 3 || (HasVaria && TotalTanks >= 1),
+  requires: () =>
+    HasSpaceJump ||
+    HasGrapple ||
+    TotalTanks >= 3 ||
+    (HasVaria && TotalTanks >= 1),
 };
 
 const RedBrinstar_Xray_Hallway_to_Scope = {
@@ -44,7 +53,8 @@ const RedBrinstar_Xray_Hallway_to_Scope = {
     HasMorph &&
     (HasSpaceJump ||
       HasGrapple ||
-      (TotalTanks >= 6 && (HasIce || CanUseBombs || (HasHiJump && (HasSpeed || HasSpringBall))))),
+      (TotalTanks >= 6 &&
+        (HasIce || CanUseBombs || (HasHiJump && (HasSpeed || HasSpringBall))))),
 };
 
 const RedBrinstar_Xray_Scope_to_Hallway = {
@@ -54,13 +64,8 @@ const RedBrinstar_Xray_Scope_to_Hallway = {
     HasMorph &&
     (HasSpaceJump ||
       HasGrapple ||
-      (TotalTanks >= 6 && (HasIce || CanUseBombs || (HasHiJump && (HasSpeed || HasSpringBall))))),
-};
-
-const WestMaridia_MamaTurtle_Missiles_to_EnergyTank = {
-  edges: ["Missiles_MamaTurtle", "EnergyTank_MamaTurtle"],
-  requires: () =>
-    CanFly || (CanMoveInWestMaridia && HasSpeed) || (HasMorph && HasSpringBall) || HasGrapple,
+      (TotalTanks >= 6 &&
+        (HasIce || CanUseBombs || (HasHiJump && (HasSpeed || HasSpringBall))))),
 };
 
 const UpperNorfair_KingCacLedge_to_SpeedMissiles = {
@@ -95,7 +100,6 @@ export const SeasonEdgeUpdates = CommonEdgeUpdates.concat([
   Crocomire_EnergyTank_to_PostCroc,
   RedBrinstar_Xray_Hallway_to_Scope,
   RedBrinstar_Xray_Scope_to_Hallway,
-  WestMaridia_MamaTurtle_Missiles_to_EnergyTank,
   UpperNorfair_KingCacLedge_to_SpeedMissiles,
   UpperNorfair_SpeedMissiles_to_KingCacLedge,
   UpperNorfair_KingCacLedge_to_KronicBoostTop,

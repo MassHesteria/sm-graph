@@ -205,8 +205,8 @@ const loadVanilla = () => {
 const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
   const failMode = !expectFail ? 0 : quiet ? 1 : 2;
   const [mapLayout, majorDistributionMode] = recall
-    ? [MapLayout.DashRecall, MajorDistributionMode.Recall]
-    : [MapLayout.DashClassic, MajorDistributionMode.Standard];
+    ? [MapLayout.Recall, MajorDistributionMode.Recall]
+    : [MapLayout.Standard, MajorDistributionMode.Standard];
 
   const graph = loadGraph(0, mapLayout, majorDistributionMode);
   generateSeed(seed, recall, full, failMode).forEach((i) =>

@@ -7,7 +7,7 @@ import {
 } from "../../params";
 
 export const ClassicPreset = {
-  mapLayout: MapLayout.DashClassic,
+  mapLayout: MapLayout.Standard,
   itemPoolParams: {
     majorDistribution: {
       mode: MajorDistributionMode.Standard,

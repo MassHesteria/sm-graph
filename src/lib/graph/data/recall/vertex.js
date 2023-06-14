@@ -1,4 +1,4 @@
-import { CommonVertexUpdates } from "../common/vertex";
+import { SeasonVertexUpdates } from "../season/vertex";
 
 //-----------------------------------------------------------------
 // Vertex definitions.
@@ -23,7 +23,7 @@ const WreckedShip_Missiles_Sky = {
 // Exports.
 //-----------------------------------------------------------------
 
-export const RecallVertexUpdates = CommonVertexUpdates.concat([
+export const RecallVertexUpdates = SeasonVertexUpdates.concat([
   Kraid_EnergyTank,
   LowerNorfair_Missiles_MickeyMouse,
   WreckedShip_Missiles_Sky,

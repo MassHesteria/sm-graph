@@ -1,4 +1,4 @@
-import { CommonEdgeUpdates } from "../common/edges";
+import { SeasonEdgeUpdates } from "../season/edges";
 
 //-----------------------------------------------------------------
 // Edge definitions.
@@ -9,13 +9,6 @@ const Crocomire_PostCroc_to_IndianaJones = {
   //TODO: Look at notes on main crocomire edges.
   //requires: () => CanFly || (CanUsePowerBombs && HasSpeed),
   requires: () => CanFly || HasSpeed,
-};
-
-const LowerNorfair_WorstRoom_Bottom_to_Top = {
-  edges: ["WorstRoomBottom", "WorstRoomTop"],
-  requires: () =>
-    (HasScrewAttack && (HasSpaceJump || HasDoubleJump)) ||
-    (CanUsePowerBombs && (CanFly || HasSpringBall || HasHiJump || HasDoubleJump)),
 };
 
 const WreckedShip_Bowling_Missiles_to_Reserve = {
@@ -65,7 +58,8 @@ const EastMaridia_BotwoonHallway_Left_to_Right = {
 
 const GreenBrinstar_ChargeBeam_to_Waterway = {
   edges: ["ChargeBeam", "EnergyTank_Waterway"],
-  requires: () => CanUsePowerBombs && CanOpenRedDoors && (HasSpeed || HasSpazer),
+  requires: () =>
+    CanUsePowerBombs && CanOpenRedDoors && (HasSpeed || HasSpazer),
 };
 
 const RedBrinstar_Xray_Hallway_to_Item = {
@@ -75,7 +69,8 @@ const RedBrinstar_Xray_Hallway_to_Item = {
     HasMorph &&
     (HasSpaceJump ||
       HasGrapple ||
-      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) && TotalTanks >= 4)),
+      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) &&
+        TotalTanks >= 4)),
 };
 
 const RedBrinstar_Xray_Item_to_Hallway = {
@@ -84,18 +79,15 @@ const RedBrinstar_Xray_Item_to_Hallway = {
     (CanUseBombs || CanUsePowerBombs) &&
     (HasSpaceJump ||
       HasGrapple ||
-      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) && TotalTanks >= 4)),
-};
-
-const WestMaridia_MamaTurtle_to_EnergyTank = {
-  edges: ["Missiles_MamaTurtle", "EnergyTank_MamaTurtle"],
-  requires: () => CanFly || HasGrapple || HasSpeed || HasDoubleJump,
+      (((HasHiJump && HasSpeed) || HasIce || HasDoubleJump) &&
+        TotalTanks >= 4)),
 };
 
 const UpperNorfair_PreCrocomire_to_CrocEscape = {
   edges: ["PreCrocomire", "Missiles_CrocEscape"],
   requires: () =>
-    HellRunTanks >= 2 && (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
+    HellRunTanks >= 2 &&
+    (CanFly || HasGrapple || HasDoubleJump || (HasHiJump && HasSpeed)),
 };
 
 const UpperNorfair_PreCrocomire_to_CrocEntry = {
@@ -115,9 +107,8 @@ const LowerNorfair_ScrewAttack_to_PrePillars = {
 // Exports.
 //-----------------------------------------------------------------
 
-export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
+export const RecallEdgeUpdates = SeasonEdgeUpdates.concat([
   Crocomire_PostCroc_to_IndianaJones,
-  LowerNorfair_WorstRoom_Bottom_to_Top,
   WreckedShip_Bowling_Missiles_to_Reserve,
   WreckedShip_RearExit_to_HighwayExit,
   WestMaridia_MainStreet_to_OasisBottom,
@@ -130,7 +121,6 @@ export const RecallEdgeUpdates = CommonEdgeUpdates.concat([
   EastMaridia_BotwoonHallway_Left_to_Right,
   RedBrinstar_Xray_Hallway_to_Item,
   RedBrinstar_Xray_Item_to_Hallway,
-  WestMaridia_MamaTurtle_to_EnergyTank,
   UpperNorfair_PreCrocomire_to_CrocEscape,
   UpperNorfair_PreCrocomire_to_CrocEntry,
   LowerNorfair_ScrewAttack_to_PrePillars,
