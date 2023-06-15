@@ -186,11 +186,24 @@ class ModeRecall {
     });
 
     minor("Missiles (Indiana Jones)", (load) => {
-      return canAccessCrocomire(load) && (load.canFly || load.hasSpeed);
+      return (
+        canAccessCrocomire(load) &&
+        (load.canFly ||
+          (load.canUsePowerBombs && load.hasSpeed) ||
+          load.hasDoubleJump)
+      );
     });
 
     minor("Power Bombs (Crocomire)", (load) => {
-      return canAccessCrocomire(load);
+      return (
+        canAccessCrocomire(load) &&
+        (load.canFly ||
+          load.hasGrapple ||
+          (load.hasSpeed && load.totalTanks >= 1) ||
+          load.hasHiJump ||
+          load.hasIce ||
+          load.hasDoubleJump)
+      );
     });
 
     major("Energy Tank (Botwoon)", (load) => {

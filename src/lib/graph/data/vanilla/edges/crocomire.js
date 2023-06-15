@@ -9,16 +9,19 @@ export const crocomireEdges = {
       //TODO: need to ask Kipp how many tanks should put this in logic
       //TODO: also need to account for varia/gravity in tank count
       (EnergyTanks >= 3 && TotalTanks >= 4) || HasSpaceJump || HasGrapple,
-    //TODO: Standard logic allows access to Croc PBs without any movement items but
-    //      we probably do not want that. In the first million, one seed failed: 893225.
-    //PBs_Croc: () => CanFly || HasIce || HasHiJump || HasGrapple,
-    PBs_Croc: true,
-    GrappleBeam: () => SuperPacks >= 1 || CanFly || HasSpeed,
-    //TODO: Both Standard and Recall allow access to Indiana Jones using Speed
-    //      without PBs to break the blocks. Not sure we want to require stutters.
-    //      Also probably want to remove grapple.
-    //Missiles_IndianaJones: () => CanFly || HasGrapple || (CanUsePowerBombs && HasSpeed),
-    Missiles_IndianaJones: () => CanFly || HasGrapple || HasSpeed,
+    PBs_Croc: () =>
+      CanOpenRedDoors &&
+      (CanFly ||
+        HasGrapple ||
+        (HasSpeed && TotalTanks >= 1) ||
+        HasHiJump ||
+        HasIce ||
+        HasDoubleJump),
+    GrappleBeam: () =>
+      SuperPacks >= 1 || (HasMorph && CanFly) || (CanUsePowerBombs && HasSpeed),
+    Missiles_IndianaJones: () =>
+      ((HasDoubleJump || CanFly) && (HasMorph || SuperPacks >= 1)) ||
+      (CanUsePowerBombs && HasSpeed),
     Missiles_Cosine: () => CanOpenRedDoors,
   },
 
@@ -31,11 +34,11 @@ export const crocomireEdges = {
   },
 
   GrappleBeam: {
-    PostCroc: true,
+    PostCroc: () => SuperPacks >= 1 || HasMorph,
   },
 
   Missiles_IndianaJones: {
-    PostCroc: true,
+    PostCroc: () => HasMorph || (CanFly && SuperPacks >= 1),
   },
 
   Missiles_Cosine: {

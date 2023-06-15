@@ -173,12 +173,19 @@ class ModeStandard {
     minor("Missiles (Indiana Jones)", (load) => {
       return (
         canAccessCrocomire(load) &&
-        (load.canFly || load.hasGrapple || load.hasSpeed)
+        (load.canFly || (load.canUsePowerBombs && load.hasSpeed))
       );
     });
 
     minor("Power Bombs (Crocomire)", (load) => {
-      return canAccessCrocomire(load);
+      return (
+        canAccessCrocomire(load) &&
+        (load.canFly ||
+          load.hasGrapple ||
+          (load.hasSpeed && load.totalTanks >= 1) ||
+          load.hasHiJump ||
+          load.hasIce)
+      );
     });
 
     major("Energy Tank (Botwoon)", (load) => {
@@ -434,10 +441,7 @@ class ModeStandard {
       return (
         canAccessCrocomire(load) &&
         (load.hasVaria || load.totalTanks >= 2) &&
-        (load.canFly ||
-          load.hasGrapple ||
-          load.hasIce ||
-          (load.hasHiJump && load.hasSpeed))
+        (load.canFly || load.hasGrapple || (load.hasHiJump && load.hasSpeed))
       );
     });
 

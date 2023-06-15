@@ -30,7 +30,8 @@ export const uppernorfairEdges = {
 
   CathedralEntranceMain: {
     CathedralEntranceLeftDoor: () => CanHellRun,
-    CathedralEntranceRightDoor: () => CanHellRun && (HasHiJump || CanFly || HasSpeed),
+    CathedralEntranceRightDoor: () =>
+      CanHellRun && (HasHiJump || CanFly || HasSpeed),
   },
 
   CathedralEntranceRightDoor: {
@@ -59,7 +60,8 @@ export const uppernorfairEdges = {
   BubbleMountainMain: {
     Missiles_BubbleMountain: true,
     BubbleMountainKingCacLedge: true,
-    BubbleMountainTopLeftDoor: () => CanFly || HasIce || HasSpringBall || HasHiJump,
+    BubbleMountainTopLeftDoor: () =>
+      CanFly || HasIce || HasSpringBall || HasHiJump,
     BubbleMountainBottomLeftDoor: () => CanPassBombPassages,
     Missiles_Cathedral: () => CanHellRun,
   },
@@ -89,13 +91,17 @@ export const uppernorfairEdges = {
     BubbleMountainKingCacLedge: () => HasVaria,
     BubbleMountainBottomLeftDoor: () => CanHellRun,
     NutellaRefill: () =>
-      HasMorph && (HasWave || CanOpenGreenDoors) && (HasGrapple || HasSpaceJump) && CanHellRun,
+      HasMorph &&
+      (HasWave || CanOpenGreenDoors) &&
+      (HasGrapple || HasSpaceJump) &&
+      CanHellRun,
     Door_LavaDive: () => CanUsePowerBombs && CanHellRun,
   },
 
   NutellaRefill: {
     BubbleMountainBottomLeftDoor: () => HellRunTanks >= 1,
-    KronicBoostTop: () => CanHellRun && HasMorph && (HasGrapple || HasSpaceJump),
+    KronicBoostTop: () =>
+      CanHellRun && HasMorph && (HasGrapple || HasSpaceJump),
     PreCrocomire: () => HellRunTanks >= 1,
   },
 
@@ -160,10 +166,13 @@ export const uppernorfairEdges = {
   PreCrocomire: {
     Door_CrocEntry: () => CanOpenGreenDoors,
     NutellaRefill: () => HellRunTanks >= 1,
-    //TODO: Probably remove HasIce
     Missiles_CrocEscape: () =>
       HellRunTanks >= 2 &&
-      (CanFly || HasGrapple || HasIce || (HasHiJump && (HasSpringBall || HasSpeed))),
+      (CanFly ||
+        HasIce || //TODO: Remove getting across with ice
+        HasGrapple ||
+        HasDoubleJump ||
+        (HasHiJump && (HasSpringBall || HasSpeed))),
   },
 
   Missiles_CrocEscape: {
