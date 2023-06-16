@@ -69,7 +69,7 @@ class GraphSolver {
     return (condition) => eval(`(${condition.toString()})()`);
   }
 
-  isVertexAvailable(vertex, load, item, legacyMode = false) {
+  isVertexAvailable(vertex, load, itemType, legacyMode = false) {
     //TODO: solve boss data?
 
     const bossData = {
@@ -89,7 +89,7 @@ class GraphSolver {
     ) {
       return false;
     }
-    if (legacyMode || item == undefined) {
+    if (legacyMode || itemType == undefined) {
       return canReachVertex(
         this.graph,
         vertex,
@@ -98,7 +98,7 @@ class GraphSolver {
       );
     }
     let temp = load.clone();
-    temp.add(item);
+    temp.add(itemType);
     return canReachVertex(
       this.graph,
       vertex,
@@ -109,6 +109,7 @@ class GraphSolver {
 
   isValid(initLoad, legacyMode = false) {
     let samus = initLoad.clone();
+    let collectedCount = 0;
 
     const bossData = {
       HasDefeatedKraid: false,
@@ -152,10 +153,10 @@ class GraphSolver {
           if (!canReachStart(this.graph, p, this.checkFlags(samus, bossData))) {
             return;
           }
-          samus.add(p.item);
+          samus.add(p.item.type);
         } else {
           const load = samus.clone();
-          load.add(p.item);
+          load.add(p.item.type);
           if (!canReachStart(this.graph, p, this.checkFlags(load, bossData))) {
             return;
           }
@@ -164,6 +165,7 @@ class GraphSolver {
 
         items.push(p.item);
         p.item = undefined;
+        collectedCount += 1;
       });
 
       if (items.length == 0) {
@@ -271,6 +273,10 @@ class GraphSolver {
           this.printUncollectedItems(this.graph);
         }
         throw new Error("Uncollected items");
+      }
+
+      if (collectedCount != 100) {
+        throw new Error(`Only placed ${collectedCount} items`);
       }
     } catch (e) {
       if (this.printMsg) {

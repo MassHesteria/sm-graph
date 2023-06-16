@@ -108,5 +108,9 @@ export const getItemPool = (seed, majorDistribution, minorDistribution) => {
     throw new Error("Invalid minor distribution");
   }
 
+  if (itemPool.length != 100) {
+    throw new Error("Not 100 items");
+  }
+
   return itemPool;
 };

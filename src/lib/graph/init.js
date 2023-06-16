@@ -1,21 +1,21 @@
-import { vanillaVertices } from "./vertex";
-import { crateriaEdges } from "./edges/crateria";
-import { greenbrinstarEdges } from "./edges/greenbrinstar";
-import { redbrinstarEdges } from "./edges/redbrinstar";
-import { kraidslairEdges } from "./edges/kraid";
-import { crocomireEdges } from "./edges/crocomire";
-import { westmaridiaEdges } from "./edges/westmaridia";
-import { eastmaridiaEdges } from "./edges/eastmaridia";
-import { uppernorfairEdges } from "./edges/uppernorfair";
-import { lowernorfairEdges } from "./edges/lowernorfair";
-import { wreckedshipEdges } from "./edges/wreckedship";
-import { bossEdges } from "./edges/boss";
-import { MapLayout, MajorDistributionMode } from "../../params";
-import { SeasonVertexUpdates } from "../season/vertex";
-import { RecallVertexUpdates } from "../recall/vertex";
-import { SeasonEdgeUpdates } from "../season/edges";
-import { RecallEdgeUpdates } from "../recall/edges";
-import { mapPortals } from "../portals";
+import { vanillaVertices } from "./data/vanilla/vertex";
+import { crateriaEdges } from "./data/vanilla/edges/crateria";
+import { greenbrinstarEdges } from "./data/vanilla/edges/greenbrinstar";
+import { redbrinstarEdges } from "./data/vanilla/edges/redbrinstar";
+import { kraidslairEdges } from "./data/vanilla/edges/kraid";
+import { crocomireEdges } from "./data/vanilla/edges/crocomire";
+import { westmaridiaEdges } from "./data/vanilla/edges/westmaridia";
+import { eastmaridiaEdges } from "./data/vanilla/edges/eastmaridia";
+import { uppernorfairEdges } from "./data/vanilla/edges/uppernorfair";
+import { lowernorfairEdges } from "./data/vanilla/edges/lowernorfair";
+import { wreckedshipEdges } from "./data/vanilla/edges/wreckedship";
+import { bossEdges } from "./data/vanilla/edges/boss";
+import { MapLayout, MajorDistributionMode } from "./params";
+import { SeasonVertexUpdates } from "./data/season/vertex";
+import { RecallVertexUpdates } from "./data/recall/vertex";
+import { SeasonEdgeUpdates } from "./data/season/edges";
+import { RecallEdgeUpdates } from "./data/recall/edges";
+import { mapPortals } from "./data/portals";
 
 const getVanillaEdges = () => {
   return {
@@ -176,8 +176,16 @@ export const cloneGraph = (graph) => {
     const orig = graph.map((o) => o.from).find((t) => t.name == v.name);
     v.type = orig.type;
     v.area = orig.area;
-    v.item = orig.item;
     v.pathToStart = orig.pathToStart;
+    if (orig.item != undefined) {
+      v.item = {
+        type: orig.item.type,
+        name: orig.item.name,
+        isMajor: orig.item.isMajor,
+        isProgression: orig.item.isProgression,
+        spoilerAddress: orig.item.spoilerAddress,
+      };
+    }
   });
 
   return graph.map((e) => {
@@ -187,12 +195,6 @@ export const cloneGraph = (graph) => {
       condition: e.condition,
     };
   });
-  //const newEdges = [...graph];
-  //newEdges.forEach((e) => {
-  //e.from = remap(e.from);
-  //e.to = remap(e.to);
-  //});
-  //return newEdges;
 };
 
 const getEdgeUpdates = (mapLayout) => {

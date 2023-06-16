@@ -1,7 +1,7 @@
 import DotNetRandom from "../dotnet-random";
 import { Item } from "../items";
 import GraphSolver from "./solver";
-import { cloneGraph } from "./data/vanilla/graph";
+import { cloneGraph } from "./init";
 import Loadout from "../loadout";
 import { getFullPrePool, getMajorMinorPrePool } from "../itemPlacement.js";
 import { getItemPool } from "./items";
@@ -100,7 +100,7 @@ export const graphFill = (
   // Prefill locations with early items.
   //-----------------------------------------------------------------
 
-  const getPrePool = restrictType ? getFullPrePool : getMajorMinorPrePool;
+  const getPrePool = restrictType ? getMajorMinorPrePool : getFullPrePool;
   let prefillLoadout = new Loadout();
 
   getPrePool(rnd).forEach((itemType) => {
@@ -112,7 +112,7 @@ export const graphFill = (
         solver.isVertexAvailable(v, prefillLoadout, itemType, settings)
     );
 
-    available.item = itemType;
+    available.item = item;
     prefillLoadout.add(itemType);
   });
 
@@ -139,7 +139,7 @@ export const graphFill = (
       if (itemIndex < 0) {
         return false;
       }
-      v.item = shuffledItems.splice(itemIndex, 1)[0].type;
+      v.item = shuffledItems.splice(itemIndex, 1)[0];
     }
     return true;
   };
@@ -160,11 +160,14 @@ export const graphFill = (
 
     nonPrefilled.forEach((n) => (n.item = undefined));
 
-    placeItems(itemPool, nonPrefilled);
+    if (!placeItems(itemPool, nonPrefilled)) {
+      continue;
+    }
 
     const tempSolver = new GraphSolver(cloneGraph(graph), settings);
     if (tempSolver.isValid(new Loadout())) {
-      break;
+      return;
     }
   }
+  throw new Error(`Failed to fill graph for seed ${seed}`);
 };

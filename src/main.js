@@ -1,6 +1,6 @@
-import { ItemNames } from "./lib/items.js";
+import { ItemNames, majorItem } from "./lib/items.js";
 import Loadout from "./lib/loadout.js";
-import { loadGraph } from "./lib/graph/data/vanilla/graph.js";
+import { loadGraph } from "./lib/graph/init.js";
 import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
 import { graphFill } from "./lib/graph/fill.js";
@@ -36,10 +36,10 @@ let quiet = false;
 
 // Read seed information from external files.
 const readFromFolders = [
-  //"path/to/results",
-  //"path/to/results",
-  //"path/to/results",
-  //"path/to/results",
+  "../_archive/varia_stats/mm/results",
+  "../_archive/varia_stats/mm_boss/results",
+  "../_archive/varia_stats/full/results",
+  "../_archive/varia_stats/full_boss/results",
 ];
 
 // Enables checking seeds produced with the legacy solver.
@@ -71,7 +71,7 @@ if (process.argv.length == 3) {
 //-----------------------------------------------------------------
 
 const getItemName = (item) => {
-  let name = ItemNames.get(item);
+  let name = ItemNames.get(item.type);
   if (name == "Super Missile") {
     name = "Super";
   } else if (name == "Grappling Beam") {
@@ -108,7 +108,7 @@ const printAvailableItems = (itemLocations) => {
     maxLocationLength[col] = Math.max(maxLocationLength[col], n.name.length + 1);
   });
 
-  let output = chalk.yellow("Available:\n");
+  let output = chalk.yellow(`Available (${itemLocations.length}):\n`);
   itemLocations.forEach((p, idx) => {
     const col = idx % 4;
     if (p.item == null) {
@@ -192,7 +192,7 @@ const loadExternal = (fileName) => {
     false,
     portals
   );
-  readSeed(fileName).forEach((i) => placeItem(graph, i.location, i.item));
+  readSeed(fileName).forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
   return graph;
 };
 
@@ -210,7 +210,7 @@ const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
 
   const graph = loadGraph(0, mapLayout, majorDistributionMode);
   generateSeed(seed, recall, full, failMode).forEach((i) =>
-    placeItem(graph, i.location.name, i.item.type)
+    placeItem(graph, i.location.name, i.item)
   );
   return graph;
 };
