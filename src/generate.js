@@ -67,6 +67,9 @@ export const readPortals = (fileName) => {
     return [];
   }
   const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
+  if (seedInfo.portals == undefined) {
+    return [];
+  }
   return seedInfo.portals;
 };
 
