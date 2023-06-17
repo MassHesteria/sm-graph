@@ -12,7 +12,8 @@ export const eastmaridiaEdges = {
   },
 
   Aqueduct: {
-    Door_Aqueduct: () => CanUsePowerBombs || (HasGravity && CanDestroyBombWalls),
+    Door_Aqueduct: () =>
+      CanUsePowerBombs || (HasGravity && CanDestroyBombWalls),
     //TODO: Snail clip is techincally in logic
     Missiles_Aqueduct: () => HasGravity,
     Supers_Aqueduct: () => HasGravity,
@@ -24,9 +25,13 @@ export const eastmaridiaEdges = {
 
   LeftSandPitBottom: {
     Missiles_LeftSandPit: () =>
-      HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
+      HasGravity &&
+      HasMorph &&
+      (CanUseBombs || CanUsePowerBombs || HasSpringBall),
     ReserveTank_LeftSandPit: () =>
-      HasGravity && HasMorph && (CanUseBombs || CanUsePowerBombs || HasSpringBall),
+      HasGravity &&
+      HasMorph &&
+      (CanUseBombs || CanUsePowerBombs || HasSpringBall),
     OasisBottom: () => HasGravity,
   },
 
@@ -60,13 +65,18 @@ export const eastmaridiaEdges = {
   OasisBottom: {
     MainStreet: () => (HasGravity || HasHiJump) && HasMorph,
     SpringBall: () =>
-      HasGravity && CanUsePowerBombs && ((HasGrapple && (CanFly || HasHiJump)) || HasIce),
-    OasisTop: () => CanUsePowerBombs || CanUseBombs || (HasGravity && HasScrewAttack),
+      HasGravity &&
+      CanUsePowerBombs &&
+      ((HasGrapple && (CanFly || HasHiJump)) || HasIce),
+    OasisTop: () =>
+      CanUsePowerBombs || CanUseBombs || (HasGravity && HasScrewAttack),
+    Aqueduct: () => false,
   },
 
   OasisTop: {
     PlasmaSparkRoomTop: () => CanOpenGreenDoors,
-    OasisBottom: () => CanUsePowerBombs || CanUseBombs || (HasGravity && HasScrewAttack),
+    OasisBottom: () =>
+      CanUsePowerBombs || CanUseBombs || (HasGravity && HasScrewAttack),
   },
 
   PlasmaSparkRoomTop: {
@@ -88,7 +98,9 @@ export const eastmaridiaEdges = {
 
   PlasmaBeam: {
     PrePlasmaBeam: () =>
-      (HasScrewAttack || HasPlasma || (HasGravity && HasCharge && TotalTanks >= 3)) &&
+      (HasScrewAttack ||
+        HasPlasma ||
+        (HasGravity && HasCharge && TotalTanks >= 3)) &&
       (CanFly || HasHiJump || HasSpeed || HasSpringBall),
   },
 
@@ -99,7 +111,8 @@ export const eastmaridiaEdges = {
   BotwoonHallwayRight: {
     Aqueduct: () => (HasGravity && HasSpeed) || HasIce,
     //TODO: Should we include charge/missile/super criteria for Botwoon?
-    EnergyTank_Botwoon: () => HasMorph && (HasGravity || HasHiJump || HasSpringBall),
+    EnergyTank_Botwoon: () =>
+      HasMorph && (HasGravity || HasHiJump || HasSpringBall),
     ColosseumTopLeft: () => HasGravity && (HasSpeed || HasMorph),
   },
 
@@ -110,9 +123,11 @@ export const eastmaridiaEdges = {
   },
 
   ColosseumTopLeft: {
-    EnergyTank_Botwoon: () => HasMorph && (HasGravity || HasHiJump || HasSpringBall),
+    EnergyTank_Botwoon: () =>
+      HasMorph && (HasGravity || HasHiJump || HasSpringBall),
     ColosseumTopRight: () => HasGravity || HasSpaceJump || CanDoSuitlessMaridia,
-    PlasmaSparkRoomBottom: () => HasDefeatedDraygon && (HasGravity || (HasHiJump && HasSpaceJump)),
+    PlasmaSparkRoomBottom: () =>
+      HasDefeatedDraygon && (HasGravity || (HasHiJump && HasSpaceJump)),
   },
 
   ColosseumTopRight: {

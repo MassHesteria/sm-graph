@@ -69,6 +69,7 @@ export const uppernorfairEdges = {
   BubbleMountainKingCacLedge: {
     BubbleMountainMain: true,
     BubbleMountainTopLeftDoor: true, //NOTE: dboost in logic
+    Door_SingleChamber: () => false,
     Missiles_SpeedBooster: () => CanHellRun,
     Missiles_Wave: () => CanHellRun,
     KronicBoostTop: () => HasVaria && (HasGravity || TotalTanks >= 2),
@@ -130,7 +131,8 @@ export const uppernorfairEdges = {
   },
 
   Door_SingleChamber: {
-    BubbleMountainKingCacLedge: () => CanHellRun && CanDestroyBombWalls,
+    BubbleMountainKingCacLedge: () =>
+      CanHellRun && CanDestroyBombWalls && HasMorph,
   },
 
   Door_LavaDive: {

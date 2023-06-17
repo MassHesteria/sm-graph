@@ -157,6 +157,8 @@ export const vanillaVertices = {
     Missiles_OceanMiddle: "minor",
     Missiles_Sky: "minor",
     Door_HighwayExit: "",
+    SpongeBathLeft: "",
+    SpongeBathRight: "",
   },
   WestMaridia: {
     Door_MainStreet: "",

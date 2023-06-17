@@ -15,6 +15,8 @@ import { SeasonVertexUpdates } from "./data/season/vertex";
 import { RecallVertexUpdates } from "./data/recall/vertex";
 import { SeasonEdgeUpdates } from "./data/season/edges";
 import { RecallEdgeUpdates } from "./data/recall/edges";
+import { RecallAreaEdgeUpdates } from "./data/recall/area";
+import { SeasonAreaEdgeUpdates } from "./data/season/area";
 import { mapPortals } from "./data/portals";
 
 const getVanillaEdges = () => {
@@ -197,13 +199,22 @@ export const cloneGraph = (graph) => {
   });
 };
 
-const getEdgeUpdates = (mapLayout) => {
+const getEdgeUpdates = (mapLayout, areaShuffle) => {
   switch (mapLayout) {
     case MapLayout.Vanilla:
+      if (areaShuffle) {
+        throw new Error("Unsupport vanilla area shuffle");
+      }
       return [];
     case MapLayout.Recall:
+      if (areaShuffle) {
+        return RecallAreaEdgeUpdates;
+      }
       return RecallEdgeUpdates;
     default:
+      if (areaShuffle) {
+        return SeasonAreaEdgeUpdates;
+      }
       return SeasonEdgeUpdates;
   }
 };
@@ -216,7 +227,7 @@ export const loadGraph = (
   bossShuffle = false,
   portals = undefined
 ) => {
-  const edgeUpdates = getEdgeUpdates(mapLayout);
+  const edgeUpdates = getEdgeUpdates(mapLayout, areaShuffle);
   const vertexUpdates =
     majorDistributionMode == MajorDistributionMode.Standard
       ? SeasonVertexUpdates

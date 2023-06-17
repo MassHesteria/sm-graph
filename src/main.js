@@ -13,7 +13,7 @@ import { MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
 
 import fs from "fs";
 import chalk from "chalk";
-import { generateSeed, readBosses, readSeed } from "./generate.js";
+import { generateSeed, readBosses, readPortals, readSeed } from "./generate.js";
 
 //-----------------------------------------------------------------
 // Constants.
@@ -36,10 +36,10 @@ let quiet = false;
 
 // Read seed information from external files.
 const readFromFolders = [
-  "../_archive/varia_stats/mm/results",
-  "../_archive/varia_stats/mm_boss/results",
-  "../_archive/varia_stats/full/results",
-  "../_archive/varia_stats/full_boss/results",
+  //"path/to/results",
+  //"path/to/results",
+  //"path/to/results",
+  //"path/to/results",
 ];
 
 // Enables checking seeds produced with the legacy solver.
@@ -166,13 +166,19 @@ const printUncollectedItems = (graph) => {
 //-----------------------------------------------------------------
 
 const loadExternal = (fileName) => {
-  const portals = mapPortals(0, false, false);
   const bosses = readBosses(fileName);
+
+  const area = readPortals(fileName);
+  const portals = area.length > 0 ? area : mapPortals(0, false, false);
 
   if (bosses != undefined) {
     const setPortal = (from, to) => {
       const temp = portals.find((p) => p[0] == from);
-      temp[1] = to;
+      if (temp == undefined) {
+        portals.push([from, to]);
+      } else {
+        temp[1] = to;
+      }
     };
 
     setPortal("Door_KraidBoss", `Exit_${bosses.kraidBoss}`);
@@ -184,11 +190,12 @@ const loadExternal = (fileName) => {
       console.log(bosses);
     }
   }
+
   const graph = loadGraph(
     0,
     MapLayout.Standard,
     MajorDistributionMode.Standard,
-    false,
+    area.length > 0,
     false,
     portals
   );
