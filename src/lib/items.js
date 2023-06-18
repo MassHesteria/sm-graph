@@ -27,6 +27,15 @@ export const Item = Object.freeze({
    PressureValve: 0xefe8,
    HeatShield:    0xefe4,
    BeamUpgrade:   0xefec,
+   // Pseudo items for bosses
+   DefeatedKraid: 0xb055,
+   DefeatedPhantoon: 0xb056,
+   DefeatedDraygon: 0xb057,
+   DefeatedRidley: 0xb058,
+   DefeatedSporeSpawn: 0xb059,
+   DefeatedCrocomire: 0xb05a,
+   DefeatedBotwoon: 0xb05b,
+   DefeatedGoldTorizo: 0xb05c
 });
 
 // prettier-ignore
@@ -56,24 +65,34 @@ export const ItemNames = new Map([
    [Item.PressureValve, "Pressure Valve"],
    [Item.HeatShield,    "Heat Shield"],
    [Item.BeamUpgrade,   "Beam Upgrade"],
+   [Item.DefeatedKraid, "Kraid"],
+   [Item.DefeatedPhantoon, "Phantoon"],
+   [Item.DefeatedDraygon, "Draygon"],
+   [Item.DefeatedRidley, "Ridley"],
+   [Item.DefeatedSporeSpawn, "Spore Spawn"],
+   [Item.DefeatedCrocomire, "Crocomire"],
+   [Item.DefeatedBotwoon, "Botwoon"],
+   [Item.DefeatedGoldTorizo, "Gold Torizo"],
 ]);
 
+export const bossItem = (type) => {
+  return newItem(type, false, true, 0x0);
+};
+
 export const majorItem = (spoilerAddress, type, isProgression = true) => {
-   return {
-      type: type,
-      name: ItemNames.get(type),
-      isMajor: true,
-      isProgression: isProgression,
-      spoilerAddress: spoilerAddress,
-   };
+  return newItem(type, true, isProgression, spoilerAddress);
 };
 
 export const minorItem = (spoilerAddress, type, isProgression = false) => {
-   return {
-      type: type,
-      name: ItemNames.get(type),
-      isMajor: false,
-      isProgression: isProgression,
-      spoilerAddress: spoilerAddress,
-   };
+  return newItem(type, false, isProgression, spoilerAddress);
+};
+
+const newItem = (type, isMajor, isProgression, spoilerAddress) => {
+  return {
+    type: type,
+    name: ItemNames.get(type),
+    isMajor: isMajor,
+    isProgression: isProgression,
+    spoilerAddress: spoilerAddress,
+  };
 };
