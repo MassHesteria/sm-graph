@@ -48,7 +48,6 @@ class Loadout {
   canOpenRedDoors = false;
   canOpenYellowDoors = false;
   canFly = false;
-  canCrystalFlash = false;
 
   constructor(inventory = {}) {
     const self = this;
@@ -89,15 +88,6 @@ class Loadout {
 
   static canOpenYellowDoors(load) {
     return Loadout.canUsePowerBombs(load);
-  }
-
-  static canCrystalFlash(load) {
-    return (
-      Loadout.canUsePowerBombs(load) &&
-      load.missilePacks >= 2 &&
-      load.superPacks >= 2 &&
-      load.powerPacks >= 3
-    );
   }
 
   static totalTanks(load) {
@@ -181,20 +171,17 @@ class Loadout {
       case Item.Missile:
         this.missilePacks += 1;
         this.canOpenRedDoors = Loadout.canOpenRedDoors(this);
-        this.canCrystalFlash = Loadout.canCrystalFlash(this);
         break;
       case Item.Super:
         this.superPacks += 1;
         this.canOpenRedDoors = Loadout.canOpenRedDoors(this);
         this.canOpenGreenDoors = Loadout.canOpenGreenDoors(this);
-        this.canCrystalFlash = Loadout.canCrystalFlash(this);
         break;
       case Item.PowerBomb:
         this.powerPacks += 1;
         this.canUsePowerBombs = Loadout.canUsePowerBombs(this);
         this.canPassBombPassages = Loadout.canPassBombPassages(this);
         this.canDestroyBombWalls = Loadout.canDestroyBombWalls(this);
-        this.canCrystalFlash = Loadout.canCrystalFlash(this);
         break;
 
       case Item.EnergyTank:
@@ -249,6 +236,35 @@ class Loadout {
       this.hasVaria ||
       this.hasHeatShield ||
       (settings.suitMode == SuitMode.Vanilla && this.hasGravity);
+    const ballisticPacks = this.superPacks + this.missilePacks;
+    const ridleyAmmoDamage =
+      this.missilePacks * 500 + this.superPacks * 3000 + this.powerPacks * 1000;
+
+    const getEnvDamageTanks = () => {
+      if (settings.suitMode == SuitMode.Standard) {
+        if (this.hasVaria) {
+          return Math.floor(this.totalTanks * 2.5);
+        }
+        return this.totalTanks;
+      }
+      if (settings.suitMode == SuitMode.Dash) {
+        if (this.hasVaria && this.hasGravity) {
+          return Math.floor(this.totalTanks * 2.5);
+        }
+        if (this.hasVaria || this.hasGravity) {
+          return this.totalTanks * 2;
+        }
+        return this.totalTanks;
+      }
+      if (this.hasGravity) {
+        return Math.floor(this.totalTanks * 2.5);
+      }
+      if (this.hasVaria) {
+        return this.totalTanks * 2;
+      }
+      return this.totalTanks;
+    };
+
     return {
       CanUseBombs: this.canUseBombs,
       CanUsePowerBombs: this.canUsePowerBombs,
@@ -281,13 +297,8 @@ class Loadout {
         : settings.suitMode == SuitMode.Dash && this.hasGravity
         ? this.totalTanks * 2
         : this.totalTanks,
+      EnvDamageTanks: getEnvDamageTanks(),
       CanFly: this.canFly,
-      CanHellRun:
-        isHeatProof ||
-        this.totalTanks >= 4 ||
-        (settings.suitMode == SuitMode.Dash &&
-          this.hasGravity &&
-          this.totalTanks >= 3),
       CanDoSuitlessMaridia:
         this.hasHiJump &&
         this.hasGrapple &&
@@ -298,10 +309,11 @@ class Loadout {
       CanKillKraid: canDamageBosses,
       CanKillPhantoon: canDamageBosses,
       CanKillDraygon: canDamageBosses,
-      CanKillRidley: this.hasVaria && canDamageBosses,
+      CanKillRidley:
+        this.hasVaria && (this.hasCharge || ridleyAmmoDamage >= 19000),
       CanKillSporeSpawn: canDamageBosses,
-      CanKillCrocomire: canDamageBosses,
-      CanKillBotwoon: canDamageBosses,
+      CanKillCrocomire: this.hasCharge || ballisticPacks >= 2,
+      CanKillBotwoon: this.hasCharge || this.superPacks >= 3,
       CanKillGoldTorizo: this.hasVaria && canDamageBosses,
       HasDefeatedBotwoon: this.hasDefeatedBotwoon,
       HasDefeatedCrocomire: this.hasDefeatedCrocomire,
