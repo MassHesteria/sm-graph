@@ -202,7 +202,6 @@ export const cloneGraph = (graph) => {
         type: orig.item.type,
         name: orig.item.name,
         isMajor: orig.item.isMajor,
-        isProgression: orig.item.isProgression,
         spoilerAddress: orig.item.spoilerAddress,
       };
     }

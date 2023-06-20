@@ -76,23 +76,22 @@ export const ItemNames = new Map([
 ]);
 
 export const bossItem = (type) => {
-  return newItem(type, false, true, 0x0);
+  return newItem(type, false, 0x0);
 };
 
-export const majorItem = (spoilerAddress, type, isProgression = true) => {
-  return newItem(type, true, isProgression, spoilerAddress);
+export const majorItem = (spoilerAddress, type) => {
+  return newItem(type, true, spoilerAddress);
 };
 
-export const minorItem = (spoilerAddress, type, isProgression = false) => {
-  return newItem(type, false, isProgression, spoilerAddress);
+export const minorItem = (spoilerAddress, type) => {
+  return newItem(type, false, spoilerAddress);
 };
 
-const newItem = (type, isMajor, isProgression, spoilerAddress) => {
+const newItem = (type, isMajor, spoilerAddress) => {
   return {
     type: type,
     name: ItemNames.get(type),
     isMajor: isMajor,
-    isProgression: isProgression,
     spoilerAddress: spoilerAddress,
   };
 };
