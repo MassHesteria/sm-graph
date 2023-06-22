@@ -5,11 +5,11 @@ import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
 import { graphFill } from "./lib/graph/fill.js";
 import GraphSolver from "./lib/graph/solver.js";
-import { ClassicPreset } from "./lib/graph/data/classic/preset.js";
-import { RecallPreset } from "./lib/graph/data/recall/preset.js";
-import { SeasonPreset } from "./lib/graph/data/season/preset.js";
 import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
 import { MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
+import { Preset_Classic_Full, Preset_Classic_MM } from "./lib/graph/data/classic/preset.js";
+import { Preset_Recall_Full, Preset_Recall_MM } from "./lib/graph/data/recall/preset.js";
+import { Preset_Season_Full, Preset_Season_MM } from "./lib/graph/data/season/preset.js";
 
 import fs from "fs";
 import chalk from "chalk";
@@ -128,7 +128,7 @@ const printAvailableItems = (itemLocations) => {
   console.log(output);
 };
 
-const printCollectedItems = (items) => {
+const printCollectedItems = (items, special = false) => {
   let str = "\nCollected:\n";
   items.forEach((item, idx) => {
     const name = getItemName(item);
@@ -140,7 +140,11 @@ const printCollectedItems = (items) => {
   if (items.length % 6 != 0) {
     str += "\n";
   }
-  console.log(str);
+  if (special) {
+    console.log(chalk.red(str));
+  } else {
+    console.log(str);
+  }
 };
 
 const printDefeatedBoss = (msg) => {
@@ -209,25 +213,23 @@ const loadVanilla = () => {
   return graph;
 };
 
-const loadVerifiedFill = (seed, recall, full, expectFail = false) => {
-  const failMode = !expectFail ? 0 : quiet ? 1 : 2;
-  const [mapLayout, majorDistributionMode] = recall
-    ? [MapLayout.Recall, MajorDistributionMode.Recall]
-    : [MapLayout.Standard, MajorDistributionMode.Standard];
+const loadVerifiedFill = (seed, preset) => {
+  const { mapLayout, itemPoolParams } = preset;
+  const { majorDistribution } = itemPoolParams;
+  const recall = mapLayout == MapLayout.Recall;
+  const full = majorDistribution.mode == MajorDistributionMode.Full;
 
-  const graph = loadGraph(0, mapLayout, majorDistributionMode);
-  generateSeed(seed, recall, full, failMode).forEach((i) =>
-    placeItem(graph, i.location.name, i.item)
-  );
+  const graph = loadGraph(0, mapLayout, majorDistribution.mode);
+  generateSeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
   return graph;
 };
 
-const loadGraphFill = (seed, preset, restrictType, bossShuffle) => {
+const loadGraphFill = (seed, preset, bossShuffle) => {
   const { mapLayout, itemPoolParams, settings } = preset;
   const { majorDistribution } = itemPoolParams;
 
   const graph = loadGraph(seed, mapLayout, majorDistribution.mode, false, bossShuffle);
-  graphFill(seed, graph, itemPoolParams, settings, restrictType);
+  graphFill(seed, graph, itemPoolParams, settings);
   return graph;
 };
 
@@ -267,9 +269,28 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
   num += 1;
 };
 
-const confirmFailure = (seed, title, graph, settings, legacyMode = true) => {
+const solveGraphFill = (seed, preset, boss) => {
+  const graph = loadGraphFill(seed, preset, boss);
+  solve(seed, `Graph ${preset.title}`, graph, preset.settings);
+};
+
+const solveVerifiedFill = (seed, preset) => {
+  const graph = loadVerifiedFill(seed, preset);
+  solve(seed, `Legacy ${preset.title}`, graph, preset.settings, true);
+};
+
+const confirmInvalidSeed = (seed, preset) => {
   try {
-    solve(seed, title + " Failure", graph, settings, legacyMode);
+    const { mapLayout, itemPoolParams } = preset;
+    const { majorDistribution } = itemPoolParams;
+    const recall = mapLayout == MapLayout.Recall;
+    const full = majorDistribution.mode == MajorDistributionMode.Full;
+
+    const graph = loadGraph(0, mapLayout, majorDistribution.mode);
+    generateInvalidSeed(seed, recall, full).forEach((i) =>
+      placeItem(graph, i.location.name, i.item)
+    );
+    solve(seed, `Failure ${preset.title}`, graph, preset.settings, true);
   } catch (e) {
     num += 1;
     return;
@@ -306,54 +327,29 @@ for (let i = startSeed; i <= endSeed; i++) {
     if (!fs.existsSync(fileName)) {
       return;
     }
-    solve(i, fileName, loadExternal(fileName), SeasonPreset.settings);
+    solve(i, fileName, loadExternal(fileName), Preset_Season_Full.settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
-    const a = loadVerifiedFill(i, false, false);
-    solve(i, "Legacy Classic M/M", a, ClassicPreset.settings, true);
-
-    const b = loadVerifiedFill(i, false, true);
-    solve(i, "Legacy Classic Full", b, ClassicPreset.settings, true);
-
-    const c = loadVerifiedFill(i, true, false);
-    solve(i, "Legacy Recall M/M", c, RecallPreset.settings, true);
-
-    const d = loadVerifiedFill(i, true, true);
-    solve(i, "Legacy Recall Full", d, RecallPreset.settings, true);
+    solveVerifiedFill(i, Preset_Classic_MM);
+    solveVerifiedFill(i, Preset_Classic_Full);
+    solveVerifiedFill(i, Preset_Recall_MM);
+    solveVerifiedFill(i, Preset_Recall_Full);
   }
   if ((verifiedFillMode & TestMode.Failure) > 0) {
-    const a = loadVerifiedFill(i, false, false, true);
-    confirmFailure(i, "Legacy Classic M/M", a, ClassicPreset.settings);
-
-    const b = loadVerifiedFill(i, false, true, true);
-    confirmFailure(i, "Legacy Classic Full", b, ClassicPreset.settings);
-
-    const c = loadVerifiedFill(i, true, false, true);
-    confirmFailure(i, "Legacy Recall M/M", c, RecallPreset.settings);
-
-    const d = loadVerifiedFill(i, true, true, true);
-    confirmFailure(i, "Legacy Recall Full", d, RecallPreset.settings);
+    confirmInvalidSeed(i, Preset_Classic_MM);
+    confirmInvalidSeed(i, Preset_Classic_Full);
+    confirmInvalidSeed(i, Preset_Recall_MM);
+    confirmInvalidSeed(i, Preset_Recall_Full);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const a = loadGraphFill(i, ClassicPreset, true, true);
-    solve(i, "Graph Classic M/M", a, ClassicPreset.settings);
-
-    const b = loadGraphFill(i, ClassicPreset, false, true);
-    solve(i, "Graph Classic Full", b, ClassicPreset.settings);
-
-    const c = loadGraphFill(i, RecallPreset, true, true);
-    solve(i, "Graph Recall M/M", c, RecallPreset.settings);
-
-    const d = loadGraphFill(i, RecallPreset, false, true);
-    solve(i, "Graph Recall Full", d, RecallPreset.settings);
-
-    const e = loadGraphFill(i, SeasonPreset, true, true);
-    solve(i, "Graph Season M/M", e, SeasonPreset.settings);
-
-    const f = loadGraphFill(i, SeasonPreset, false, true);
-    solve(i, "Graph Season Full", f, SeasonPreset.settings);
+    solveGraphFill(i, Preset_Classic_MM, true);
+    solveGraphFill(i, Preset_Classic_Full, true);
+    solveGraphFill(i, Preset_Recall_MM, true);
+    solveGraphFill(i, Preset_Recall_Full, true);
+    solveGraphFill(i, Preset_Season_MM, true);
+    solveGraphFill(i, Preset_Season_Full, true);
   }
-  if (!quiet || i % 100 == 0) {
+  if (!quiet || i % 1000 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
     step = Date.now();
   }

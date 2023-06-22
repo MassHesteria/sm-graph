@@ -5,8 +5,9 @@ export const MapLayout = {
 };
 
 export const MajorDistributionMode = {
-  Standard: 0,
-  Recall: 1,
+  Standard: 34,
+  Recall: 36,
+  Full: 38,
 };
 
 export const MinorDistributionMode = {
@@ -18,10 +19,16 @@ export const BeamMode = {
   Vanilla: 0,
   DashClassic: 1,
   DashRecall: 2,
+  New: 3,
 };
 
 export const SuitMode = {
   Vanilla: 0,
   Standard: 1,
   Dash: 2,
+};
+
+export const GravityHeatReduction = {
+  Off: 0x4000,
+  On: 0x3000,
 };

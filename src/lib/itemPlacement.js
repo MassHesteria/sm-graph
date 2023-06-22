@@ -121,8 +121,7 @@ export const performVerifiedFill = (
   itemPool,
   getPrePool,
   initLoad,
-  canPlaceItem,
-  failMode
+  canPlaceItem
 ) => {
   const rnd = new DotNetRandom(seed);
 
@@ -214,32 +213,8 @@ export const performVerifiedFill = (
       continue;
     }
 
-    if (failMode > 1) {
-      let log = [];
-      if (verifyItemProgression(initLoad, nodes, log)) {
-        continue;
-      }
-      console.log("--- No Access ---");
-      nodes
-        .filter((n) => !log.some((e) => e.location == n.location))
-        .map((n) => {
-          return `${n.item.name} at ${n.location.name}`;
-        })
-        .sort()
-        .forEach((e) => console.log(e));
-      console.log("----------------");
-    } else if (failMode == 1) {
-      if (verifyItemProgression(initLoad, nodes, null)) {
-        continue;
-      }
-    } else {
-      //let log = [];
-      if (!verifyItemProgression(initLoad, nodes, null)) {
-        continue;
-      }
-      //console.log("--- Pseduo Order ---");
-      //log.forEach((n) => console.log(`${n.item.name} at ${n.location.name}`));
-      //console.log("--------------------");
+    if (!verifyItemProgression(initLoad, nodes, null)) {
+      continue;
     }
 
     break;
