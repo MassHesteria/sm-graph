@@ -13,7 +13,13 @@ import { Preset_Season_Full, Preset_Season_MM } from "./lib/graph/data/season/pr
 
 import fs from "fs";
 import chalk from "chalk";
-import { generateSeed, readBosses, readPortals, readSeed } from "./generate.js";
+import {
+  generateSeed,
+  generateInvalidSeed,
+  readBosses,
+  readPortals,
+  readSeed,
+} from "./generate.js";
 
 //-----------------------------------------------------------------
 // Constants.
@@ -295,7 +301,7 @@ const confirmInvalidSeed = (seed, preset) => {
     num += 1;
     return;
   }
-  throw new Error(`Unexpected success ${title}: ${seed}`);
+  throw new Error(`Unexpected success ${preset.title}: ${seed}`);
 };
 
 //-----------------------------------------------------------------

@@ -7,6 +7,7 @@ import {
   isValidMajorMinor,
   verifyItemProgression,
 } from "./lib/itemPlacement";
+import DotNetRandom from "./lib/dotnet-random";
 import { getLocations } from "./lib/locations";
 import { Item } from "./lib/items";
 import Loadout from "./lib/loadout";
@@ -46,6 +47,7 @@ export const generateInvalidSeed = (seed, recall, full) => {
     ? [getFullPrePool, isEmptyNode]
     : [getMajorMinorPrePool, isValidMajorMinor];
   const nodes = mode.nodes;
+  const itemPool = mode.itemPool;
   let initLoad = new Loadout();
   const rnd = new DotNetRandom(seed);
 
@@ -144,6 +146,7 @@ export const generateInvalidSeed = (seed, recall, full) => {
     break;
   }
 
+  nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
   return nodes;
 };
 
