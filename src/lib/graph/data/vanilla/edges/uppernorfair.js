@@ -85,7 +85,7 @@ export const uppernorfairEdges = {
     BubbleMountainMain: () => CanPassBombPassages,
     BusinessCenterBottomRightDoor: () => HasSpeed,
     NutellaRefill: () => HellRunTanks >= 1 && (HasWave || CanOpenRedDoors),
-    KronicBoostBottom: () => HellRunTanks >= 3,
+    KronicBoostBottom: () => HellRunTanks >= 2,
     BubbleMountainKingCacLedge: () => HellRunTanks >= 6,
   },
 
@@ -131,7 +131,7 @@ export const uppernorfairEdges = {
 
   Door_SingleChamber: {
     BubbleMountainKingCacLedge: () =>
-      HellRunTanks >= 3 && CanDestroyBombWalls && HasMorph,
+      HellRunTanks >= 2 && CanDestroyBombWalls && HasMorph,
   },
 
   Door_LavaDive: {
