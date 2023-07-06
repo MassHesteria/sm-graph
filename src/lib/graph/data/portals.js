@@ -15,12 +15,13 @@ const samePortals = (unshuffled, shuffled) => {
         if (shuffled[j][1] == right) {
           continue;
         }
+        return false;
       } else if (shuffled[j][1] == left) {
         if (shuffled[j][0] == right) {
           continue;
         }
+        return false;
       }
-      return false;
     }
   }
 
@@ -89,7 +90,7 @@ const getAreaPortals = (seed) => {
   };
 
   //
-  const shuffled = shuffleAreas();
+  let shuffled = shuffleAreas();
   while (samePortals(areas, shuffled)) {
     shuffled = shuffleAreas();
   }
@@ -123,7 +124,7 @@ const getBossPortals = (seed) => {
   };
 
   //
-  const shuffled = shuffleBosses();
+  let shuffled = shuffleBosses();
   while (samePortals(bosses, shuffled)) {
     shuffled = shuffleBosses();
   }
