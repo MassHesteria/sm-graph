@@ -30,6 +30,50 @@ export const Preset_Recall_MM = {
   },
 };
 
+export const Preset_RecallV2_MM = {
+  title: "Recall v2 M/M",
+  mapLayout: MapLayout.Recall,
+  itemPoolParams: {
+    majorDistribution: {
+      mode: MajorDistributionMode.Recall,
+      extraItems: [Item.DoubleJump, Item.PressureValve, Item.HeatShield],
+    },
+    minorDistribution: {
+      mode: MinorDistributionMode.Standard,
+      missiles: 2,
+      supers: 1,
+      powerbombs: 1,
+    },
+  },
+  settings: {
+    beamMode: BeamMode.New,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.On,
+  },
+};
+
+export const Preset_RecallV2_Full = {
+  title: "Recall v2 Full",
+  mapLayout: MapLayout.Recall,
+  itemPoolParams: {
+    majorDistribution: {
+      mode: MajorDistributionMode.Full,
+      extraItems: [Item.DoubleJump, Item.PressureValve, Item.HeatShield],
+    },
+    minorDistribution: {
+      mode: MinorDistributionMode.Standard,
+      missiles: 2,
+      supers: 1,
+      powerbombs: 1,
+    },
+  },
+  settings: {
+    beamMode: BeamMode.New,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.On,
+  },
+};
+
 export const Preset_Recall_Full = {
   title: "Recall Full",
   mapLayout: MapLayout.Recall,
