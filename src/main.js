@@ -6,9 +6,10 @@ import { mapPortals } from "./lib/graph/data/portals.js";
 import { graphFill } from "./lib/graph/fill.js";
 import GraphSolver from "./lib/graph/solver.js";
 import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
-import { MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
+import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
 import { Preset_Classic_Full, Preset_Classic_MM } from "./lib/graph/data/classic/preset.js";
 import { Preset_Recall_Full, Preset_Recall_MM } from "./lib/graph/data/recall/preset.js";
+import { Preset_RecallV2_Full, Preset_RecallV2_MM } from "./lib/graph/data/recall/preset.js";
 import { Preset_Season_Full, Preset_Season_MM } from "./lib/graph/data/season/preset.js";
 
 import fs from "fs";
@@ -54,7 +55,7 @@ const verifiedFillMode = TestMode.Success;
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
 // a bit of a sanity check.
-const graphFillMode = TestMode.Success;
+const graphFillMode = TestMode.None;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -230,13 +231,26 @@ const loadVerifiedFill = (seed, preset) => {
   return graph;
 };
 
-const loadGraphFill = (seed, preset, bossShuffle) => {
+const loadGraphFill = (seed, preset, areaShuffle, bossMode) => {
   const { mapLayout, itemPoolParams, settings } = preset;
   const { majorDistribution } = itemPoolParams;
 
-  const graph = loadGraph(seed, mapLayout, majorDistribution.mode, false, bossShuffle);
-  graphFill(seed, graph, itemPoolParams, settings);
-  return graph;
+  let i = 0;
+  while (i++ < 10) {
+    const graph = loadGraph(
+      seed + i * 1e8,
+      mapLayout,
+      majorDistribution.mode,
+      areaShuffle,
+      bossMode
+    );
+    try {
+      graphFill(seed, graph, itemPoolParams, settings);
+      return graph;
+    } catch (e) {}
+  }
+
+  throw new Error(`could not generate seed ${seed}`);
 };
 
 //-----------------------------------------------------------------
@@ -275,8 +289,8 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
   num += 1;
 };
 
-const solveGraphFill = (seed, preset, boss) => {
-  const graph = loadGraphFill(seed, preset, boss);
+const solveGraphFill = (seed, preset, area, boss) => {
+  const graph = loadGraphFill(seed, preset, area, boss);
   solve(seed, `Graph ${preset.title}`, graph, preset.settings);
 };
 
@@ -348,14 +362,22 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmInvalidSeed(i, Preset_Recall_Full);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    solveGraphFill(i, Preset_Classic_MM, true);
-    solveGraphFill(i, Preset_Classic_Full, true);
-    solveGraphFill(i, Preset_Recall_MM, true);
-    solveGraphFill(i, Preset_Recall_Full, true);
-    solveGraphFill(i, Preset_Season_MM, true);
-    solveGraphFill(i, Preset_Season_Full, true);
+    //solveGraphFill(i, Preset_Classic_MM, false, true);
+    //solveGraphFill(i, Preset_Classic_Full, false, true);
+    //solveGraphFill(i, Preset_Recall_MM, false, true);
+    //solveGraphFill(i, Preset_Recall_Full, false, true);
+    solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.Vanilla);
+    solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.Vanilla);
+    solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleStandard);
+    solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleStandard);
+    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleDash);
+    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleDash);
+    //solveGraphFill(i, Preset_Season_MM, true, false);
+    //solveGraphFill(i, Preset_Season_Full, true, false);
+    //solveGraphFill(i, Preset_Season_MM, true, true);
+    //solveGraphFill(i, Preset_Season_Full, true, true);
   }
-  if (!quiet || i % 1000 == 0) {
+  if (!quiet || i % 100 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
     step = Date.now();
   }

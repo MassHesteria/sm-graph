@@ -10,7 +10,7 @@ import { uppernorfairEdges } from "./data/vanilla/edges/uppernorfair";
 import { lowernorfairEdges } from "./data/vanilla/edges/lowernorfair";
 import { wreckedshipEdges } from "./data/vanilla/edges/wreckedship";
 import { bossEdges } from "./data/vanilla/edges/boss";
-import { MapLayout, MajorDistributionMode } from "./params";
+import { BossMode, MapLayout, MajorDistributionMode } from "./params";
 import { SeasonVertexUpdates } from "./data/season/vertex";
 import { RecallVertexUpdates } from "./data/recall/vertex";
 import { SeasonEdgeUpdates } from "./data/season/edges";
@@ -43,13 +43,13 @@ const getAllVertices = () => {
     }
     switch (name) {
       case "Boss_Kraid":
-        return bossItem(Item.DefeatedKraid);
+        return bossItem(Item.DefeatedBrinstarBoss);
       case "Boss_Phantoon":
-        return bossItem(Item.DefeatedPhantoon);
+        return bossItem(Item.DefeatedWreckedShipBoss);
       case "Boss_Draygon":
-        return bossItem(Item.DefeatedDraygon);
+        return bossItem(Item.DefeatedMaridiaBoss);
       case "Boss_Ridley":
-        return bossItem(Item.DefeatedRidley);
+        return bossItem(Item.DefeatedNorfairBoss);
       default:
         return undefined;
     }
@@ -241,7 +241,7 @@ export const loadGraph = (
   mapLayout,
   majorDistributionMode,
   areaShuffle = false,
-  bossShuffle = false,
+  bossMode = BossMode.Vanilla,
   portals = undefined
 ) => {
   const edgeUpdates = getEdgeUpdates(mapLayout, areaShuffle);
@@ -255,7 +255,7 @@ export const loadGraph = (
   }
 
   return createGraph(
-    mapPortals(seed, areaShuffle, bossShuffle),
+    mapPortals(seed, areaShuffle, bossMode),
     vertexUpdates,
     edgeUpdates
   );
