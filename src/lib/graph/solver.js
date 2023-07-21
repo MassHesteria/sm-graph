@@ -110,7 +110,9 @@ class GraphSolver {
       ).from;
 
       this.printDefeatedBoss(
-        `Defeated ${ItemNames.get(item.type)} @ ${doorVertex.name}`
+        `Defeated ${ItemNames.get(item.type)} - ${bossVertex.name} @ ${
+          doorVertex.name
+        }`
       );
     };
 
