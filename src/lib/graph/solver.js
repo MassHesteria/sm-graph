@@ -231,13 +231,6 @@ class GraphSolver {
         if (uncollected.length == 0) {
           break;
         }
-
-        //all.forEach((p) => {
-        //if (this.printMsg) {
-        //this.printMsg(p.name);
-        //}
-        //});
-
         if (this.printAvailableItems != undefined) {
           this.printAvailableItems(uncollected);
         }
