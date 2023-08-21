@@ -11,6 +11,13 @@ import { Preset_Classic_Full, Preset_Classic_MM } from "./lib/graph/data/classic
 import { Preset_Recall_Full, Preset_Recall_MM } from "./lib/graph/data/recall/preset.js";
 import { Preset_RecallV2_Full, Preset_RecallV2_MM } from "./lib/graph/data/recall/preset.js";
 import { Preset_Season_Full, Preset_Season_MM } from "./lib/graph/data/season/preset.js";
+import { Item } from "./lib/items.js";
+import {
+  MinorDistributionMode,
+  BeamMode,
+  SuitMode,
+  GravityHeatReduction,
+} from "./lib/graph/params.js";
 
 import fs from "fs";
 import chalk from "chalk";
@@ -41,16 +48,30 @@ let startSeed = 0;
 let endSeed = 0;
 let quiet = false;
 
+const rootFolder = "";
+
 // Read seed information from external files.
 const readFromFolders = [
-  //"path/to/results",
-  //"path/to/results",
-  //"path/to/results",
-  //"path/to/results",
+  //`${rootFolder}/mm/results`,
+  //`${rootFolder}/mm_boss/results`,
+  //`${rootFolder}/full/results`,
+  //`${rootFolder}/full_boss/results`,
+  //`${rootFolder}/mm_area/results`,
+  //`${rootFolder}/mm_area_boss/results`,
+  //`${rootFolder}/full_area/results`,
+  //`${rootFolder}/full_area_boss/results`,
+  //`${rootFolder}/mm/_archive/results`,
+  //`${rootFolder}/mm_boss/_archive/results`,
+  //`${rootFolder}/full/_archive/results`,
+  //`${rootFolder}/full_boss/_archive/results`,
+  //`${rootFolder}/mm_area/_archive/results`,
+  //`${rootFolder}/mm_area_boss/_archive/results`,
+  //`${rootFolder}/full_area/_archive/results`,
+  //`${rootFolder}/full_area_boss/_archive/results`,
 ];
 
 // Enables checking seeds produced with the legacy solver.
-const verifiedFillMode = TestMode.Success;
+const verifiedFillMode = TestMode.None;
 
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
@@ -203,11 +224,12 @@ const loadExternal = (fileName) => {
   }
 
   const graph = loadGraph(
-    0,
+    1,
+    1,
     MapLayout.Standard,
     MajorDistributionMode.Standard,
     area.length > 0,
-    false,
+    BossMode.ShuffleStandard,
     portals
   );
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
@@ -362,14 +384,37 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmInvalidSeed(i, Preset_Recall_Full);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
+    const Preset_SGL23 = {
+      title: "SGL23",
+      mapLayout: MapLayout.Standard,
+      itemPoolParams: {
+        majorDistribution: {
+          mode: MajorDistributionMode.Full,
+          extraItems: [Item.DoubleJump],
+        },
+        minorDistribution: {
+          mode: MinorDistributionMode.Standard,
+          missiles: 2,
+          supers: 1,
+          powerbombs: 1,
+        },
+      },
+      settings: {
+        bossMode: BossMode.ShuffleDash,
+        beamMode: BeamMode.Vanilla,
+        suitMode: SuitMode.Dash,
+        gravityHeatReduction: GravityHeatReduction.On,
+      },
+    };
+    solveGraphFill(i, Preset_SGL23, true, true);
     //solveGraphFill(i, Preset_Classic_MM, false, true);
     //solveGraphFill(i, Preset_Classic_Full, false, true);
     //solveGraphFill(i, Preset_Recall_MM, false, true);
     //solveGraphFill(i, Preset_Recall_Full, false, true);
-    solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.Vanilla);
-    solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.Vanilla);
-    solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleStandard);
-    solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleStandard);
+    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.Vanilla);
+    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.Vanilla);
+    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleStandard);
+    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleStandard);
     //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleDash);
     //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleDash);
     //solveGraphFill(i, Preset_Season_MM, true, false);
