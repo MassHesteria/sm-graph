@@ -5,7 +5,7 @@ import { cloneGraph, loadGraph } from "./init";
 import Loadout from "../loadout";
 import { getFullPrePool, getMajorMinorPrePool } from "../itemPlacement.js";
 import { getItemPool } from "./items";
-import { MajorDistributionMode } from "./params";
+import { BossMode, MajorDistributionMode } from "./params";
 
 //-----------------------------------------------------------------
 // Utility routines.
@@ -215,7 +215,7 @@ export const generateSeed = (seed, mapLayout, itemPoolParams, settings) => {
   if (!settings.randomizeAreas) {
     maxInnerLoop *= 10;
   }
-  if (!settings.randomizeBosses) {
+  if (settings.bossMode == BossMode.Vanilla) {
     maxInnerLoop *= 2;
   }
 
