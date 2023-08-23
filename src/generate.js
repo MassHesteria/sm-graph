@@ -15,7 +15,7 @@ import ModeStandard from "./lib/modes/modeStandard";
 import ModeRecall from "./lib/modes/modeRecall";
 import { mapLocation } from "./lib/graph/util";
 
-export const generateSeed = (seed, recall, full) => {
+export const generateLegacySeed = (seed, recall, full) => {
   const mode = recall
     ? new ModeRecall(seed, getLocations())
     : new ModeStandard(seed, getLocations());

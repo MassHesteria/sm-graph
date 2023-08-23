@@ -1,28 +1,16 @@
 import { ItemNames, majorItem } from "./lib/items.js";
 import Loadout from "./lib/loadout.js";
 import { loadGraph } from "./lib/graph/init.js";
-import { vanillaItemPlacement } from "./lib/graph/data/vanilla/items.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
-import { graphFill } from "./lib/graph/fill.js";
+import { generateSeed } from "./lib/graph/fill.js";
 import GraphSolver from "./lib/graph/solver.js";
-import { VanillaPreset } from "./lib/graph/data/vanilla/preset.js";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
-import { Preset_Classic_Full, Preset_Classic_MM } from "./lib/graph/data/classic/preset.js";
-import { Preset_Recall_Full, Preset_Recall_MM } from "./lib/graph/data/recall/preset.js";
-import { Preset_RecallV2_Full, Preset_RecallV2_MM } from "./lib/graph/data/recall/preset.js";
-import { Preset_Season_Full, Preset_Season_MM } from "./lib/graph/data/season/preset.js";
-import { Item } from "./lib/items.js";
-import {
-  MinorDistributionMode,
-  BeamMode,
-  SuitMode,
-  GravityHeatReduction,
-} from "./lib/graph/params.js";
+import { getPreset } from "./lib/presets.js";
 
 import fs from "fs";
 import chalk from "chalk";
 import {
-  generateSeed,
+  generateLegacySeed,
   generateInvalidSeed,
   readBosses,
   readPortals,
@@ -48,7 +36,7 @@ let startSeed = 0;
 let endSeed = 0;
 let quiet = false;
 
-const rootFolder = "";
+const rootFolder = ".";
 
 // Read seed information from external files.
 const readFromFolders = [
@@ -71,12 +59,12 @@ const readFromFolders = [
 ];
 
 // Enables checking seeds produced with the legacy solver.
-const verifiedFillMode = TestMode.None;
+const verifiedFillMode = TestMode.Success;
 
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
 // a bit of a sanity check.
-const graphFillMode = TestMode.None;
+const graphFillMode = TestMode.Success;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -236,43 +224,15 @@ const loadExternal = (fileName) => {
   return graph;
 };
 
-const loadVanilla = () => {
-  const graph = loadGraph(0, MapLayout.Vanilla, MajorDistributionMode.Standard);
-  vanillaItemPlacement.forEach((i) => placeItem(graph, i.location, i.item));
-  return graph;
-};
-
 const loadVerifiedFill = (seed, preset) => {
   const { mapLayout, itemPoolParams } = preset;
   const { majorDistribution } = itemPoolParams;
   const recall = mapLayout == MapLayout.Recall;
   const full = majorDistribution.mode == MajorDistributionMode.Full;
 
-  const graph = loadGraph(0, mapLayout, majorDistribution.mode);
-  generateSeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
+  const graph = loadGraph(0, 1, mapLayout, majorDistribution.mode);
+  generateLegacySeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
   return graph;
-};
-
-const loadGraphFill = (seed, preset, areaShuffle, bossMode) => {
-  const { mapLayout, itemPoolParams, settings } = preset;
-  const { majorDistribution } = itemPoolParams;
-
-  let i = 0;
-  while (i++ < 10) {
-    const graph = loadGraph(
-      seed + i * 1e8,
-      mapLayout,
-      majorDistribution.mode,
-      areaShuffle,
-      bossMode
-    );
-    try {
-      graphFill(seed, graph, itemPoolParams, settings);
-      return graph;
-    } catch (e) {}
-  }
-
-  throw new Error(`could not generate seed ${seed}`);
 };
 
 //-----------------------------------------------------------------
@@ -311,18 +271,21 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
   num += 1;
 };
 
-const solveGraphFill = (seed, preset, area, boss) => {
-  const graph = loadGraphFill(seed, preset, area, boss);
+const solveGraphFill = (seed, preset) => {
+  const { mapLayout, itemPoolParams, settings } = preset;
+  const graph = generateSeed(seed, mapLayout, itemPoolParams, settings);
   solve(seed, `Graph ${preset.title}`, graph, preset.settings);
 };
 
-const solveVerifiedFill = (seed, preset) => {
+const solveVerifiedFill = (seed, presetName) => {
+  const preset = getPreset(presetName);
   const graph = loadVerifiedFill(seed, preset);
   solve(seed, `Legacy ${preset.title}`, graph, preset.settings, true);
 };
 
-const confirmInvalidSeed = (seed, preset) => {
+const confirmInvalidSeed = (seed, presetName) => {
   try {
+    const preset = getPreset(presetName);
     const { mapLayout, itemPoolParams } = preset;
     const { majorDistribution } = itemPoolParams;
     const recall = mapLayout == MapLayout.Recall;
@@ -355,13 +318,7 @@ modes += (graphFillMode & TestMode.Success) > 0 ? "graphSuccess " : "";
 
 let start = Date.now();
 let step = start;
-
-if (startSeed == 0) {
-  solve(0, "Vanilla", loadVanilla(), VanillaPreset.settings);
-  console.log(`Verified 0 [ vanilla ] ${Date.now() - step} ms`);
-  step = Date.now();
-  startSeed += 1;
-}
+const { settings } = getPreset("standard_full");
 
 for (let i = startSeed; i <= endSeed; i++) {
   readFromFolders.forEach((f) => {
@@ -369,58 +326,26 @@ for (let i = startSeed; i <= endSeed; i++) {
     if (!fs.existsSync(fileName)) {
       return;
     }
-    solve(i, fileName, loadExternal(fileName), Preset_Season_Full.settings);
+    solve(i, fileName, loadExternal(fileName), settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
-    solveVerifiedFill(i, Preset_Classic_MM);
-    solveVerifiedFill(i, Preset_Classic_Full);
-    solveVerifiedFill(i, Preset_Recall_MM);
-    solveVerifiedFill(i, Preset_Recall_Full);
+    solveVerifiedFill(i, "classic_mm");
+    solveVerifiedFill(i, "classic_full");
+    solveVerifiedFill(i, "recall_mm");
+    solveVerifiedFill(i, "recall_full");
   }
   if ((verifiedFillMode & TestMode.Failure) > 0) {
-    confirmInvalidSeed(i, Preset_Classic_MM);
-    confirmInvalidSeed(i, Preset_Classic_Full);
-    confirmInvalidSeed(i, Preset_Recall_MM);
-    confirmInvalidSeed(i, Preset_Recall_Full);
+    confirmInvalidSeed(i, "classic_mm");
+    confirmInvalidSeed(i, "classic_full");
+    confirmInvalidSeed(i, "recall_mm");
+    confirmInvalidSeed(i, "recall_full");
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const Preset_SGL23 = {
-      title: "SGL23",
-      mapLayout: MapLayout.Standard,
-      itemPoolParams: {
-        majorDistribution: {
-          mode: MajorDistributionMode.Full,
-          extraItems: [Item.DoubleJump],
-        },
-        minorDistribution: {
-          mode: MinorDistributionMode.Standard,
-          missiles: 2,
-          supers: 1,
-          powerbombs: 1,
-        },
-      },
-      settings: {
-        bossMode: BossMode.ShuffleDash,
-        beamMode: BeamMode.Vanilla,
-        suitMode: SuitMode.Dash,
-        gravityHeatReduction: GravityHeatReduction.On,
-      },
-    };
-    solveGraphFill(i, Preset_SGL23, true, true);
-    //solveGraphFill(i, Preset_Classic_MM, false, true);
-    //solveGraphFill(i, Preset_Classic_Full, false, true);
-    //solveGraphFill(i, Preset_Recall_MM, false, true);
-    //solveGraphFill(i, Preset_Recall_Full, false, true);
-    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.Vanilla);
-    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.Vanilla);
-    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleStandard);
-    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleStandard);
-    //solveGraphFill(i, Preset_RecallV2_MM, false, BossMode.ShuffleDash);
-    //solveGraphFill(i, Preset_RecallV2_Full, false, BossMode.ShuffleDash);
-    //solveGraphFill(i, Preset_Season_MM, true, false);
-    //solveGraphFill(i, Preset_Season_Full, true, false);
-    //solveGraphFill(i, Preset_Season_MM, true, true);
-    //solveGraphFill(i, Preset_Season_Full, true, true);
+    const presets = ["sgl23", "recall_mm", "recall_full", "standard_mm", "standard_full"];
+    presets.forEach((p) => {
+      const pre = getPreset(p);
+      solveGraphFill(i, pre);
+    });
   }
   if (!quiet || i % 100 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
