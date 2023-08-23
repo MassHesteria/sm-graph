@@ -11,7 +11,6 @@ import { lowernorfairEdges } from "./data/vanilla/edges/lowernorfair";
 import { wreckedshipEdges } from "./data/vanilla/edges/wreckedship";
 import { bossEdges } from "./data/vanilla/edges/boss";
 import { BossMode, MapLayout, MajorDistributionMode } from "./params";
-import { SeasonVertexUpdates } from "./data/season/vertex";
 import { RecallVertexUpdates } from "./data/recall/vertex";
 import { SeasonEdgeUpdates } from "./data/season/edges";
 import { RecallEdgeUpdates } from "./data/recall/edges";
@@ -328,9 +327,9 @@ export const loadGraph = (
   };
   const edgeUpdates = getEdgeUpdates(mapLayout, areaShuffle);
   const vertexUpdates =
-    majorDistributionMode == MajorDistributionMode.Standard
-      ? SeasonVertexUpdates
-      : RecallVertexUpdates;
+    majorDistributionMode == MajorDistributionMode.Recall
+      ? RecallVertexUpdates
+      : [];
 
   if (portals != undefined) {
     const g = createGraph(portals, vertexUpdates, edgeUpdates);
