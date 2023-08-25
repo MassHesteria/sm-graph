@@ -107,7 +107,7 @@ const WestMaridia_EverestTopRight_to_PreAqueductPortal = {
 // Exports.
 //-----------------------------------------------------------------
 
-export const SeasonAreaEdgeUpdates = [
+export const StandardAreaEdgeUpdates = [
   Crateria_PreMoat_to_Crabs,
   Crateria_Terminator_to_G4,
   GreenBrinstar_Tube_to_GreenHillsPortal,

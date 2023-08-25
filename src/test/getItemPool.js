@@ -1,10 +1,8 @@
-import { ClassicPreset } from "../lib/graph/data/classic/preset";
-import { RecallPreset } from "../lib/graph/data/recall/preset";
-import { SeasonPreset } from "../lib/graph/data/season/preset";
 import ModeStandard from "../lib/modes/modeStandard";
 import ModeRecall from "../lib/modes/modeRecall";
 import { getLocations } from "../lib/locations";
 import { getItemPool } from "../lib/graph/items";
+import { getPreset } from "../lib/presets";
 
 export const UnitTest_getItemPool = (quiet) => {
   const showItem = (i) => console.log(i.name);
@@ -45,6 +43,7 @@ export const UnitTest_getItemPool = (quiet) => {
   };
 
   const testSeed = (seed) => {
+    const ClassicPreset = getPreset("classic_mm");
     if (
       !compare(
         "Classic",
@@ -55,6 +54,7 @@ export const UnitTest_getItemPool = (quiet) => {
     ) {
       process.exit(1);
     }
+    const RecallPreset = getPreset("recall_mm");
     if (
       !compare(
         "Recall",
@@ -65,9 +65,6 @@ export const UnitTest_getItemPool = (quiet) => {
     ) {
       process.exit(1);
     }
-    //if (!compare("Season", seed, getSeasonItemPool, SeasonPreset.itemPoolParams)) {
-    //process.exit(1);
-    //}
   };
 
   for (let i = 1; i <= 1000; i++) {
