@@ -12,7 +12,6 @@ import { wreckedshipEdges } from "./data/standard/edges/wreckedship";
 import { bossEdges } from "./data/standard/edges/boss";
 import { BossMode, MapLayout, MajorDistributionMode } from "./params";
 import { RecallVertexUpdates } from "./data/recall/vertex";
-import { SeasonEdgeUpdates } from "./data/season/edges";
 import { RecallEdgeUpdates } from "./data/recall/edges";
 import { RecallAreaEdgeUpdates } from "./data/recall/area";
 import { SeasonAreaEdgeUpdates } from "./data/season/area";
@@ -215,7 +214,7 @@ const getEdgeUpdates = (mapLayout, areaShuffle) => {
       if (areaShuffle) {
         return SeasonAreaEdgeUpdates;
       }
-      return SeasonEdgeUpdates;
+      return [];
   }
 };
 
