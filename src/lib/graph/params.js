@@ -6,8 +6,8 @@ import { Item } from "../items";
 //-----------------------------------------------------------------
 
 export const MapLayout = {
-  Standard: 0,
-  Recall: 1,
+  Standard: 1,
+  Recall: 3,
 };
 
 export const MajorDistributionMode = {
