@@ -8,7 +8,7 @@ import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params.j
 import { getPreset } from "./lib/presets.js";
 
 import fs from "node:fs";
-import chalk from "chalk";
+import chalk from "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js";
 import {
   generateLegacySeed,
   generateInvalidSeed,

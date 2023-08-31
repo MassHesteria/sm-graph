@@ -2,7 +2,7 @@
 
 start_seed=1
 end_seed=999999
-options="--allow-sys=osRelease"
+options="--allow-sys=osRelease --allow-env"
 #options="--experimental-specifier-resolution=node --no-warnings"
 #options="--prof --experimental-specifier-resolution=node --no-warnings"
 
