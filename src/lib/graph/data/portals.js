@@ -1,5 +1,5 @@
-import DotNetRandom from "../../dotnet-random";
-import { BossMode } from "../params";
+import DotNetRandom from "../../dotnet-random.js";
+import { BossMode } from "../params.js";
 
 const samePortals = (unshuffled, shuffled) => {
   if (unshuffled.length != shuffled.length) {

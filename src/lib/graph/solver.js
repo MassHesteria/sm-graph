@@ -1,6 +1,6 @@
-import { canReachStart, canReachVertex, searchAndCache } from "./search";
-import { Item, ItemNames } from "../items";
-import { cloneGraph } from "./init";
+import { canReachStart, canReachVertex, searchAndCache } from "./search.js";
+import { Item, ItemNames } from "../items.ts";
+import { cloneGraph } from "./init.js";
 
 class GraphSolver {
   constructor(graph, settings, logMethods) {

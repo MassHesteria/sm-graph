@@ -1,4 +1,4 @@
-import { Item } from "./items";
+import { Item } from "./items.ts";
 import {
   BeamMode,
   BossMode,
@@ -7,23 +7,45 @@ import {
   MinorDistributionMode,
   SuitMode,
   GravityHeatReduction,
-} from "./graph/params";
+} from "./graph/params.js";
 
 //-----------------------------------------------------------------
 // Accessor Method
 //-----------------------------------------------------------------
 
-export const getPreset = (tag) => {
-  const presets = [
+export const getAllPresets = () => {
+  return [
     Preset_SGL23,
     Preset_Recall_MM,
     Preset_Recall_Full,
+    Preset_Recall_Area_MM,
     Preset_Classic_MM,
     Preset_Classic_Full,
     Preset_Standard_MM,
     Preset_Standard_Full,
   ];
-  return presets.find((p) => p.tags.includes(tag));
+};
+
+export const getPreset = (tag) => {
+  return getAllPresets().find((p) => p.tags.includes(tag));
+};
+
+export const findPreset = (params) => {
+  const { itemPoolParams, settings } = params;
+  return getAllPresets().find((p) => {
+    if (
+      params.mapLayout != p.mapLayout ||
+      JSON.stringify(itemPoolParams) !== JSON.stringify(p.itemPoolParams) ||
+      settings.beamMode !== p.settings.beamMode ||
+      settings.suitMode !== p.settings.suitMode ||
+      settings.gravityHeatReduction !== p.settings.gravityHeatReduction ||
+      settings.randomizeAreas !== p.settings.randomizeAreas ||
+      settings.bossMode !== p.settings.bossMode
+    ) {
+      return false;
+    }
+    return true;
+  });
 };
 
 //-----------------------------------------------------------------
@@ -168,6 +190,32 @@ export const Preset_Recall_Full = {
   },
 };
 
+export const Preset_Recall_Area_MM = {
+  title: "Recall Area M/M",
+  tags: ["recall_area_mm"],
+  mapLayout: MapLayout.Recall,
+  itemPoolParams: {
+    majorDistribution: {
+      mode: MajorDistributionMode.Recall,
+      extraItems: [Item.DoubleJump, Item.PressureValve, Item.HeatShield],
+    },
+    minorDistribution: {
+      mode: MinorDistributionMode.Standard,
+      missiles: 2,
+      supers: 1,
+      powerbombs: 1,
+    },
+  },
+  settings: {
+    preset: "RecallAreaMM",
+    beamMode: BeamMode.DashRecall,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.On,
+    randomizeAreas: true,
+    bossMode: BossMode.Vanilla,
+  },
+};
+
 //-----------------------------------------------------------------
 // Standard Settings (similar to Total and VARIA vanilla seeds)
 //-----------------------------------------------------------------
@@ -191,7 +239,7 @@ export const Preset_Standard_MM = {
   settings: {
     preset: "StandardMM",
     beamMode: BeamMode.Vanilla,
-    suitMode: SuitMode.Standard,
+    suitMode: SuitMode.Dash,
     gravityHeatReduction: GravityHeatReduction.Off,
     randomizeAreas: false,
     bossMode: BossMode.Vanilla,
@@ -217,7 +265,7 @@ export const Preset_Standard_Full = {
   settings: {
     preset: "StandardFull",
     beamMode: BeamMode.Vanilla,
-    suitMode: SuitMode.Standard,
+    suitMode: SuitMode.Dash,
     gravityHeatReduction: GravityHeatReduction.Off,
     randomizeAreas: false,
     bossMode: BossMode.Vanilla,

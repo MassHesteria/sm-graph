@@ -1,5 +1,5 @@
-import { BeamMode, SuitMode } from "./graph/params";
-import { Item, ItemNames } from "./items";
+import { BeamMode, SuitMode } from "./graph/params.js";
+import { Item, ItemNames } from "./items.ts";
 
 class Loadout {
   hasBombs = false;

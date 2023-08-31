@@ -1,4 +1,4 @@
-import { ItemNames, majorItem } from "./lib/items.js";
+import { ItemNames, majorItem } from "./lib/items.ts";
 import Loadout from "./lib/loadout.js";
 import { loadGraph } from "./lib/graph/init.js";
 import { mapPortals } from "./lib/graph/data/portals.js";
@@ -7,7 +7,7 @@ import GraphSolver from "./lib/graph/solver.js";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
 import { getPreset } from "./lib/presets.js";
 
-import fs from "fs";
+import fs from "node:fs";
 import chalk from "chalk";
 import {
   generateLegacySeed,
@@ -70,16 +70,16 @@ const graphFillMode = TestMode.Success;
 // Process command line arguments.
 //-----------------------------------------------------------------
 
-if (process.argv.length == 3) {
-  startSeed = parseInt(process.argv[2]);
-  endSeed = parseInt(process.argv[2]);
-} else if (process.argv.length == 4) {
-  startSeed = parseInt(process.argv[2]);
-  endSeed = parseInt(process.argv[3]);
+if (Deno.args.length == 1) {
+  startSeed = parseInt(Deno.args[0]);
+  endSeed = parseInt(Deno.args[0]);
+} else if (Deno.args.length == 2) {
+  startSeed = parseInt(Deno.args[0]);
+  endSeed = parseInt(Deno.args[1]);
   quiet = true;
 } else {
   console.log("Please specify a seed");
-  process.exit(1);
+  Deno.exit(1);
 }
 
 //-----------------------------------------------------------------
@@ -341,13 +341,20 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmInvalidSeed(i, "recall_full");
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const presets = ["sgl23", "recall_mm", "recall_full", "standard_mm", "standard_full"];
+    const presets = [
+      "sgl23",
+      "recall_area_mm",
+      "recall_mm",
+      "recall_full",
+      "standard_mm",
+      "standard_full",
+    ];
     presets.forEach((p) => {
       const pre = getPreset(p);
       solveGraphFill(i, pre);
     });
   }
-  if (!quiet || i % 100 == 0) {
+  if (!quiet || i % 1000 == 0) {
     console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
     step = Date.now();
   }
