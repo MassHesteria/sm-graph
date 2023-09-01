@@ -231,9 +231,9 @@ const loadVerifiedFill = (seed, preset) => {
   const { mapLayout, itemPoolParams } = preset;
   const { majorDistribution } = itemPoolParams;
   const recall = mapLayout == MapLayout.Recall;
-  const full = majorDistribution.mode == MajorDistributionMode.Full;
+  const full = majorDistribution == MajorDistributionMode.Full;
 
-  const graph = loadGraph(0, 1, mapLayout, majorDistribution.mode);
+  const graph = loadGraph(0, 1, mapLayout, majorDistribution);
   generateLegacySeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
   return graph;
 };
@@ -292,9 +292,9 @@ const confirmInvalidSeed = (seed, presetName) => {
     const { mapLayout, itemPoolParams } = preset;
     const { majorDistribution } = itemPoolParams;
     const recall = mapLayout == MapLayout.Recall;
-    const full = majorDistribution.mode == MajorDistributionMode.Full;
+    const full = majorDistribution == MajorDistributionMode.Full;
 
-    const graph = loadGraph(0, mapLayout, majorDistribution.mode);
+    const graph = loadGraph(0, mapLayout, majorDistribution);
     generateInvalidSeed(seed, recall, full).forEach((i) =>
       placeItem(graph, i.location.name, i.item)
     );
