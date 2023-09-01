@@ -1,7 +1,7 @@
-import DotNetRandom from "../lib/dotnet-random.js";
-import { majorItem, minorItem, Item } from "../lib/items.ts";
-import { getLocations } from "../lib/locations.ts";
-import ItemNode from "../lib/logic.js";
+import DotNetRandom from "../lib/dotnet-random";
+import { majorItem, minorItem, Item } from "../lib/items";
+import { getLocations } from "../lib/locations";
+import ItemNode from "../lib/logic";
 
 class ModeRecall {
   nodes = [];

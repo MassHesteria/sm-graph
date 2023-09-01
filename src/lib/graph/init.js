@@ -1,22 +1,22 @@
-import { standardVertices } from "./data/standard/vertex.js";
-import { crateriaEdges } from "./data/standard/edges/crateria.js";
-import { greenbrinstarEdges } from "./data/standard/edges/greenbrinstar.js";
-import { redbrinstarEdges } from "./data/standard/edges/redbrinstar.js";
-import { kraidslairEdges } from "./data/standard/edges/kraid.js";
-import { crocomireEdges } from "./data/standard/edges/crocomire.js";
-import { westmaridiaEdges } from "./data/standard/edges/westmaridia.js";
-import { eastmaridiaEdges } from "./data/standard/edges/eastmaridia.js";
-import { uppernorfairEdges } from "./data/standard/edges/uppernorfair.js";
-import { lowernorfairEdges } from "./data/standard/edges/lowernorfair.js";
-import { wreckedshipEdges } from "./data/standard/edges/wreckedship.js";
-import { bossEdges } from "./data/standard/edges/boss.js";
-import { BossMode, MapLayout, MajorDistributionMode } from "./params.js";
-import { RecallVertexUpdates } from "./data/recall/vertex.js";
-import { RecallEdgeUpdates } from "./data/recall/edges.js";
-import { StandardAreaEdgeUpdates } from "./data/standard/area.js";
-import { mapPortals } from "./data/portals.js";
-import { bossItem, Item } from "../items.ts";
-import DotNetRandom from "../dotnet-random.js";
+import { standardVertices } from "./data/standard/vertex";
+import { crateriaEdges } from "./data/standard/edges/crateria";
+import { greenbrinstarEdges } from "./data/standard/edges/greenbrinstar";
+import { redbrinstarEdges } from "./data/standard/edges/redbrinstar";
+import { kraidslairEdges } from "./data/standard/edges/kraid";
+import { crocomireEdges } from "./data/standard/edges/crocomire";
+import { westmaridiaEdges } from "./data/standard/edges/westmaridia";
+import { eastmaridiaEdges } from "./data/standard/edges/eastmaridia";
+import { uppernorfairEdges } from "./data/standard/edges/uppernorfair";
+import { lowernorfairEdges } from "./data/standard/edges/lowernorfair";
+import { wreckedshipEdges } from "./data/standard/edges/wreckedship";
+import { bossEdges } from "./data/standard/edges/boss";
+import { BossMode, MapLayout, MajorDistributionMode } from "./params";
+import { RecallVertexUpdates } from "./data/recall/vertex";
+import { RecallEdgeUpdates } from "./data/recall/edges";
+import { StandardAreaEdgeUpdates } from "./data/standard/area";
+import { mapPortals } from "./data/portals";
+import { bossItem, Item } from "../items";
+import DotNetRandom from "../dotnet-random";
 
 const getStandardEdges = () => {
   return {

@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import fs from "fs";
 import {
   performVerifiedFill,
   getFullPrePool,
@@ -6,14 +6,14 @@ import {
   isEmptyNode,
   isValidMajorMinor,
   verifyItemProgression,
-} from "./legacy/itemPlacement.js";
-import DotNetRandom from "./lib/dotnet-random.js";
-import { getLocations } from "./lib/locations.ts";
-import { Item } from "./lib/items.ts";
-import Loadout from "./lib/loadout.js";
-import ModeStandard from "./legacy/modeStandard.js";
-import ModeRecall from "./legacy/modeRecall.js";
-import { mapLocation } from "./lib/graph/util.js";
+} from "./legacy/itemPlacement";
+import DotNetRandom from "./lib/dotnet-random";
+import { getLocations } from "./lib/locations";
+import { Item } from "./lib/items";
+import Loadout from "./lib/loadout";
+import ModeStandard from "./legacy/modeStandard";
+import ModeRecall from "./legacy/modeRecall";
+import { mapLocation } from "./lib/graph/util";
 
 export const generateLegacySeed = (seed, recall, full) => {
   const mode = recall

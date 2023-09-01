@@ -1,7 +1,7 @@
-import DotNetRandom from "../lib/dotnet-random.js";
-import { majorItem, minorItem, Item } from "../lib/items.ts";
-import ItemNode from "../lib/logic.js";
-import { getLocations } from "../lib/locations.ts";
+import DotNetRandom from "../lib/dotnet-random";
+import { majorItem, minorItem, Item } from "../lib/items";
+import ItemNode from "../lib/logic";
+import { getLocations } from "../lib/locations";
 
 class ModeStandard {
   nodes = [];

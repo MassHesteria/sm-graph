@@ -1,10 +1,10 @@
-import DotNetRandom from "../dotnet-random.js";
-import { Item, majorItem, minorItem } from "../items.ts";
+import DotNetRandom from "../dotnet-random";
+import { Item, majorItem, minorItem } from "../items";
 import {
   BeamMode,
   MajorDistributionMode,
   MinorDistributionMode,
-} from "./params.js";
+} from "./params";
 
 export const getItemPool = (
   seed,

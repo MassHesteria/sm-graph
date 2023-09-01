@@ -1,21 +1,21 @@
-import { ItemNames, majorItem } from "./lib/items.ts";
-import Loadout from "./lib/loadout.js";
-import { loadGraph } from "./lib/graph/init.js";
-import { mapPortals } from "./lib/graph/data/portals.js";
-import { generateSeed } from "./lib/graph/fill.js";
-import GraphSolver from "./lib/graph/solver.js";
-import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params.js";
-import { getPreset } from "./lib/presets.js";
+import { ItemNames, majorItem } from "./lib/items";
+import Loadout from "./lib/loadout";
+import { loadGraph } from "./lib/graph/init";
+import { mapPortals } from "./lib/graph/data/portals";
+import { generateSeed } from "./lib/graph/fill";
+import GraphSolver from "./lib/graph/solver";
+import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
+import { getPreset } from "./lib/presets";
 
-import fs from "node:fs";
-import chalk from "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js";
+import fs from "fs";
+import chalk from "chalk";
 import {
   generateLegacySeed,
   generateInvalidSeed,
   readBosses,
   readPortals,
   readSeed,
-} from "./generate.js";
+} from "./generate";
 
 //-----------------------------------------------------------------
 // Constants.
@@ -70,16 +70,19 @@ const graphFillMode = TestMode.Success;
 // Process command line arguments.
 //-----------------------------------------------------------------
 
-if (Deno.args.length == 1) {
-  startSeed = parseInt(Deno.args[0]);
-  endSeed = parseInt(Deno.args[0]);
-} else if (Deno.args.length == 2) {
-  startSeed = parseInt(Deno.args[0]);
-  endSeed = parseInt(Deno.args[1]);
+const args = process.argv.slice(2);
+const quit = () => process.exit(1);
+
+if (args.length == 1) {
+  startSeed = parseInt(args[0]);
+  endSeed = parseInt(args[0]);
+} else if (args.length == 2) {
+  startSeed = parseInt(args[0]);
+  endSeed = parseInt(args[1]);
   quiet = true;
 } else {
   console.log("Please specify a seed");
-  Deno.exit(1);
+  quit();
 }
 
 //-----------------------------------------------------------------

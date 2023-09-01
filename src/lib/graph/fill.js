@@ -1,10 +1,10 @@
-import DotNetRandom from "../dotnet-random.js";
-import { Item } from "../items.ts";
-import GraphSolver from "./solver.js";
-import { cloneGraph, loadGraph } from "./init.js";
-import Loadout from "../loadout.js";
-import { getItemPool } from "./items.js";
-import { BossMode, MajorDistributionMode } from "./params.js";
+import DotNetRandom from "../dotnet-random";
+import { Item } from "../items";
+import GraphSolver from "./solver";
+import { cloneGraph, loadGraph } from "./init";
+import Loadout from "../loadout";
+import { getItemPool } from "./items";
+import { BossMode, MajorDistributionMode } from "./params";
 
 //-----------------------------------------------------------------
 // Utility routines.

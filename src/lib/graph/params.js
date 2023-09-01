@@ -1,5 +1,5 @@
-import { Buffer } from "npm:buffer";
-import { Item } from "../items.ts";
+import { Buffer } from "buffer";
+import { Item } from "../items";
 
 //-----------------------------------------------------------------
 // Parameter types

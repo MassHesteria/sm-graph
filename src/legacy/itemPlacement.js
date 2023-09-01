@@ -1,6 +1,6 @@
-import DotNetRandom from "../lib/dotnet-random.js";
-import { Item } from "../lib/items.ts";
-import { Area } from "../lib/locations.ts";
+import DotNetRandom from "../lib/dotnet-random";
+import { Item } from "../lib/items";
+import { Area } from "../lib/locations";
 
 //-----------------------------------------------------------------
 // Checks if a node is empty.

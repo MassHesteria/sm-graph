@@ -1,4 +1,4 @@
-import { Item } from "./items.ts";
+import { Item } from "./items";
 import {
   BeamMode,
   BossMode,
@@ -7,7 +7,7 @@ import {
   MinorDistributionMode,
   SuitMode,
   GravityHeatReduction,
-} from "./graph/params.js";
+} from "./graph/params";
 
 //-----------------------------------------------------------------
 // Accessor Method
