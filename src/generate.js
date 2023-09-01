@@ -6,7 +6,7 @@ import {
   isEmptyNode,
   isValidMajorMinor,
   verifyItemProgression,
-} from "./lib/itemPlacement.js";
+} from "./legacy/itemPlacement.js";
 import DotNetRandom from "./lib/dotnet-random.js";
 import { getLocations } from "./lib/locations.ts";
 import { Item } from "./lib/items.ts";

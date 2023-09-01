@@ -1,6 +1,6 @@
-import DotNetRandom from "./dotnet-random.js";
-import { Item } from "./items.ts";
-import { Area } from "./locations.ts";
+import DotNetRandom from "../lib/dotnet-random.js";
+import { Item } from "../lib/items.ts";
+import { Area } from "../lib/locations.ts";
 
 //-----------------------------------------------------------------
 // Checks if a node is empty.
@@ -24,10 +24,7 @@ export const isValidMajorMinor = (item, node) => {
       return false;
     }
   } else if (item.type == Item.Varia) {
-    if (
-      node.location.area == Area.LowerNorfair ||
-      node.location.area == Area.Crateria
-    ) {
+    if (node.location.area == Area.LowerNorfair || node.location.area == Area.Crateria) {
       return false;
     }
   } else {
@@ -115,14 +112,7 @@ export const getMajorMinorPrePool = (rnd) => {
 // Places items in random locations and verifies the seed.
 //-----------------------------------------------------------------
 
-export const performVerifiedFill = (
-  seed,
-  nodes,
-  itemPool,
-  getPrePool,
-  initLoad,
-  canPlaceItem
-) => {
+export const performVerifiedFill = (seed, nodes, itemPool, getPrePool, initLoad, canPlaceItem) => {
   const rnd = new DotNetRandom(seed);
 
   //-----------------------------------------------------------------
