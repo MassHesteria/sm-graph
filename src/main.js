@@ -228,8 +228,7 @@ const loadExternal = (fileName) => {
 };
 
 const loadVerifiedFill = (seed, preset) => {
-  const { mapLayout, itemPoolParams } = preset;
-  const { majorDistribution } = itemPoolParams;
+  const { mapLayout, majorDistribution } = preset.settings;
   const recall = mapLayout == MapLayout.Recall;
   const full = majorDistribution == MajorDistributionMode.Full;
 
@@ -275,8 +274,7 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
 };
 
 const solveGraphFill = (seed, preset) => {
-  const { mapLayout, itemPoolParams, settings } = preset;
-  const graph = generateSeed(seed, mapLayout, itemPoolParams, settings);
+  const graph = generateSeed(seed, preset.settings);
   solve(seed, `Graph ${preset.title}`, graph, preset.settings);
 };
 
@@ -289,8 +287,7 @@ const solveVerifiedFill = (seed, presetName) => {
 const confirmInvalidSeed = (seed, presetName) => {
   try {
     const preset = getPreset(presetName);
-    const { mapLayout, itemPoolParams } = preset;
-    const { majorDistribution } = itemPoolParams;
+    const { mapLayout, majorDistribution } = preset.settings;
     const recall = mapLayout == MapLayout.Recall;
     const full = majorDistribution == MajorDistributionMode.Full;
 
