@@ -1,6 +1,6 @@
 import DotNetRandom from "../lib/dotnet-random";
 import { majorItem, minorItem, Item } from "../lib/items";
-import ItemNode from "../lib/logic";
+import ItemNode from "./logic";
 import { getLocations } from "../lib/locations";
 
 class ModeStandard {

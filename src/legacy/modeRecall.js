@@ -1,7 +1,7 @@
 import DotNetRandom from "../lib/dotnet-random";
 import { majorItem, minorItem, Item } from "../lib/items";
 import { getLocations } from "../lib/locations";
-import ItemNode from "../lib/logic";
+import ItemNode from "./logic";
 
 class ModeRecall {
   nodes = [];
