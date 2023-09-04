@@ -53,8 +53,12 @@ const writeEdge = async (e) => {
     output += `# ${edgeArea}   \n   \n`;
     area = edgeArea;
   }
-  // Hide conditions that are always true or false
-  if (e.condition === true || e.condition === false) {
+  // Hide constant conditions unless they are to get an item
+  if (
+    e.to.type != "major" &&
+    e.to.type != "minor" &&
+    (e.condition === true || e.condition === false)
+  ) {
     return "";
   }
   let condition = await prettier.format(getBody(e.condition), { semi: false, parser: "babel" });
