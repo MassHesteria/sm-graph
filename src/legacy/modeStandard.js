@@ -400,7 +400,7 @@ class ModeStandard {
     });
 
     minor("Missiles (Cathedral)", (load) => {
-      return canAccessHeatedNorfair(load);
+      return canAccessRedBrinstar(load) && (load.totalTanks >= 5 || load.hasVaria);
     });
 
     minor("Missiles (Croc Escape)", (load) => {

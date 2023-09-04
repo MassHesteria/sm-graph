@@ -417,7 +417,9 @@ class ModeRecall {
     });
 
     minor("Missiles (Cathedral)", (load) => {
-      return canAccessHeatedNorfair(load);
+      return (
+        canAccessRedBrinstar(load) && (load.totalTanks >= 5 || load.hasVaria || load.hasHeatShield)
+      );
     });
 
     minor("Missiles (Croc Escape)", (load) => {
