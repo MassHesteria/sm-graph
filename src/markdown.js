@@ -19,11 +19,39 @@ const getBody = (func) => {
 
 let area = "";
 
+const mapArea = (graphArea) => {
+  switch (graphArea) {
+    case "BlueBrinstar":
+      return "Crateria";
+    case "GreenBrinstar":
+      return "Green Brinstar";
+    case "WreckedShip":
+      return "Wrecked Ship";
+    case "LowerNorfair":
+      return "Lower Norfair";
+    case "UpperNorfair":
+      return "Upper Norfair";
+    case "EastMaridia":
+      return "East Maridia";
+    case "WestMaridia":
+      return "West Maridia";
+    case "RedBrinstar":
+      return "Red Brinstar";
+    case "CrocomiresLair":
+      return "Crocomire's Lair";
+    case "KraidsLair":
+      return "Kraid's Lair";
+    default:
+      return graphArea;
+  }
+};
+
 const writeEdge = async (e) => {
   let output = "";
-  if (e.from.area != area) {
-    output += `# ${e.from.area}   \n   \n`;
-    area = e.from.area;
+  const edgeArea = mapArea(e.from.area);
+  if (edgeArea != area) {
+    output += `# ${edgeArea}   \n   \n`;
+    area = edgeArea;
   }
   let condition = await prettier.format(getBody(e.condition), { semi: false, parser: "babel" });
   if (condition[0] == ";") {
