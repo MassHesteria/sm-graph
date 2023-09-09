@@ -1,39 +1,39 @@
 export const mapLocation = (name) => {
   const mappings = [
+    ["Missiles (Billy Mays 1)", ""],
+    ["Missiles (Billy Mays 2)", ""],
+    ["Missiles (Gauntlet Right)", ""],
+    ["Missiles (Gauntlet Left)", ""],
+    ["Energy Tank (Gauntlet)", ""],
+    ["Energy Tank (Terminator)", ""],
+    ["Missiles (230)", ""],
+    ["Power Bombs (Landing Site)", ""],
+    ["Supers (Climb)", ""],
+    ["Missiles (Alpha)", ""],
+    ["Missiles (Beta)", ""],
+    ["Power Bombs (Morph)", ""],
+    ["Energy Tank (Brinstar Ceiling)", ""],
+    ["Missiles (Moat)", ""],
+    ["Morphing Ball", ""],
+    ["Missiles (Mother Brain)", ""],
+    ["Bombs", ""],
     ["Supers (WS Right)", "Supers_RightSide"],
     ["Supers (WS Left)", "Supers_LeftSide"],
     ["Missiles (Sky)", "Missiles_Sky"],
     ["Missiles (Spooky)", "Missiles_Spooky"],
     ["Missiles (Attic)", "Missiles_Attic"],
-    ["Morphing Ball", "MorphBall"],
-    ["Missiles (Moat)", "Missiles_Moat"],
-    ["Bombs", "Bombs"],
-    ["Energy Tank (Brinstar Ceiling)", "EnergyTank_Ceiling"],
     ["Space Jump", "SpaceJump"],
     ["Energy Tank (Ridley)", "EnergyTank_Ridley"],
     ["Varia Suit", "VariaSuit"],
-    ["Energy Tank (Gauntlet)", "EnergyTank_Gauntlet"],
-    ["Missiles (Gauntlet Right)", "Missiles_GauntletRight"],
-    ["Missiles (Gauntlet Left)", "Missiles_GauntletLeft"],
-    ["Energy Tank (Terminator)", "EnergyTank_Terminator"],
-    ["Missiles (230)", "Missiles_230"],
-    ["Power Bombs (Landing Site)", "PBs_LandingSite"],
-    ["Supers (Climb)", "Supers_Climb"],
-    ["Missiles (Alpha)", "Missiles_Alpha"],
     ["Power Bombs (Alpha)", "PBs_Alpha"],
     ["Missiles (Alpha PBs)", "Missiles_AlphaPBs"],
-    ["Missiles (Beta)", "Missiles_Beta"],
     ["Power Bombs (Beta)", "PBs_Beta"],
     ["Missiles (Ocean Bottom)", "Missiles_Ocean"],
     ["Missiles (Ocean Middle)", "Missiles_OceanMiddle"],
-    ["Missiles (Mother Brain)", "Missiles_OldMB"],
-    ["Missiles (Billy Mays 1)", "Missiles_BillyMays1"],
-    ["Missiles (Billy Mays 2)", "Missiles_BillyMays2"],
     ["Power Bombs (Etecoons)", "PBs_Etecoons"],
     ["Energy Tank (Etecoons)", "EnergyTank_Etecoons"],
     ["Supers (Etecoons)", "Supers_Etecoons"],
     ["Supers (Spore Spawn)", "Supers_SpoSpo"],
-    ["Power Bombs (Morph)", "PBs_Retro"],
     ["Missiles (Early Bridge)", "Missiles_EarlySupers"],
     ["Supers (Early Bridge)", "Supers_EarlySupers"],
     ["Reserve Tank (Brinstar)", "ReserveTank_Brinstar"],
@@ -104,6 +104,9 @@ export const mapLocation = (name) => {
 
   const mapped = mappings.find((m) => m[0] == name);
   if (mapped != undefined) {
+    if (mapped[1] == "") {
+      return name;
+    }
     return mapped[1];
   }
   throw new Error("missing " + name);
