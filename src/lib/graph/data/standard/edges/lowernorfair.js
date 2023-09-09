@@ -19,7 +19,7 @@ export const lowernorfairEdges = {
 
   Ruins: {
     Door_RidleyMouth: true,
-    Missiles_GT: () => HasSpaceJump && CanUsePowerBombs,
+    Missiles_GT: () => CanUsePowerBombs, // Space Jump not required
     PrePillars: () => CanUsePowerBombs,
   },
 
@@ -32,11 +32,10 @@ export const lowernorfairEdges = {
   WorstRoomBottom: {
     PrePillars: () => CanDestroyBombWalls,
     WorstRoomTop: () =>
-      //TODO: include killing pirates
       CanUseBombs ||
       (HasScrewAttack && (HasSpaceJump || HasDoubleJump)) ||
       (CanUsePowerBombs &&
-        (HasHiJump || HasSpringBall || HasSpaceJump || HasDoubleJump)),
+        (HasHiJump || HasSpringBall || HasSpaceJump || HasDoubleJump)), //TODO: include killing pirates
   },
 
   WorstRoomTop: {
