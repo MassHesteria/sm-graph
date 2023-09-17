@@ -39,9 +39,9 @@ export const wreckedshipEdges = {
   ShipRearExit: {
     EnergyTank_Ship: () => HasDefeatedWreckedShipBoss,
     SpongeBathRight: true,
-    //TODO: Should this change? Technically HJB+SpaceJump is enough
-    //Door_HighwayExit: () => CanUsePowerBombs && (HasGravity || (HasHiJump && HasSpaceJump)),
-    Door_HighwayExit: () => CanUsePowerBombs && HasGravity,
+    Door_HighwayExit: () =>
+      CanUsePowerBombs &&
+      (HasGravity || (HasHiJump && (HasSpaceJump || HasSpringBall))),
   },
 
   EnergyTank_Ship: {
@@ -49,7 +49,7 @@ export const wreckedshipEdges = {
   },
 
   Door_HighwayExit: {
-    ShipRearExit: () => HasGravity || HasHiJump || HasSpaceJump,
+    ShipRearExit: () => (HasGravity || HasHiJump) && HasMorph,
   },
 
   Missiles_Attic: {
