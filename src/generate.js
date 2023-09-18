@@ -13,7 +13,6 @@ import { Item } from "./lib/items";
 import Loadout from "./lib/loadout";
 import ModeStandard from "./legacy/modeStandard";
 import ModeRecall from "./legacy/modeRecall";
-import { mapLocation } from "./lib/graph/util";
 
 export const generateLegacySeed = (seed, recall, full) => {
   const mode = recall
@@ -28,7 +27,6 @@ export const generateLegacySeed = (seed, recall, full) => {
 
   // Place the items.
   performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
-  mode.nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
 
   //let log = [];
   //verifyItemProgression(initLoad, mode.nodes, log);
@@ -146,7 +144,6 @@ export const generateInvalidSeed = (seed, recall, full) => {
     break;
   }
 
-  nodes.forEach((n) => (n.location.name = mapLocation(n.location.name)));
   return nodes;
 };
 
@@ -188,7 +185,7 @@ export const readSeed = (fileName) => {
   const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
   return seedInfo.itemLocations.map((i) => {
     return {
-      location: mapLocation(i.location),
+      location: i.location,
       item: getItem(i.item),
     };
   });
