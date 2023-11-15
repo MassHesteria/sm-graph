@@ -5,7 +5,7 @@ import { mapPortals } from "./lib/graph/data/portals";
 import { generateSeed } from "./lib/graph/fill";
 import GraphSolver from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
-import { getPreset } from "./lib/presets";
+import { getAllPresets, getPreset } from "./lib/presets";
 
 import fs from "fs";
 import chalk from "chalk";
@@ -209,9 +209,9 @@ const loadExternal = (fileName) => {
     setPortal("Door_DraygonBoss", `Exit_${bosses.draygonBoss}`);
     setPortal("Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`);
 
-    if (!quiet) {
-      console.log(bosses);
-    }
+    //if (!quiet) {
+    //console.log(bosses);
+    //}
   }
 
   const graph = loadGraph(
@@ -318,7 +318,7 @@ modes += (graphFillMode & TestMode.Success) > 0 ? "graphSuccess " : "";
 
 let start = Date.now();
 let step = start;
-const { settings } = getPreset("standard_full");
+const { settings } = getPreset("2017_mm");
 
 for (let i = startSeed; i <= endSeed; i++) {
   readFromFolders.forEach((f) => {
@@ -341,17 +341,9 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmInvalidSeed(i, "recall_full");
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const presets = [
-      "sgl23",
-      "recall_area_mm",
-      "recall_mm",
-      "recall_full",
-      "standard_mm",
-      "standard_full",
-    ];
+    const presets = getAllPresets();
     presets.forEach((p) => {
-      const pre = getPreset(p);
-      solveGraphFill(i, pre);
+      solveGraphFill(i, p);
     });
   }
   if (!quiet || i % 1000 == 0) {

@@ -18,11 +18,9 @@ export const getAllPresets = () => {
     Preset_SGL23,
     Preset_Recall_MM,
     Preset_Recall_Full,
-    Preset_Recall_Area_MM,
     Preset_Classic_MM,
     Preset_Classic_Full,
-    Preset_Standard_MM,
-    Preset_Standard_Full,
+    Preset_2017_MM,
   ];
 };
 
@@ -77,10 +75,10 @@ export const Preset_SGL23 = {
 
 export const Preset_Classic_MM = {
   title: "Classic M/M",
-  tags: ["classic_mm"],
+  tags: ["classic_mm", "standard_mm"],
   settings: {
     preset: "ClassicMM",
-    mapLayout: MapLayout.Standard,
+    mapLayout: MapLayout.Classic,
     majorDistribution: MajorDistributionMode.Standard,
     minorDistribution: MinorDistributionMode.Dash,
     extraItems: [],
@@ -94,10 +92,10 @@ export const Preset_Classic_MM = {
 
 export const Preset_Classic_Full = {
   title: "Classic Full",
-  tags: ["classic_full"],
+  tags: ["classic_full", "standard_full"],
   settings: {
     preset: "ClassicFull",
-    mapLayout: MapLayout.Standard,
+    mapLayout: MapLayout.Classic,
     majorDistribution: MajorDistributionMode.Full,
     minorDistribution: MinorDistributionMode.Dash,
     extraItems: [],
@@ -122,7 +120,7 @@ export const Preset_Recall_MM = {
     majorDistribution: MajorDistributionMode.Recall,
     minorDistribution: MinorDistributionMode.Dash,
     extraItems: [Item.DoubleJump, Item.HeatShield, Item.PressureValve],
-    beamMode: BeamMode.DashRecall,
+    beamMode: BeamMode.New,
     suitMode: SuitMode.Dash,
     gravityHeatReduction: GravityHeatReduction.On,
     randomizeAreas: false,
@@ -139,7 +137,7 @@ export const Preset_Recall_Full = {
     majorDistribution: MajorDistributionMode.Full,
     minorDistribution: MinorDistributionMode.Dash,
     extraItems: [Item.DoubleJump, Item.HeatShield, Item.PressureValve],
-    beamMode: BeamMode.DashRecall,
+    beamMode: BeamMode.New,
     suitMode: SuitMode.Dash,
     gravityHeatReduction: GravityHeatReduction.On,
     randomizeAreas: false,
@@ -147,51 +145,17 @@ export const Preset_Recall_Full = {
   },
 };
 
-export const Preset_Recall_Area_MM = {
-  title: "Recall Area M/M",
-  tags: ["recall_area_mm"],
-  settings: {
-    preset: "RecallAreaMM",
-    mapLayout: MapLayout.Recall,
-    majorDistribution: MajorDistributionMode.Recall,
-    minorDistribution: MinorDistributionMode.Dash,
-    extraItems: [Item.DoubleJump, Item.HeatShield, Item.PressureValve],
-    beamMode: BeamMode.DashRecall,
-    suitMode: SuitMode.Dash,
-    gravityHeatReduction: GravityHeatReduction.On,
-    randomizeAreas: true,
-    bossMode: BossMode.Vanilla,
-  },
-};
-
 //-----------------------------------------------------------------
-// Standard Settings (similar to Total and VARIA vanilla seeds)
+// 2017 Settings (similar to Total and VARIA vanilla seeds)
 //-----------------------------------------------------------------
 
-export const Preset_Standard_MM = {
-  title: "Standard M/M",
-  tags: ["standard_mm"],
+export const Preset_2017_MM = {
+  title: "Throwback 2017",
+  tags: ["2017_mm"],
   settings: {
-    preset: "StandardMM",
+    preset: "2017MM",
     mapLayout: MapLayout.Standard,
     majorDistribution: MajorDistributionMode.Standard,
-    minorDistribution: MinorDistributionMode.Standard,
-    extraItems: [],
-    beamMode: BeamMode.Vanilla,
-    suitMode: SuitMode.Dash,
-    gravityHeatReduction: GravityHeatReduction.Off,
-    randomizeAreas: false,
-    bossMode: BossMode.Vanilla,
-  },
-};
-
-export const Preset_Standard_Full = {
-  title: "Standard Full",
-  tags: ["standard_full"],
-  settings: {
-    preset: "StandardFull",
-    mapLayout: MapLayout.Standard,
-    majorDistribution: MajorDistributionMode.Full,
     minorDistribution: MinorDistributionMode.Standard,
     extraItems: [],
     beamMode: BeamMode.Vanilla,
