@@ -36,27 +36,11 @@ let startSeed = 0;
 let endSeed = 0;
 let quiet = false;
 
-const rootFolder = ".";
-
 // Read seed information from external files.
-const readFromFolders = [
-  //`${rootFolder}/mm/results`,
-  //`${rootFolder}/mm_boss/results`,
-  //`${rootFolder}/full/results`,
-  //`${rootFolder}/full_boss/results`,
-  //`${rootFolder}/mm_area/results`,
-  //`${rootFolder}/mm_area_boss/results`,
-  //`${rootFolder}/full_area/results`,
-  //`${rootFolder}/full_area_boss/results`,
-  //`${rootFolder}/mm/_archive/results`,
-  //`${rootFolder}/mm_boss/_archive/results`,
-  //`${rootFolder}/full/_archive/results`,
-  //`${rootFolder}/full_boss/_archive/results`,
-  //`${rootFolder}/mm_area/_archive/results`,
-  //`${rootFolder}/mm_area_boss/_archive/results`,
-  //`${rootFolder}/full_area/_archive/results`,
-  //`${rootFolder}/full_area_boss/_archive/results`,
-];
+const readFromFolders = 
+      fs.existsSync('external.json') ?
+      JSON.parse(fs.readFileSync('external.json', "utf-8")) :
+      [];
 
 // Enables checking seeds produced with the legacy solver.
 const verifiedFillMode = TestMode.Success;
