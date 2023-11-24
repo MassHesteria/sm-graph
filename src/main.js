@@ -12,8 +12,7 @@ import chalk from "chalk";
 import {
   generateLegacySeed,
   generateInvalidSeed,
-  readBosses,
-  readPortals,
+  readBossesAndArea,
   readSeed,
 } from "./generate";
 
@@ -173,9 +172,7 @@ const printUncollectedItems = (graph) => {
 //-----------------------------------------------------------------
 
 const loadExternal = (fileName) => {
-  const bosses = readBosses(fileName);
-
-  const area = readPortals(fileName);
+  const { bosses, area } = readBossesAndArea(fileName);
   const portals = area.length > 0 ? area : mapPortals(0, false, false);
 
   if (bosses != undefined) {

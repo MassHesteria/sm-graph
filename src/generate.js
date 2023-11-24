@@ -147,29 +147,29 @@ export const generateInvalidSeed = (seed, recall, full) => {
   return nodes;
 };
 
-export const readBosses = (fileName) => {
-  if (fileName == undefined || fileName.length <= 0) {
+export const readBossesAndArea = (fileName) => {
+  const defaultBosses = () => {
     return {
       kraidBoss: "Kraid",
       phantoonBoss: "Phantoon",
       draygonBoss: "Draygon",
       ridleyBoss: "Ridley",
-    };
-  }
-  const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
-  return seedInfo.bosses;
-};
+    }
+  };
 
-export const readPortals = (fileName) => {
   if (fileName == undefined || fileName.length <= 0) {
-    return [];
+    return {
+      bosses: defaultBosses(),
+      area: []
+    }
   }
-  const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
-  if (seedInfo.portals == undefined) {
-    return [];
+
+  const info = JSON.parse(fs.readFileSync(fileName, "utf-8"));
+  return {
+    bosses: info.bosses == undefined ? defaultBosses() : info.bosses,
+    area: info.portals == undefined ? [] : info.portals
   }
-  return seedInfo.portals;
-};
+}
 
 export const readSeed = (fileName) => {
   const getItem = (itemName) => {
