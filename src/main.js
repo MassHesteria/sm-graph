@@ -201,7 +201,7 @@ const loadExternal = (fileName) => {
     MapLayout.Standard,
     MajorDistributionMode.Standard,
     area.length > 0,
-    BossMode.ShuffleStandard,
+    BossMode.Shuffled,
     portals
   );
   readSeed(fileName).forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
@@ -299,7 +299,7 @@ modes += (graphFillMode & TestMode.Success) > 0 ? "graphSuccess " : "";
 
 let start = Date.now();
 let step = start;
-const { settings } = getPreset("2017_mm");
+const presets = getAllPresets();
 
 for (let i = startSeed; i <= endSeed; i++) {
   readFromFolders.forEach((f) => {
@@ -307,7 +307,7 @@ for (let i = startSeed; i <= endSeed; i++) {
     if (!fs.existsSync(fileName)) {
       return;
     }
-    solve(i, fileName, loadExternal(fileName), settings);
+    solve(i, fileName, loadExternal(fileName), presets[0].settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
     solveVerifiedFill(i, "classic_mm");
@@ -322,7 +322,6 @@ for (let i = startSeed; i <= endSeed; i++) {
     confirmInvalidSeed(i, "recall_full");
   }
   if ((graphFillMode & TestMode.Success) > 0) {
-    const presets = getAllPresets();
     presets.forEach((p) => {
       solveGraphFill(i, p);
     });

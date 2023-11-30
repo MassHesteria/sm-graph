@@ -12,6 +12,7 @@ export const MapLayout = {
 };
 
 export const MajorDistributionMode = {
+  Chozo: 25,
   Standard: 34,
   Recall: 36,
   Full: 38,
@@ -41,8 +42,8 @@ export const GravityHeatReduction = {
 
 export const BossMode = {
   Vanilla: 0,
-  ShuffleStandard: 1,
-  ShuffleDash: 2,
+  Shuffled: 1,
+  Shifted: 2,
   Randomized: 3,
 };
 
