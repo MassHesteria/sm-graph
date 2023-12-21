@@ -74,7 +74,7 @@ class Loadout {
   }
 
   static canPassBombPassages(load) {
-    return Loadout.canUseBombs(load) || Loadout.canUsePowerBombs(load);
+    return load.hasMorph && (load.hasBombs || load.powerPacks > 0);
   }
 
   static canOpenGreenDoors(load) {
