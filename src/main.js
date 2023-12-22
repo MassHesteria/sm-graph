@@ -292,10 +292,10 @@ let modes = readFromFolders.length > 0 ? "external " : "";
 if (verifiedFillMode == TestMode.Both) {
   modes += "verifiedBoth ";
 } else {
-  modes += (verifiedFillMode & TestMode.Success) > 0 ? "verifiedSuccess " : "";
-  modes += (verifiedFillMode & TestMode.Failure) > 0 ? "verifiedFailure " : "";
+  modes += (verifiedFillMode & TestMode.Success) > 0 ? "verifiedPass " : "";
+  modes += (verifiedFillMode & TestMode.Failure) > 0 ? "verifiedFail " : "";
 }
-modes += (graphFillMode & TestMode.Success) > 0 ? "graphSuccess " : "";
+modes += (graphFillMode & TestMode.Success) > 0 ? "graphPass " : "";
 
 let start = Date.now();
 let step = start;
@@ -327,8 +327,10 @@ for (let i = startSeed; i <= endSeed; i++) {
     });
   }
   if (!quiet || i % 1000 == 0) {
-    console.log(`Verified ${i} [ ${modes}] ${Date.now() - step} ms`);
-    step = Date.now();
+    const curr = Date.now();
+    console.log(`Seed ${i} [${modes.trimEnd()}] in ${curr - step} ms,`,
+      `Total [num: ${num} avg: ${((curr - start)/num).toFixed(2)} ms]`);
+    step = curr;
   }
 }
 
