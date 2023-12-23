@@ -1,5 +1,6 @@
 import DotNetRandom from "../lib/dotnet-random";
 import { Item } from "../lib/items";
+import { addItem, cloneLoadout } from "../lib/loadout";
 import { Area } from "../lib/locations";
 
 //-----------------------------------------------------------------
@@ -142,7 +143,7 @@ export const performVerifiedFill = (seed, nodes, itemPool, getPrePool, initLoad,
   // Prefill locations with early items.
   //-----------------------------------------------------------------
 
-  let prefillLoadout = initLoad.clone();
+  let prefillLoadout = cloneLoadout(initLoad);
 
   getPrePool(rnd).forEach((itemType) => {
     const itemIndex = itemPool.findIndex((i) => i.type == itemType);
@@ -152,7 +153,7 @@ export const performVerifiedFill = (seed, nodes, itemPool, getPrePool, initLoad,
     );
 
     available.SetItem(item);
-    prefillLoadout.add(itemType);
+    addItem(prefillLoadout,itemType);
   });
 
   //-----------------------------------------------------------------
@@ -216,7 +217,7 @@ export const performVerifiedFill = (seed, nodes, itemPool, getPrePool, initLoad,
 //-----------------------------------------------------------------
 
 export const verifyItemProgression = (initLoad, nodes, log) => {
-  let load = initLoad.clone();
+  let load = cloneLoadout(initLoad);
   let copy = [...nodes];
 
   while (copy.length > 0) {
@@ -228,7 +229,7 @@ export const verifyItemProgression = (initLoad, nodes, log) => {
     if (log != null) {
       log.push({ item: node.item, location: node.location });
     }
-    load.add(node.item.type);
+    addItem(load,node.item.type);
   }
 
   return true;

@@ -1,7 +1,43 @@
-import { canReachStart, canReachVertex, searchAndCache } from "./search";
-import { Item, ItemNames } from "../items";
+import { canReachStart, searchAndCache } from "./search";
+import { Item } from "../items";
 import { cloneGraph } from "./init";
 import { MajorDistributionMode } from "./params";
+import { addItem, cloneLoadout, checkFlags, copyLoadout } from "../loadout";
+
+const isFungible = (item) => {
+  switch (item.type) {
+    case Item.Super:
+    case Item.PowerBomb:
+    case Item.Missile:
+    case Item.EnergyTank:
+    case Item.Reserve:
+      return true;
+    default:
+      return false;
+  }
+};
+
+const revSolve = (solver, load, node) => {
+  // Setup a graph with the item location as the start vertex
+  const clonedGraph = cloneGraph(solver.graph);
+  clonedGraph.forEach((e) => (e.from.pathToStart = false));
+  const clonedVertex = clonedGraph.find(
+    (e) => e.from.name == node.name
+  ).from;
+  clonedVertex.pathToStart = true;
+
+  // Create a solver for the new graph
+  const reverseSolver = new GraphSolver(clonedGraph, solver.settings);
+  reverseSolver.startVertex = clonedVertex;
+
+  try {
+    if (reverseSolver.isValid(load)) {
+      return true;
+    }
+  } catch (e) {
+  }
+  return false;
+};
 
 class GraphSolver {
   constructor(graph, settings, logMethods) {
@@ -10,6 +46,11 @@ class GraphSolver {
     this.startVertex = graph[0].from;
     this.trackProgression = false;
     this.progression = [];
+    if (settings.majorDistribution == MajorDistributionMode.Chozo) {
+      this.checkItem = v => v.item != undefined && v.type != "minor";
+    } else {
+      this.checkItem = v => v.item != undefined;
+    }
     if (logMethods != undefined) {
       this.printAvailableItems = logMethods.printAvailableItems;
       this.printCollectedItems = logMethods.printCollectedItems;
@@ -38,219 +79,96 @@ class GraphSolver {
     })
   }
 
-  checkFlags(load) {
-    const {
-      CanUseBombs,
-      CanUsePowerBombs,
-      CanOpenRedDoors,
-      CanOpenGreenDoors,
-      HasCharge,
-      HasDoubleJump,
-      HasGravity,
-      HasGrapple,
-      HasHeatShield,
-      HasHiJump,
-      HasIce,
-      HasMorph,
-      HasPlasma,
-      HasPressureValve,
-      HasScrewAttack,
-      HasSpazer,
-      HasSpaceJump,
-      HasSpeed,
-      HasSpringBall,
-      HasVaria,
-      HasWave,
-      EnergyTanks,
-      MissilePacks,
-      PowerBombPacks,
-      SuperPacks,
-      TotalTanks,
-      HellRunTanks,
-      CanFly,
-      CanDoSuitlessMaridia,
-      CanPassBombPassages,
-      CanDestroyBombWalls,
-      CanMoveInWestMaridia,
-      CanKillKraid,
-      CanKillPhantoon,
-      CanKillDraygon,
-      CanKillRidley,
-      CanKillSporeSpawn,
-      CanKillCrocomire,
-      CanKillBotwoon,
-      CanKillGoldTorizo,
-      HasDefeatedBrinstarBoss,
-      HasDefeatedWreckedShipBoss,
-      HasDefeatedMaridiaBoss,
-      HasDefeatedNorfairBoss,
-    } = load.getFlags();
-
-    return (condition) => eval(`(${condition.toString()})()`);
-  }
-
-  isVertexAvailable(vertex, load, itemType, legacyMode = false) {
-    if (
-      !canReachVertex(
-        this.graph,
-        this.startVertex,
-        vertex,
-        this.checkFlags(load)
-      )
-    ) {
-      return false;
-    }
-    if (legacyMode || itemType == undefined) {
-      return canReachVertex(
-        this.graph,
-        vertex,
-        this.startVertex,
-        this.checkFlags(load)
-      );
-    }
-    let temp = load.clone();
-    temp.add(itemType);
-    return canReachVertex(
-      this.graph,
-      vertex,
-      this.startVertex,
-      this.checkFlags(temp)
-    );
-  }
-
   isValid(initLoad, legacyMode = false) {
-    let samus = initLoad.clone();
+    let samus = cloneLoadout(initLoad);
+    let collected = [];
 
     this.progression = [];
 
     const findAll = () =>
-      searchAndCache(this.graph, this.startVertex, this.checkFlags(samus));
+      searchAndCache(this.graph, this.startVertex, checkFlags(samus));
 
     //-----------------------------------------------------------------
     // Collects all items where there is a round trip back to the
     // ship. All these items are collected at the same time.
     //-----------------------------------------------------------------
 
+    const collectItem = (p) => {
+      this.recordProgression(p);
+      if (this.printDefeatedBoss && p.type == "boss") {
+        this.printDefeatedBoss(`Defeated ${p.item.name} (${p.name}) in ${p.area}`);
+      }
+      p.item = undefined;
+    }
+
     const collectEasyItems = (itemLocations) => {
-      let items = [];
+      const load = cloneLoadout(samus);
+
+      collected.length = 0;
 
       itemLocations.forEach((p) => {
         if (legacyMode) {
-          if (!canReachStart(this.graph, p, this.checkFlags(samus))) {
+          if (!canReachStart(this.graph, p, checkFlags(samus))) {
             return;
           }
-          samus.add(p.item.type);
-          this.recordProgression(p);
+          addItem(samus, p.item.type);
         } else {
-          const load = samus.clone();
-          load.add(p.item.type);
-          if (!canReachStart(this.graph, p, this.checkFlags(load))) {
+          addItem(load, p.item.type);
+          if (!canReachStart(this.graph, p, checkFlags(load))) {
+            copyLoadout(load, samus);
             return;
           }
-          samus = load;
-          this.recordProgression(p);
+          addItem(samus, p.item.type);
         }
 
-        items.push(p.item);
-        if (this.printDefeatedBoss && p.type == "boss") {
-          this.printDefeatedBoss(`Defeated ${p.item.name} (${p.name}) in ${p.area}`);
-        }
-
-        p.item = undefined;
+        collected.push(p.item);
+        collectItem(p);
       });
 
-      if (items.length == 0) {
-        //-----------------------------------------------------------------
-        // Utility function that determines if collecting an available
-        // item that does not have a round trip to the starting vertex
-        // would result in a valid graph.
-        //-----------------------------------------------------------------
+      if (collected.length > 0) {
+        return true;
+      }
 
-        const reverseSolve = (filteredItemLocations) => {
-          for (let i = 0; i < filteredItemLocations.length; i++) {
-            const p = filteredItemLocations[i];
+      //-----------------------------------------------------------------
+      // Utility function that determines if collecting an available
+      // item that does not have a round trip to the starting vertex
+      // would result in a valid graph.
+      //-----------------------------------------------------------------
 
-            // Setup a graph with the item location as the start vertex
-            const clonedGraph = cloneGraph(this.graph);
-            clonedGraph.forEach((e) => (e.from.pathToStart = false));
-            const clonedVertex = clonedGraph.find(
-              (e) => e.from.name == p.name
-            ).from;
-            clonedVertex.pathToStart = true;
+      const reverseSolve = (filtered) => {
+        const p = filtered.find(n => revSolve(this, samus, n));
 
-            // Create a solver for the new graph
-            const reverseSolver = new GraphSolver(clonedGraph, {
-              ...this.settings,
-            });
-            reverseSolver.startVertex = clonedVertex;
-
-            // Collect the item if the graph can be solved
-            try {
-              if (reverseSolver.isValid(samus)) {
-                if (this.printCollectedItems) {
-                  this.printCollectedItems([p.item], true);
-                }
-                // Collect the item
-                samus.add(p.item.type);
-                this.recordProgression(p);
-                p.item = undefined;
-                return true;
-              }
-            } catch (e) {
-              console.log("sub:", e);
-            }
-          }
+        if (p == undefined) {
           return false;
-        };
-
-        //-----------------------------------------------------------------
-        // Try to reverse solve the majors first and then the rest.
-        //-----------------------------------------------------------------
-
-        const IsSingleton = (item) => {
-          switch (item.type) {
-            case Item.Super:
-            case Item.PowerBomb:
-            case Item.Missile:
-            case Item.EnergyTank:
-            case Item.Reserve:
-              return false;
-            default:
-              return true;
-          }
-        };
-
-        if (!legacyMode) {
-          if (reverseSolve(itemLocations.filter((p) => IsSingleton(p.item)))) {
-            return true;
-          }
-          if (reverseSolve(itemLocations.filter((p) => !IsSingleton(p.item)))) {
-            return true;
-          }
         }
 
-        if (this.printUncollectedItems != undefined) {
-          this.printUncollectedItems(this.graph);
+        // Collect the item
+        addItem(samus, p.item.type);
+        collected.push(p.item);
+        collectItem(p);
+        return true;
+      };
+
+      //-----------------------------------------------------------------
+      // Try to reverse solve the majors first and then the rest.
+      //-----------------------------------------------------------------
+
+      if (!legacyMode) {
+        if (reverseSolve(itemLocations.filter((p) => !isFungible(p.item)))) {
+          return true;
         }
-        throw new Error("no round trip locations");
-      } else if (this.printCollectedItems) {
-        this.printCollectedItems(items);
+        if (reverseSolve(itemLocations.filter((p) => isFungible(p.item)))) {
+          return true;
+        }
       }
 
-      return true;
+      throw new Error("no round trip locations");
     };
-
-    const checkItem = (v) => {
-      if (this.settings.majorDistribution == MajorDistributionMode.Chozo) {
-        return v.item != undefined && v.type != "minor";
-      }
-      return v.item != undefined;
-    }
 
     try {
       while (true) {
         const all = findAll();
-        const uncollected = all.filter((v) => checkItem(v));
+        const uncollected = all.filter((v) => this.checkItem(v));
         if (uncollected.length == 0) {
           break;
         }
@@ -260,6 +178,9 @@ class GraphSolver {
 
         // Collect all items where we can make a round trip back to the start
         if (collectEasyItems(uncollected)) {
+          if (this.printCollectedItems) {
+            this.printCollectedItems(collected);
+          }
           continue;
         }
 
@@ -270,7 +191,7 @@ class GraphSolver {
       // Check for uncollected items. This indicates an invalid graph.
       //-----------------------------------------------------------------
 
-      const leftovers = this.graph.filter((n) => checkItem(n.from));
+      const leftovers = this.graph.filter((n) => this.checkItem(n.from));
       if (leftovers.length > 0) {
         if (this.printUncollectedItems != undefined) {
           this.printUncollectedItems(this.graph);

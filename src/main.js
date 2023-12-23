@@ -1,5 +1,5 @@
 import { ItemNames, majorItem } from "./lib/items";
-import Loadout from "./lib/loadout";
+import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
 import { generateSeed } from "./lib/graph/fill";
@@ -243,7 +243,7 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
       };
 
   let solver = new GraphSolver(graph, settings, logMethods);
-  if (!solver.isValid(new Loadout(), legacyMode)) {
+  if (!solver.isValid(createLoadout(), legacyMode)) {
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
 

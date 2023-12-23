@@ -10,7 +10,7 @@ import {
 import DotNetRandom from "./lib/dotnet-random";
 import { getLocations } from "./lib/locations";
 import { Item } from "./lib/items";
-import Loadout from "./lib/loadout";
+import { addItem, cloneLoadout, createLoadout } from "./lib/loadout";
 import ModeStandard from "./legacy/modeStandard";
 import ModeRecall from "./legacy/modeRecall";
 
@@ -23,16 +23,10 @@ export const generateLegacySeed = (seed, recall, full) => {
     : [getMajorMinorPrePool, isValidMajorMinor];
 
   // Setup the initial loadout.
-  let initLoad = new Loadout();
+  let initLoad = createLoadout();
 
   // Place the items.
   performVerifiedFill(seed, mode.nodes, mode.itemPool, getPrePool, initLoad, canPlaceItem);
-
-  //let log = [];
-  //verifyItemProgression(initLoad, mode.nodes, log);
-  //console.log("** old verify **");
-  //log.forEach((e) => console.log(`${e.item.name} @ ${e.location.name}`));
-  //console.log("****************");
 
   return mode.nodes;
 };
@@ -46,7 +40,7 @@ export const generateInvalidSeed = (seed, recall, full) => {
     : [getMajorMinorPrePool, isValidMajorMinor];
   const nodes = mode.nodes;
   const itemPool = mode.itemPool;
-  let initLoad = new Loadout();
+  let initLoad = createLoadout();
   const rnd = new DotNetRandom(seed);
 
   //-----------------------------------------------------------------
@@ -76,7 +70,7 @@ export const generateInvalidSeed = (seed, recall, full) => {
   // Prefill locations with early items.
   //-----------------------------------------------------------------
 
-  let prefillLoadout = initLoad.clone();
+  let prefillLoadout = cloneLoadout(initLoad);
 
   getPrePool(rnd).forEach((itemType) => {
     const itemIndex = itemPool.findIndex((i) => i.type == itemType);
@@ -86,7 +80,7 @@ export const generateInvalidSeed = (seed, recall, full) => {
     );
 
     available.SetItem(item);
-    prefillLoadout.add(itemType);
+    addItem(prefillLoadout,itemType);
   });
 
   //-----------------------------------------------------------------
