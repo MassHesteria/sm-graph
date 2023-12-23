@@ -3,11 +3,11 @@
 start_seed=1
 end_seed=999999
 #options="-r esm"
-options="--experimental-specifier-resolution=node --no-warnings"
-#options="--prof --experimental-specifier-resolution=node --no-warnings"
-#cmd="clinic heapprofiler -- node $options"
-#cmd="clinic flame -- node $options"
-cmd="node $options"
+common="--experimental-specifier-resolution=node --no-warnings"
+#cmd="clinic heapprofiler -- node $common"
+#cmd="clinic flame -- node $common"
+#cmd="node --inspect $common"
+cmd="node $common"
 
 if [ $# -eq 1 ]; then
    npx tsc

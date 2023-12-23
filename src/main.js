@@ -12,7 +12,6 @@ import chalk from "chalk";
 import {
   generateLegacySeed,
   generateInvalidSeed,
-  readBossesAndArea,
   readSeed,
 } from "./generate";
 
@@ -172,7 +171,7 @@ const printUncollectedItems = (graph) => {
 //-----------------------------------------------------------------
 
 const loadExternal = (fileName) => {
-  const { bosses, area } = readBossesAndArea(fileName);
+  const { bosses, area, items } = readSeed(fileName);
   const portals = area.length > 0 ? area : mapPortals(0, false, false);
 
   if (bosses != undefined) {
@@ -189,10 +188,6 @@ const loadExternal = (fileName) => {
     setPortal("Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`);
     setPortal("Door_DraygonBoss", `Exit_${bosses.draygonBoss}`);
     setPortal("Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`);
-
-    //if (!quiet) {
-    //console.log(bosses);
-    //}
   }
 
   const graph = loadGraph(
@@ -204,7 +199,7 @@ const loadExternal = (fileName) => {
     BossMode.Shuffled,
     portals
   );
-  readSeed(fileName).forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
+  items.forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
   return graph;
 };
 

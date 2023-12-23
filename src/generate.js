@@ -54,8 +54,9 @@ export const generateInvalidSeed = (seed, recall, full) => {
   };
 
   const shuffle = (arr) => {
-    for (let i = 0; i < arr.length; i++) {
-      swap(arr, i, rnd.NextInRange(i, arr.length));
+    const n = arr.length;
+    for (let i = 0; i < n; i++) {
+      swap(arr, i, rnd.NextInRange(i, n));
     }
   };
 
@@ -141,46 +142,33 @@ export const generateInvalidSeed = (seed, recall, full) => {
   return nodes;
 };
 
-export const readBossesAndArea = (fileName) => {
-  const defaultBosses = () => {
-    return {
-      kraidBoss: "Kraid",
-      phantoonBoss: "Phantoon",
-      draygonBoss: "Draygon",
-      ridleyBoss: "Ridley",
-    }
-  };
+const defaultBosses = () => {
+  return {
+    kraidBoss: "Kraid",
+    phantoonBoss: "Phantoon",
+    draygonBoss: "Draygon",
+    ridleyBoss: "Ridley",
+  }
+};
 
+export const readSeed = (fileName) => {
   if (fileName == undefined || fileName.length <= 0) {
     return {
       bosses: defaultBosses(),
-      area: []
+      area: [],
+      items: []
     }
   }
 
   const info = JSON.parse(fs.readFileSync(fileName, "utf-8"));
   return {
     bosses: info.bosses == undefined ? defaultBosses() : info.bosses,
-    area: info.portals == undefined ? [] : info.portals
+    area: info.portals == undefined ? [] : info.portals,
+    items: info.itemLocations.map((i) => {
+      return {
+        location: i.location,
+        item: Item[i.item],
+      };
+    })
   }
 }
-
-export const readSeed = (fileName) => {
-  const getItem = (itemName) => {
-    let itemKey = 0;
-    Object.entries(Item).forEach((value) => {
-      if (value[0] == itemName) {
-        itemKey = value[1];
-      }
-    });
-    return itemKey;
-  };
-
-  const seedInfo = JSON.parse(fs.readFileSync(fileName, "utf-8"));
-  return seedInfo.itemLocations.map((i) => {
-    return {
-      location: i.location,
-      item: getItem(i.item),
-    };
-  });
-};
