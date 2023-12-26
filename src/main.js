@@ -219,7 +219,7 @@ const loadVerifiedFill = (seed, preset) => {
 
 let num = 0;
 
-const solve = (seed, title, graph, settings, legacyMode = false) => {
+const solve = (seed, title, graph, settings) => {
   if (!quiet) {
     console.log(
       chalk.blueBright(`\n********* Solving ${title} ********************************\n`)
@@ -238,7 +238,7 @@ const solve = (seed, title, graph, settings, legacyMode = false) => {
       };
 
   let solver = new GraphSolver(graph, settings, logMethods);
-  if (!solver.isValid(createLoadout(), legacyMode)) {
+  if (!solver.isValid(createLoadout())) {
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
 
@@ -254,15 +254,13 @@ const solveGraphFill = (seed, preset) => {
   solve(seed, `Graph ${preset.title}`, graph, preset.settings);
 };
 
-const solveVerifiedFill = (seed, presetName) => {
-  const preset = getPreset(presetName);
+const solveVerifiedFill = (seed, preset) => {
   const graph = loadVerifiedFill(seed, preset);
   solve(seed, `Legacy ${preset.title}`, graph, preset.settings, true);
 };
 
-const confirmInvalidSeed = (seed, presetName) => {
+const confirmInvalidSeed = (seed, preset) => {
   try {
-    const preset = getPreset(presetName);
     const { mapLayout, majorDistribution } = preset.settings;
     const recall = mapLayout == MapLayout.Recall;
     const full = majorDistribution == MajorDistributionMode.Full;
@@ -296,6 +294,11 @@ let start = Date.now();
 let step = start;
 const presets = getAllPresets();
 
+const classic_mm = getPreset("classic_mm");
+const classic_full = getPreset("classic_full");
+const recall_mm = getPreset("recall_mm");
+const recall_full = getPreset("recall_full");
+
 for (let i = startSeed; i <= endSeed; i++) {
   readFromFolders.forEach((f) => {
     const fileName = `${f}/${i.toString().padStart(6, "0")}.json`;
@@ -305,16 +308,16 @@ for (let i = startSeed; i <= endSeed; i++) {
     solve(i, fileName, loadExternal(fileName), presets[0].settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
-    solveVerifiedFill(i, "classic_mm");
-    solveVerifiedFill(i, "classic_full");
-    solveVerifiedFill(i, "recall_mm");
-    solveVerifiedFill(i, "recall_full");
+    solveVerifiedFill(i, classic_mm);
+    solveVerifiedFill(i, classic_full);
+    solveVerifiedFill(i, recall_mm);
+    solveVerifiedFill(i, recall_full);
   }
   if ((verifiedFillMode & TestMode.Failure) > 0) {
-    confirmInvalidSeed(i, "classic_mm");
-    confirmInvalidSeed(i, "classic_full");
-    confirmInvalidSeed(i, "recall_mm");
-    confirmInvalidSeed(i, "recall_full");
+    confirmInvalidSeed(i, classic_mm);
+    confirmInvalidSeed(i, classic_full);
+    confirmInvalidSeed(i, recall_mm);
+    confirmInvalidSeed(i, recall_full);
   }
   if ((graphFillMode & TestMode.Success) > 0) {
     presets.forEach((p) => {
