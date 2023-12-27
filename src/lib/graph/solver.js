@@ -2,7 +2,28 @@ import { canReachStart, searchAndCache } from "./search";
 import { isFungible } from "../items";
 import { cloneGraph } from "./init";
 import { MajorDistributionMode } from "./params";
-import { addItem, cloneLoadout, checkFlags, copyLoadout } from "../loadout";
+import {
+  addItem,
+  checkFlags,
+  cloneLoadout,
+  copyLoadout,
+  createLoadout
+} from "../loadout";
+
+export const isGraphValid = (graph, settings, loadout, logger) => {
+  const solver = new GraphSolver(graph, settings, logger);
+  return solver.isValid(loadout);
+};
+
+export const getItemProgression = (graph, settings, loadout) => {
+  const initLoad = loadout != undefined ? loadout : createLoadout();
+  const solver = new GraphSolver(cloneGraph(graph), settings);
+  solver.trackProgression = true;
+  if (!solver.isValid(initLoad)) {
+    return [];
+  }
+  return solver.progression;
+}
 
 const revSolve = (solver, load, node) => {
   // Setup a graph with the item location as the start vertex
@@ -26,9 +47,6 @@ const revSolve = (solver, load, node) => {
   return false;
 };
 
-const hasItem = v => v.item != undefined;
-const hasMajor = v => hasItem(v) && v.type != "minor";
-
 class GraphSolver {
   constructor(graph, settings, logMethods) {
     this.graph = graph;
@@ -37,16 +55,16 @@ class GraphSolver {
     this.trackProgression = false;
     this.progression = [];
     if (settings.majorDistribution == MajorDistributionMode.Chozo) {
-      this.checkItem = hasMajor;
-    } else {
-      this.checkItem = hasItem;
+      this.graph.forEach(n => {
+        if (n.from.item != undefined && n.from.type == "minor") {
+          n.from.item = undefined;
+        }
+      });
     }
     if (logMethods != undefined) {
       this.printAvailableItems = logMethods.printAvailableItems;
       this.printCollectedItems = logMethods.printCollectedItems;
       this.printDefeatedBoss = logMethods.printDefeatedBoss;
-      this.printUncollectedItems = logMethods.printUncollectedItems;
-      this.printMsg = logMethods.printMsg;
     }
   }
 
@@ -142,50 +160,33 @@ class GraphSolver {
         return true;
       }
 
-      throw new Error("no round trip locations");
+      return false;
     };
 
-    try {
-      while (true) {
-        const all = findAll();
-        const uncollected = all.filter((v) => this.checkItem(v));
-        if (uncollected.length == 0) {
-          break;
-        }
-        if (this.printAvailableItems != undefined) {
-          this.printAvailableItems(uncollected);
-        }
-
-        // Collect all items where we can make a round trip back to the start
-        if (collectEasyItems(uncollected)) {
-          if (this.printCollectedItems) {
-            this.printCollectedItems(collected);
-          }
-          continue;
-        }
-
-        throw new Error("one way ticket");
+    while (true) {
+      const all = findAll();
+      const uncollected = all.filter((v) => v.item != undefined);
+      if (uncollected.length == 0) {
+        break;
+      }
+      if (this.printAvailableItems != undefined) {
+        this.printAvailableItems(uncollected);
       }
 
-      //-----------------------------------------------------------------
-      // Check for uncollected items. This indicates an invalid graph.
-      //-----------------------------------------------------------------
+      // Collect all items where we can make a round trip back to the start
+      if (!collectEasyItems(uncollected)) {
+        return false;
+      }
 
-      const leftovers = this.graph.filter((n) => this.checkItem(n.from));
-      if (leftovers.length > 0) {
-        if (this.printUncollectedItems != undefined) {
-          this.printUncollectedItems(this.graph);
-        }
-        throw new Error("Uncollected items");
+      if (this.printCollectedItems) {
+        this.printCollectedItems(collected);
       }
-    } catch (e) {
-      if (this.printMsg) {
-        this.printMsg(e);
-      }
-      return false;
     }
-    return true;
+
+    //-----------------------------------------------------------------
+    // Check for uncollected items. This indicates an invalid graph.
+    //-----------------------------------------------------------------
+
+    return !this.graph.some((n) => n.from.item != undefined);
   }
 }
-
-export default GraphSolver;

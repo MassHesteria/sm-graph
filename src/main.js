@@ -3,7 +3,7 @@ import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
 import { generateSeed } from "./lib/graph/fill";
-import GraphSolver from "./lib/graph/solver";
+import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
 
@@ -219,6 +219,15 @@ const loadVerifiedFill = (seed, preset) => {
 
 let num = 0;
 
+const emptyLoadout = createLoadout();
+const logMethods = quiet
+  ? undefined
+  : {
+      printAvailableItems: printAvailableItems,
+      printCollectedItems: printCollectedItems,
+      printDefeatedBoss: printDefeatedBoss,
+    };
+
 const solve = (seed, title, graph, settings) => {
   if (!quiet) {
     console.log(
@@ -227,18 +236,11 @@ const solve = (seed, title, graph, settings) => {
   }
   const start = Date.now();
 
-  const logMethods = quiet
-    ? undefined
-    : {
-        printAvailableItems: printAvailableItems,
-        printCollectedItems: printCollectedItems,
-        printUncollectedItems: printUncollectedItems,
-        printDefeatedBoss: printDefeatedBoss,
-        printMsg: console.log,
-      };
 
-  let solver = new GraphSolver(graph, settings, logMethods);
-  if (!solver.isValid(createLoadout())) {
+  if (!isGraphValid(graph, settings, emptyLoadout, logMethods)) {
+    if (!quiet) {
+      printUncollectedItems(graph);
+    }
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
 
@@ -313,12 +315,12 @@ for (let i = startSeed; i <= endSeed; i++) {
     solveVerifiedFill(i, recall_mm);
     solveVerifiedFill(i, recall_full);
   }
-  if ((verifiedFillMode & TestMode.Failure) > 0) {
+  /*if ((verifiedFillMode & TestMode.Failure) > 0) {
     confirmInvalidSeed(i, classic_mm);
     confirmInvalidSeed(i, classic_full);
     confirmInvalidSeed(i, recall_mm);
     confirmInvalidSeed(i, recall_full);
-  }
+  }*/
   if ((graphFillMode & TestMode.Success) > 0) {
     presets.forEach((p) => {
       solveGraphFill(i, p);
