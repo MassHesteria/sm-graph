@@ -10,19 +10,22 @@ import {
   createLoadout
 } from "../loadout";
 
-export const isGraphValid = (graph, settings, loadout, logger) => {
-  const solver = new GraphSolver(graph, settings, logger);
-  return solver.isValid(loadout);
+export const isGraphValid = (graph, settings, loadout, progression) => {
+  const solver = new GraphSolver(graph, settings);
+  return solver.isValid(loadout, progression);
 };
 
 export const getItemProgression = (graph, settings, loadout) => {
   const initLoad = loadout != undefined ? loadout : createLoadout();
-  const solver = new GraphSolver(cloneGraph(graph), settings);
-  solver.trackProgression = true;
-  if (!solver.isValid(initLoad)) {
-    return [];
+  const itemProgression = [], progression = [];
+  if (isGraphValid(cloneGraph(graph), settings, initLoad, progression)) {
+    progression.forEach(step => {
+      step.collected.forEach(item => {
+        itemProgression.push(item);
+      })
+    });
   }
-  return solver.progression;
+  return itemProgression;
 }
 
 const revSolve = (solver, load, node) => {
@@ -47,13 +50,28 @@ const revSolve = (solver, load, node) => {
   return false;
 };
 
+const getProgressionLocation = (itemNode) => {
+  if (itemNode.type == "boss") {
+    const bossName = itemNode.name.substring(5)
+    return `${bossName} @ ${itemNode.area}`;
+  }
+  return itemNode.name;
+}
+
+const getProgressionEntry = (itemNode) => {
+  return {
+    itemName: itemNode.item.name,
+    itemType: itemNode.item.type,
+    locationName: getProgressionLocation(itemNode),
+    isMajor: itemNode.item.isMajor,
+  };
+}
+
 class GraphSolver {
-  constructor(graph, settings, logMethods) {
+  constructor(graph, settings) {
     this.graph = graph;
     this.settings = settings;
     this.startVertex = graph[0].from;
-    this.trackProgression = false;
-    this.progression = [];
     if (settings.majorDistribution == MajorDistributionMode.Chozo) {
       this.graph.forEach(n => {
         if (n.from.item != undefined && n.from.type == "minor") {
@@ -61,58 +79,30 @@ class GraphSolver {
         }
       });
     }
-    if (logMethods != undefined) {
-      this.printAvailableItems = logMethods.printAvailableItems;
-      this.printCollectedItems = logMethods.printCollectedItems;
-      this.printDefeatedBoss = logMethods.printDefeatedBoss;
-    }
   }
 
-  recordProgression(itemNode) {
-    if (!this.trackProgression) {
-      return;
-    }
-    let locationName = itemNode.name;
-
-    if (itemNode.type == "boss") {
-      const bossName = itemNode.name.substring(5)
-      locationName = `${bossName} @ ${itemNode.area}`;
-    }
-
-    this.progression.push({
-      itemName: itemNode.item.name,
-      itemType: itemNode.item.type,
-      locationName: locationName,
-      isMajor: itemNode.item.isMajor,
-    })
-  }
-
-  isValid(initLoad) {
+  isValid(initLoad, progression) {
     let samus = cloneLoadout(initLoad);
-    let collected = [];
-
-    this.progression = [];
+    let step = -1;
 
     const findAll = () =>
       searchAndCache(this.graph, this.startVertex, checkFlags(samus));
 
     //-----------------------------------------------------------------
     // Collects all items where there is a round trip back to the
-    // ship. All these items are collected at the same time.
+    // start node. All these items are collected at the same time.
     //-----------------------------------------------------------------
 
     const collectItem = (p) => {
-      this.recordProgression(p);
-      if (this.printDefeatedBoss && p.type == "boss") {
-        this.printDefeatedBoss(`Defeated ${p.item.name} (${p.name}) in ${p.area}`);
+      if (step >= 0) {
+        progression[step].collected.push(getProgressionEntry(p));
       }
       p.item = undefined;
     }
 
-    const collectEasyItems = (itemLocations) => {
+    const collectSafeItems = (itemLocations) => {
       const load = cloneLoadout(samus);
-
-      collected.length = 0;
+      let collectedItem = false;
 
       itemLocations.forEach((p) => {
         addItem(load, p.item.type);
@@ -121,11 +111,11 @@ class GraphSolver {
           return;
         }
         addItem(samus, p.item.type);
-        collected.push(p.item);
+        collectedItem = true;
         collectItem(p);
       });
 
-      if (collected.length > 0) {
+      if (collectedItem) {
         return true;
       }
 
@@ -144,7 +134,6 @@ class GraphSolver {
 
         // Collect the item
         addItem(samus, p.item.type);
-        collected.push(p.item);
         collectItem(p);
         return true;
       };
@@ -164,22 +153,27 @@ class GraphSolver {
     };
 
     while (true) {
+      // Find all available items
       const all = findAll();
       const uncollected = all.filter((v) => v.item != undefined);
+
+      // No items available? All done
       if (uncollected.length == 0) {
         break;
       }
-      if (this.printAvailableItems != undefined) {
-        this.printAvailableItems(uncollected);
+
+      // Add a new entry if recording progression
+      if (progression != undefined) {
+        progression.push({
+          available: uncollected.map(getProgressionEntry),
+          collected: []
+        });
+        step = progression.length - 1;
       }
 
-      // Collect all items where we can make a round trip back to the start
-      if (!collectEasyItems(uncollected)) {
+      // Collect all items where we can make a round trip to the start node
+      if (!collectSafeItems(uncollected)) {
         return false;
-      }
-
-      if (this.printCollectedItems) {
-        this.printCollectedItems(collected);
       }
     }
 

@@ -1,4 +1,4 @@
-import { ItemNames, majorItem } from "./lib/items";
+import { isBoss, majorItem } from "./lib/items";
 import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
@@ -6,12 +6,13 @@ import { generateSeed } from "./lib/graph/fill";
 import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
+import CRC32 from "crc-32";
 
 import fs from "fs";
 import chalk from "chalk";
 import {
   generateLegacySeed,
-  generateInvalidSeed,
+  //generateInvalidSeed,
   readSeed,
 } from "./generate";
 
@@ -71,8 +72,7 @@ if (args.length == 1) {
 // Utility routines.
 //-----------------------------------------------------------------
 
-const getItemName = (item) => {
-  let name = ItemNames.get(item.type);
+const getItemName = (name) => {
   if (name == "Super Missile") {
     name = "Super";
   } else if (name == "Grappling Beam") {
@@ -105,19 +105,15 @@ const printAvailableItems = (itemLocations) => {
   maxLocationLength.fill(0);
   itemLocations.forEach((n, idx) => {
     const col = idx % 4;
-    maxItemLength[col] = Math.max(maxItemLength[col], getItemName(n.item).length + 1);
-    maxLocationLength[col] = Math.max(maxLocationLength[col], n.name.length + 1);
+    maxItemLength[col] = Math.max(maxItemLength[col], getItemName(n.itemName).length + 1);
+    maxLocationLength[col] = Math.max(maxLocationLength[col], n.locationName.length + 1);
   });
 
   let output = chalk.yellow(`Available (${itemLocations.length}):\n`);
   itemLocations.forEach((p, idx) => {
     const col = idx % 4;
-    if (p.item == null) {
-      output += chalk.red("none");
-    } else {
-      output += chalk.green(getItemName(p.item).padStart(maxItemLength[col], " "));
-    }
-    output += ` @ ${chalk.blue(p.name.padEnd(maxLocationLength[col], " "))} `;
+    output += chalk.green(getItemName(p.itemName).padStart(maxItemLength[col], " "));
+    output += ` @ ${chalk.blue(p.locationName.padEnd(maxLocationLength[col], " "))} `;
     if ((idx + 1) % 4 == 0) {
       output += "\n";
     }
@@ -129,16 +125,23 @@ const printAvailableItems = (itemLocations) => {
   console.log(output);
 };
 
-const printCollectedItems = (items, special = false) => {
+const printCollectedItems = (itemLocations, special = false) => {
+  itemLocations.forEach(p => {
+    if (isBoss(p.itemType)) {
+      const msg = `Defeated ${p.itemName} (${p.locationName})`;
+      console.log(chalk.magentaBright(msg));
+    }
+  })
+
   let str = "\nCollected:\n";
-  items.forEach((item, idx) => {
-    const name = getItemName(item);
+  itemLocations.forEach((p, idx) => {
+    const name = getItemName(p.itemName);
     str += `> ${name}`.padEnd(20, " ");
     if ((idx + 1) % 6 == 0) {
       str += "\n";
     }
   });
-  if (items.length % 6 != 0) {
+  if (itemLocations.length % 6 != 0) {
     str += "\n";
   }
   if (special) {
@@ -146,10 +149,6 @@ const printCollectedItems = (items, special = false) => {
   } else {
     console.log(str);
   }
-};
-
-const printDefeatedBoss = (msg) => {
-  console.log(chalk.magentaBright(msg));
 };
 
 const printUncollectedItems = (graph) => {
@@ -218,38 +217,49 @@ const loadVerifiedFill = (seed, preset) => {
 //-----------------------------------------------------------------
 
 let num = 0;
-
+const checksums = [];
 const emptyLoadout = createLoadout();
-const logMethods = quiet
-  ? undefined
-  : {
-      printAvailableItems: printAvailableItems,
-      printCollectedItems: printCollectedItems,
-      printDefeatedBoss: printDefeatedBoss,
-    };
 
-const solve = (seed, title, graph, settings) => {
-  if (!quiet) {
-    console.log(
-      chalk.blueBright(`\n********* Solving ${title} ********************************\n`)
-    );
+const computeChecksum = (array) => {
+  return CRC32.str(JSON.stringify(array)) >>> 0;
+}
+
+const checksumToString = (checksum) => {
+  return checksum.toString(16).toUpperCase().padStart(8, "0");
+}
+
+const solveQuiet = (seed, title, graph, settings) => {
+  const progression = [];
+  if (!isGraphValid(graph, settings, emptyLoadout, progression)) {
+    throw new Error(`Invalid ${title} seed: ${seed}`);
   }
+  checksums.push(computeChecksum(progression));
+  num += 1;
+}
+
+const solveLoud = (seed, title, graph, settings) => {
+  console.log(
+    chalk.blueBright(`\n********* Solving ${title} ********************************\n`)
+  );
   const start = Date.now();
+  const progression = [];
 
-
-  if (!isGraphValid(graph, settings, emptyLoadout, logMethods)) {
-    if (!quiet) {
-      printUncollectedItems(graph);
-    }
+  if (!isGraphValid(graph, settings, emptyLoadout, progression)) {
+    printUncollectedItems(graph);
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
 
-  if (!quiet) {
-    const end = Date.now();
-    console.log(chalk.yellow(`Solved ${title} in ${end - start} ms`));
-  }
+  progression.forEach(step => {
+    printAvailableItems(step.available);
+    printCollectedItems(step.collected);
+  });
+  checksums.push(computeChecksum(progression));
+  const end = Date.now();
+  console.log(chalk.yellow(`Solved ${title} in ${end - start} ms`));
   num += 1;
 };
+
+const solve = quiet ? solveQuiet : solveLoud;
 
 const solveGraphFill = (seed, preset) => {
   const graph = generateSeed(seed, preset.settings);
@@ -261,7 +271,7 @@ const solveVerifiedFill = (seed, preset) => {
   solve(seed, `Legacy ${preset.title}`, graph, preset.settings, true);
 };
 
-const confirmInvalidSeed = (seed, preset) => {
+/*const confirmInvalidSeed = (seed, preset) => {
   try {
     const { mapLayout, majorDistribution } = preset.settings;
     const recall = mapLayout == MapLayout.Recall;
@@ -277,7 +287,7 @@ const confirmInvalidSeed = (seed, preset) => {
     return;
   }
   throw new Error(`Unexpected success ${preset.title}: ${seed}`);
-};
+};*/
 
 //-----------------------------------------------------------------
 // Solve the specified seeds.
@@ -329,10 +339,13 @@ for (let i = startSeed; i <= endSeed; i++) {
   if (!quiet || i % 1000 == 0) {
     const curr = Date.now();
     console.log(`Seed ${i} [${modes.trimEnd()}] in ${curr - step} ms,`,
-      `Total [num: ${num} avg: ${((curr - start)/num).toFixed(2)} ms]`);
+      `Total [num: ${num} avg: ${((curr - start)/num).toFixed(2)} ms]`,
+      checksumToString(computeChecksum(checksums)));
     step = curr;
   }
 }
 
 const delta = Date.now() - start;
-console.log(`Total Time: ${delta} ms [${num} seeds, avg ${delta / num} ms]`);
+console.log(`Total Time: ${delta} ms [${num} seeds, `,
+  `avg ${(delta / num).toFixed(2)} ms]`,
+  checksumToString(computeChecksum(checksums)));
