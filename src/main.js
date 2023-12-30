@@ -268,7 +268,7 @@ const solveGraphFill = (seed, preset) => {
 
 const solveVerifiedFill = (seed, preset) => {
   const graph = loadVerifiedFill(seed, preset);
-  solve(seed, `Legacy ${preset.title}`, graph, preset.settings, true);
+  solve(seed, `Legacy ${preset.title}`, graph, preset.settings);
 };
 
 /*const confirmInvalidSeed = (seed, preset) => {
@@ -277,11 +277,11 @@ const solveVerifiedFill = (seed, preset) => {
     const recall = mapLayout == MapLayout.Recall;
     const full = majorDistribution == MajorDistributionMode.Full;
 
-    const graph = loadGraph(0, mapLayout, majorDistribution);
+    const graph = loadGraph(0, 1, mapLayout, majorDistribution);
     generateInvalidSeed(seed, recall, full).forEach((i) =>
       placeItem(graph, i.location.name, i.item)
     );
-    solve(seed, `Failure ${preset.title}`, graph, preset.settings, true);
+    solve(seed, `Failure ${preset.title}`, graph, preset.settings);
   } catch (e) {
     num += 1;
     return;
