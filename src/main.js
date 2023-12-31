@@ -1,4 +1,4 @@
-import { isBoss, majorItem } from "./lib/items";
+import { isBoss, minorItem } from "./lib/items";
 import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
@@ -6,6 +6,7 @@ import { generateSeed } from "./lib/graph/fill";
 import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
+import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges";
 import CRC32 from "crc-32";
 
 import fs from "fs";
@@ -91,6 +92,8 @@ const placeItem = (graph, location, item) => {
   const part = graph.find((n) => n.from.name == location);
   if (part == null) {
     console.error("missing part", location);
+  } else if (part.from.type == "major") {
+    item.isMajor = true;
   }
   part.from.item = item;
 };
@@ -158,7 +161,7 @@ const printUncollectedItems = (graph) => {
   console.log("--- Uncollected ---");
   graph
     .filter((n) => n.from.item != undefined)
-    .map((n) => `${getItemName(n.from.item)} @ ${n.from.name}`)
+    .map((n) => `${getItemName(n.from.item.name)} @ ${n.from.name} ${n.from.area}`)
     .filter(isUnique)
     .sort()
     .forEach((n) => console.log(n));
@@ -169,7 +172,7 @@ const printUncollectedItems = (graph) => {
 // Seed load routines.
 //-----------------------------------------------------------------
 
-const loadExternal = (fileName) => {
+const loadExternal = (fileName, majorDistribution) => {
   const { bosses, area, items } = readSeed(fileName);
   const portals = area.length > 0 ? area : mapPortals(0, false, false);
 
@@ -193,12 +196,28 @@ const loadExternal = (fileName) => {
     1,
     1,
     MapLayout.Standard,
-    MajorDistributionMode.Standard,
+    majorDistribution,
     area.length > 0,
     BossMode.Shuffled,
     portals
   );
-  items.forEach((i) => placeItem(graph, i.location, majorItem(0x0, i.item)));
+
+  //-----------------------------------------------------------------
+  // Apply specified edge updates. This could simply be a logic
+  // change or could include edits to the map.
+  //-----------------------------------------------------------------
+
+  SeasonEdgeUpdates.forEach((c) => {
+    const [from, to] = c.edges;
+    const edge = graph.find((n) => n.from.name == from && n.to.name == to);
+    if (edge == null) {
+      throw new Error(`Could not find edge from ${from} to ${to}`);
+    }
+    edge.condition = c.requires;
+  });
+
+  // Place the items.
+  items.forEach((i) => placeItem(graph, i.location, minorItem(0x0, i.item)));
   return graph;
 };
 
@@ -245,6 +264,10 @@ const solveLoud = (seed, title, graph, settings) => {
   const progression = [];
 
   if (!isGraphValid(graph, settings, emptyLoadout, progression)) {
+    progression.forEach(step => {
+      printAvailableItems(step.available);
+      printCollectedItems(step.collected);
+    });
     printUncollectedItems(graph);
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
@@ -306,6 +329,7 @@ let start = Date.now();
 let step = start;
 const presets = getAllPresets();
 
+const chozo = getPreset("chozo");
 const classic_mm = getPreset("classic_mm");
 const classic_full = getPreset("classic_full");
 const recall_mm = getPreset("recall_mm");
@@ -317,7 +341,8 @@ for (let i = startSeed; i <= endSeed; i++) {
     if (!fs.existsSync(fileName)) {
       return;
     }
-    solve(i, fileName, loadExternal(fileName), presets[0].settings);
+    const settings = f.includes("chozo") ? chozo.settings : classic_full.settings;
+    solve(i, fileName, loadExternal(fileName, settings.majorDistribution), settings);
   });
   if ((verifiedFillMode & TestMode.Success) > 0) {
     solveVerifiedFill(i, classic_mm);
