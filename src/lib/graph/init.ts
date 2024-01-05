@@ -19,9 +19,9 @@ import { bossItem, Item } from "../items";
 import DotNetRandom from "../dotnet-random";
 import { ChozoVertexUpdates } from "./data/chozo/vertex";
 
-type Condition = boolean | (() => any);
+export type Condition = boolean | (() => any);
 
-type Vertex = {
+export type Vertex = {
   name: string;
   type: string;
   area: string;
@@ -45,7 +45,7 @@ type EdgeUpdate = {
   requires: Condition;
 }
 
-type Graph = Edge[];
+export type Graph = Edge[];
 
 //-----------------------------------------------------------------
 // Returns a structure containing all edges grouped by area.
