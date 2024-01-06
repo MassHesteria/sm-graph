@@ -1,23 +1,36 @@
 import { canReachStart, searchAndCache } from "./search";
 import { isFungible } from "../items";
-import { cloneGraph } from "./init";
-import { MajorDistributionMode } from "./params";
+import { cloneGraph, Graph, Vertex } from "./init";
+import { MajorDistributionMode, Settings } from "./params";
 import {
   addItem,
   checkFlags,
   cloneLoadout,
   copyLoadout,
-  createLoadout
+  createLoadout,
+  Loadout
 } from "../loadout";
 
-export const isGraphValid = (graph, settings, loadout, progression) => {
+type Entry = {
+  itemName: string;
+  itemType: string;
+  locationName: string;
+  isMajor: boolean;
+}
+
+type Progression = {
+  available: Entry[];
+  collected: Entry[];
+}
+
+export const isGraphValid = (graph: Graph, settings: Settings, loadout: Loadout, progression?: Progression[]) => {
   const solver = new GraphSolver(graph, settings);
   return solver.isValid(loadout, progression);
 };
 
-export const getItemProgression = (graph, settings, loadout) => {
+export const getItemProgression = (graph: Graph, settings: Settings, loadout?: Loadout) => {
   const initLoad = loadout != undefined ? loadout : createLoadout();
-  const itemProgression = [], progression = [];
+  const itemProgression: Entry[] = [], progression: Progression[] = [];
   if (isGraphValid(cloneGraph(graph), settings, initLoad, progression)) {
     progression.forEach(step => {
       step.collected.forEach(item => {
@@ -28,13 +41,17 @@ export const getItemProgression = (graph, settings, loadout) => {
   return itemProgression;
 }
 
-const revSolve = (solver, load, node) => {
+const revSolve = (solver: GraphSolver, load: Loadout, node: Vertex) => {
   // Setup a graph with the item location as the start vertex
   const clonedGraph = cloneGraph(solver.graph);
   clonedGraph.forEach((e) => (e.from.pathToStart = false));
   const clonedVertex = clonedGraph.find(
     (e) => e.from.name == node.name
-  ).from;
+  )?.from;
+
+  if (clonedVertex == undefined) {
+    throw new Error("revSolve: missing start vertex")
+  }
   clonedVertex.pathToStart = true;
 
   // Create a solver for the new graph
@@ -50,7 +67,7 @@ const revSolve = (solver, load, node) => {
   return false;
 };
 
-const getProgressionLocation = (itemNode) => {
+const getProgressionLocation = (itemNode: Vertex) => {
   if (itemNode.type == "boss") {
     const bossName = itemNode.name.substring(5)
     return `${bossName} @ ${itemNode.area}`;
@@ -58,7 +75,7 @@ const getProgressionLocation = (itemNode) => {
   return itemNode.name;
 }
 
-const getProgressionEntry = (itemNode) => {
+const getProgressionEntry = (itemNode: Vertex): Entry => {
   return {
     itemName: itemNode.item.name,
     itemType: itemNode.item.type,
@@ -68,7 +85,11 @@ const getProgressionEntry = (itemNode) => {
 }
 
 class GraphSolver {
-  constructor(graph, settings) {
+  graph: Graph;
+  settings: Settings;
+  startVertex: Vertex;
+
+  constructor(graph: Graph, settings: Settings) {
     this.graph = graph;
     this.settings = settings;
     this.startVertex = graph[0].from;
@@ -81,7 +102,7 @@ class GraphSolver {
     }
   }
 
-  isValid(initLoad, progression) {
+  isValid(initLoad: Loadout, progression?: Progression[]) {
     let samus = cloneLoadout(initLoad);
     let step = -1;
 
@@ -93,14 +114,14 @@ class GraphSolver {
     // start node. All these items are collected at the same time.
     //-----------------------------------------------------------------
 
-    const collectItem = (p) => {
-      if (step >= 0) {
+    const collectItem = (p: Vertex) => {
+      if (progression != undefined) {
         progression[step].collected.push(getProgressionEntry(p));
       }
       p.item = undefined;
     }
 
-    const collectSafeItems = (itemLocations) => {
+    const collectSafeItems = (itemLocations: Vertex[]) => {
       const load = cloneLoadout(samus);
       let collectedItem = false;
 
@@ -125,7 +146,7 @@ class GraphSolver {
       // would result in a valid graph.
       //-----------------------------------------------------------------
 
-      const reverseSolve = (filtered) => {
+      const reverseSolve = (filtered: Vertex[]) => {
         const p = filtered.find(n => revSolve(this, samus, n));
 
         if (p == undefined) {
