@@ -8,8 +8,8 @@ export type Settings = {
   extraItems: number[];
   randomizeAreas: boolean;
   bossMode: number;
-  beamMode: number,
-  suitMode: number,
+  beamMode: number;
+  suitMode: number;
   gravityHeatReduction: number;
 }
 
@@ -229,7 +229,7 @@ export const bytesToParams = (bytes: Uint8Array): Params => {
 
   const major = bitsToMajorMode((bytes[3] >> 2) & 0x3);
   const minor = bitsToMinorMode((bytes[3] >> 4) & 0x3);
-  const extra = [];
+  const extra: number[] = [];
   if (doubleJump != 0x0) {
     extra.push(Item.DoubleJump);
   }
