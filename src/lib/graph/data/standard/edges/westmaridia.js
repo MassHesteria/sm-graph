@@ -10,7 +10,7 @@ export const westmaridiaEdges = {
       HasMorph && (CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall))),
     "Missiles (Mama Turtle)": () => CanOpenRedDoors &&
       (CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall))),
-    Door_MaridiaMap: () => HasMorph && CanOpenGreenDoors,
+    AboveMaridiaMap: () => CanOpenGreenDoors,
     EverestTopRight: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
     OasisBottom: () => CanOpenGreenDoors && CanMoveInWestMaridia,
     Door_RedFish: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
@@ -48,9 +48,13 @@ export const westmaridiaEdges = {
   },
 
   Door_MaridiaMap: {
-    MainStreet: () =>
-      HasMorph && CanOpenGreenDoors &&
-      (CanMoveInWestMaridia || (HasHiJump && HasIce)),
+    AboveMaridiaMap: () =>
+      HasMorph && (CanMoveInWestMaridia || (HasHiJump && HasIce)),
+  },
+
+  AboveMaridiaMap: {
+    MainStreet: () => CanOpenGreenDoors,
+    Door_MaridiaMap: () => HasMorph,
   },
 
   "Supers (Crab)": {
@@ -61,7 +65,7 @@ export const westmaridiaEdges = {
     MainStreet: () => HasMorph,
     "Missiles (Mama Turtle)": () =>
       HasMorph && CanOpenRedDoors && (CanMoveInWestMaridia || HasHiJump),
-    EverestTopRight: () => HasMorph || (CanMoveInWestMaridia || HasGrapple),
+    EverestTopRight: () => HasMorph && (CanMoveInWestMaridia || HasGrapple),
     "Supers (Crab)": () => HasMorph,
   },
 

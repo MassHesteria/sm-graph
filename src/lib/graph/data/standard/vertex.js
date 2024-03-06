@@ -175,6 +175,7 @@ export const standardVertices = {
     "Missiles (Mama Turtle)": "minor",
     "Energy Tank (Mama Turtle)": "major",
     Door_MaridiaMap: "",
+    AboveMaridiaMap: "",
     EverestTopRight: "",
     "Spring Ball": "major",
     Door_RedFish: "",
