@@ -233,7 +233,7 @@ const computeGraphChecksum = (graph) => {
   return (
     computeChecksum(
       getLocations().map((l) => {
-        return graph.find((e) => e.to.name == l.name).item
+        return graph.find((e) => e.to.name === l.name).to.item
       })
     )
   )
