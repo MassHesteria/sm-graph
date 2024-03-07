@@ -7,6 +7,7 @@ import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
 import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges";
+import { getLocations } from "./lib/locations";
 import CRC32 from "crc-32";
 
 import fs from "fs";
@@ -243,16 +244,25 @@ const computeChecksum = (array) => {
   return CRC32.str(JSON.stringify(array)) >>> 0;
 }
 
+const computeGraphChecksum = (graph) => {
+  return (
+    computeChecksum(
+      getLocations().map((l) => {
+        return graph.find((e) => e.to.name == l.name).item
+      })
+    )
+  )
+}
+
 const checksumToString = (checksum) => {
   return checksum.toString(16).toUpperCase().padStart(8, "0");
 }
 
 const solveQuiet = (seed, title, graph, settings) => {
-  const progression = [];
-  if (!isGraphValid(graph, settings, emptyLoadout, progression)) {
+  if (!isGraphValid(graph, settings, emptyLoadout)) {
     throw new Error(`Invalid ${title} seed: ${seed}`);
   }
-  checksums.push(computeChecksum(progression));
+  checksums.push(computeGraphChecksum(graph));
   num += 1;
 }
 
@@ -276,7 +286,7 @@ const solveLoud = (seed, title, graph, settings) => {
     printAvailableItems(step.available);
     printCollectedItems(step.collected);
   });
-  checksums.push(computeChecksum(progression));
+  checksums.push(computeGraphChecksum(graph));
   const end = Date.now();
   console.log(chalk.yellow(`Solved ${title} in ${end - start} ms`));
   num += 1;
@@ -286,7 +296,12 @@ const solve = quiet ? solveQuiet : solveLoud;
 
 const solveGraphFill = (seed, preset) => {
   const graph = generateSeed(seed, preset.settings);
-  solve(seed, `Graph ${preset.title}`, graph, preset.settings);
+  if (quiet) {
+    checksums.push(computeGraphChecksum(graph));
+    num += 1;
+  } else {
+    solveLoud(seed, `Graph ${preset.title}`, graph, preset.settings);
+  }
 };
 
 const solveVerifiedFill = (seed, preset) => {
