@@ -6,8 +6,8 @@ export const uppernorfairEdges = {
   BusinessCenter: {
     Door_ElevatorEntry: true,
     Door_KraidMouth: () => SuperPacks >= 1,
-    "Ice Beam": () => CanOpenGreenDoors && HellRunTanks >= 2,
-    "Missiles (Crumble Shaft)": () => CanUsePowerBombs && HellRunTanks >= 2,
+    "Ice Beam": () => CanOpenGreenDoors && HasMorph && HellRunTanks >= 2,
+    "Missiles (Crumble Shaft)": () => CanOpenGreenDoors && CanUsePowerBombs && HellRunTanks >= 2,
     BusinessCenterTopRightDoor: true,
     BusinessCenterBottomRightDoor: true,
     "Energy Tank (HJB)": () => CanOpenRedDoors,
