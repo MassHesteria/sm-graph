@@ -12,22 +12,7 @@ import CRC32 from "crc-32";
 
 import fs from "fs";
 import chalk from "chalk";
-import {
-  generateLegacySeed,
-  //generateInvalidSeed,
-  readSeed,
-} from "./generate";
-
-//-----------------------------------------------------------------
-// Constants.
-//-----------------------------------------------------------------
-
-const TestMode = {
-  None: 0,
-  Success: 1,
-  Failure: 2,
-  Both: 3,
-};
+import { generateLegacySeed, readSeed } from "./generate";
 
 //-----------------------------------------------------------------
 // Determine the seed.
@@ -44,12 +29,12 @@ const readFromFolders =
       [];
 
 // Enables checking seeds produced with the legacy solver.
-const verifiedFillMode = TestMode.Success;
+const verifiedFillMode = true;
 
 // Graph fill seeds should work by definition because the solver
 // is used to verify the seed during generation. Enabling this is
 // a bit of a sanity check.
-const graphFillMode = TestMode.Success;
+const graphFillMode = true;
 
 //-----------------------------------------------------------------
 // Process command line arguments.
@@ -309,36 +294,13 @@ const solveVerifiedFill = (seed, preset) => {
   solve(seed, `Legacy ${preset.title}`, graph, preset.settings);
 };
 
-/*const confirmInvalidSeed = (seed, preset) => {
-  try {
-    const { mapLayout, majorDistribution } = preset.settings;
-    const recall = mapLayout == MapLayout.Recall;
-    const full = majorDistribution == MajorDistributionMode.Full;
-
-    const graph = loadGraph(0, 1, mapLayout, majorDistribution);
-    generateInvalidSeed(seed, recall, full).forEach((i) =>
-      placeItem(graph, i.location.name, i.item)
-    );
-    solve(seed, `Failure ${preset.title}`, graph, preset.settings);
-  } catch (e) {
-    num += 1;
-    return;
-  }
-  throw new Error(`Unexpected success ${preset.title}: ${seed}`);
-};*/
-
 //-----------------------------------------------------------------
 // Solve the specified seeds.
 //-----------------------------------------------------------------
 
 let modes = readFromFolders.length > 0 ? "external " : "";
-if (verifiedFillMode == TestMode.Both) {
-  modes += "verifiedBoth ";
-} else {
-  modes += (verifiedFillMode & TestMode.Success) > 0 ? "verifiedPass " : "";
-  modes += (verifiedFillMode & TestMode.Failure) > 0 ? "verifiedFail " : "";
-}
-modes += (graphFillMode & TestMode.Success) > 0 ? "graphPass " : "";
+modes += verifiedFillMode ? "legacy " : "";
+modes += graphFillMode ? "graph " : "";
 
 let start = Date.now();
 let step = start;
@@ -359,19 +321,13 @@ for (let i = startSeed; i <= endSeed; i++) {
     const settings = f.includes("chozo") ? chozo.settings : classic_full.settings;
     solve(i, fileName, loadExternal(fileName, settings.majorDistribution), settings);
   });
-  if ((verifiedFillMode & TestMode.Success) > 0) {
+  if (verifiedFillMode) {
     solveVerifiedFill(i, classic_mm);
     solveVerifiedFill(i, classic_full);
     solveVerifiedFill(i, recall_mm);
     solveVerifiedFill(i, recall_full);
   }
-  /*if ((verifiedFillMode & TestMode.Failure) > 0) {
-    confirmInvalidSeed(i, classic_mm);
-    confirmInvalidSeed(i, classic_full);
-    confirmInvalidSeed(i, recall_mm);
-    confirmInvalidSeed(i, recall_full);
-  }*/
-  if ((graphFillMode & TestMode.Success) > 0) {
+  if (graphFillMode) {
     presets.forEach((p) => {
       solveGraphFill(i, p);
     });
