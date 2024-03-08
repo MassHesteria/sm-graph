@@ -107,6 +107,10 @@ export const standardVertices = {
     BusinessCenter: "",
     BusinessCenterTopRightDoor: "",
     BusinessCenterBottomRightDoor: "",
+    IceBeamGatesTopLeftDoor: "",
+    IceBeamGatesBottomLeftDoor: "",
+    CrumbleShaft: "",
+    SingleChamberTopRightDoor: "",
   },
   LowerNorfair: {
     Door_RidleyMouth: "",

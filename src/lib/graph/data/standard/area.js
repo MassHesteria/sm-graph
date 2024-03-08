@@ -33,7 +33,7 @@ const UpperNorfair_PreCrocomire_to_CrocEntry = {
 };
 
 const UpperNorfair_KingCacLedge_to_SingleChamberPortal = {
-  edges: ["BubbleMountainKingCacLedge", "Door_SingleChamber"],
+  edges: ["BubbleMountainKingCacLedge", "SingleChamberTopRightDoor"],
   requires: () => HasMorph && CanDestroyBombWalls && HellRunTanks >= 2,
 };
 
