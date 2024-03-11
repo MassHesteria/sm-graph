@@ -1,11 +1,3 @@
-/***
- * I might've been more thorough than I needed to be,
- * since some things are very easy to do but not technically in logic.
- * With that being said, you can traverse between both entrances with just hijump and supers/pbs,
- * which is non-trivial for area rando purposes
- *  - AJ
- ***/
-
 export const eastmaridiaEdges = {
   Door_Aqueduct: {
     Aqueduct: () => CanUsePowerBombs,
@@ -18,7 +10,6 @@ export const eastmaridiaEdges = {
       (CanUseBombs || CanUsePowerBombs || (HasGravity && HasScrewAttack)),
     //TODO: Snail clip is technically in logic
     "Missiles (Aqueduct)": () => HasGravity,
-    "Supers (Aqueduct)": () => HasGravity,
     //TODO: Snail climb is technically in logic
     BotwoonHallwayLeft: () => HasGravity || HasHiJump,
     LeftSandPitBottom: () => HasGravity,
@@ -158,12 +149,10 @@ export const eastmaridiaEdges = {
   },
 
   "Missiles (Aqueduct)": {
-    Aqueduct: true,
     "Supers (Aqueduct)": true,
   },
 
   "Supers (Aqueduct)": {
-    "Missiles (Aqueduct)": true,
     Aqueduct: true,
   },
 

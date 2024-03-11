@@ -109,7 +109,6 @@ export const standardVertices = {
     BusinessCenterBottomRightDoor: "",
     IceBeamGatesTopLeftDoor: "",
     IceBeamGatesBottomLeftDoor: "",
-    CrumbleShaft: "",
     SingleChamberTopRightDoor: "",
   },
   LowerNorfair: {
@@ -187,6 +186,7 @@ export const standardVertices = {
     "Missiles (Watering Hole)": "minor",
     "Supers (Watering Hole)": "minor",
     Door_PreAqueduct: "",
+    RedFish: "",
   },
   EastMaridia: {
     Door_DraygonBoss: "",

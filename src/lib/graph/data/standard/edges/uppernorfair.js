@@ -19,13 +19,8 @@ export const uppernorfairEdges = {
   },
 
   IceBeamGatesBottomLeftDoor: {
-    CrumbleShaft: true,
-    IceBeamGatesTopLeftDoor: () => CanUsePowerBombs,
-  },
-
-  CrumbleShaft: {
-    IceBeamGatesBottomLeftDoor: true,
     "Missiles (Crumble Shaft)": () => HellRunTanks >= 2,
+    IceBeamGatesTopLeftDoor: () => CanUsePowerBombs,
   },
 
   BusinessCenterTopRightDoor: {
@@ -169,7 +164,7 @@ export const uppernorfairEdges = {
   },
 
   "Missiles (Crumble Shaft)": {
-    CrumbleShaft: () => HellRunTanks >= 2,
+    IceBeamGatesBottomLeftDoor: () => HellRunTanks >= 2,
     PreCrocomire: () => HasSpeed && HellRunTanks >= 2,
   },
 
