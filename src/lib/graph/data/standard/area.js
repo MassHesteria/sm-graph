@@ -83,13 +83,13 @@ const EastMaridia_AqueductPortal_to_Aqueduct = {
     CanUseBombs || CanUsePowerBombs || (HasGravity && HasScrewAttack),
 };
 
-const EastMaridia_OasisBottom_to_MainStreet = {
-  edges: ["OasisBottom", "MainStreet"],
+const EastMaridia_OasisBottom_to_AboveMaridiaMap = {
+  edges: ["OasisBottom", "AboveMaridiaMap"],
   requires: false,
 };
 
-const WestMaridia_MainStreet_to_OasisBottom = {
-  edges: ["MainStreet", "OasisBottom"],
+const WestMaridia_AboveMaridiaMap_to_OasisBottom = {
+  edges: ["MainStreet", "AboveMaridiaMap"],
   requires: false,
 };
 
@@ -130,8 +130,8 @@ export const StandardAreaEdgeUpdates = [
   WreckedShip_ShipHallway_to_SpongeBath,
   WreckedShip_RearExit_to_Highway,
   EastMaridia_OasisBottom_to_Aqueduct,
-  EastMaridia_OasisBottom_to_MainStreet,
-  WestMaridia_MainStreet_to_OasisBottom,
+  EastMaridia_OasisBottom_to_AboveMaridiaMap,
+  WestMaridia_AboveMaridiaMap_to_OasisBottom,
   WestMaridia_MainStreet_to_AboveMaridiaMap,
   WestMaridia_AboveMaridiaMap_to_MainStreet,
   WestMaridia_EverestTopRight_to_PreAqueductPortal,

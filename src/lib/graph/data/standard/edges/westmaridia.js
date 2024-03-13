@@ -12,7 +12,6 @@ export const westmaridiaEdges = {
       (CanMoveInWestMaridia || (HasHiJump && (HasIce || HasSpringBall))),
     AboveMaridiaMap: () => CanOpenGreenDoors,
     EverestTopRight: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
-    OasisBottom: () => CanOpenGreenDoors && CanMoveInWestMaridia,
     RedFish: () => CanMoveInWestMaridia || CanDoSuitlessMaridia,
   },
 
@@ -54,6 +53,7 @@ export const westmaridiaEdges = {
 
   AboveMaridiaMap: {
     MainStreet: () => CanOpenGreenDoors,
+    OasisBottom: () => CanMoveInWestMaridia,
     Door_MaridiaMap: () => HasMorph,
   },
 
