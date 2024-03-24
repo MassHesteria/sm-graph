@@ -184,6 +184,7 @@ const loadExternal = (fileName, majorDistribution) => {
     MapLayout.Standard,
     majorDistribution,
     area.length > 0,
+    false,
     BossMode.Shuffled,
     portals
   );
@@ -280,7 +281,7 @@ const solveLoud = (seed, title, graph, settings) => {
 const solve = quiet ? solveQuiet : solveLoud;
 
 const solveGraphFill = (seed, preset) => {
-  const graph = generateSeed(seed, preset.settings);
+  const graph = generateSeed(seed, preset.settings, preset.options);
   if (quiet) {
     checksums.push(computeGraphChecksum(graph));
     num += 1;
