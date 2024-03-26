@@ -1,7 +1,6 @@
 import DotNetRandom from "../lib/dotnet-random";
 import { majorItem, minorItem, Item } from "../lib/items";
 import ItemNode from "./logic";
-import { getLocations } from "../lib/locations";
 
 class ModeStandard {
   nodes = [];
@@ -638,29 +637,6 @@ const canEnterAndLeaveGauntlet = (load) => {
     load.hasScrewAttack ||
     (load.canUsePowerBombs && load.powerPacks >= 2 && load.totalTanks >= 1)
   );
-};
-
-export const LogicChecks = {
-  canAccessGreenBrinstar,
-  canHellRun,
-  canAccessRedBrinstar,
-  canAccessHeatedNorfair,
-  canAccessLowerNorfair,
-  canPassWorstRoom,
-  canAccessKraid,
-  canAccessCrocomire,
-  canDoSuitlessMaridia,
-  canAccessBotwoon,
-  canDefeatDraygon,
-  canAccessWreckedShip,
-  canAccessOuterMaridia,
-  canAccessInnerMaridia,
-  canEnterAndLeaveGauntlet,
-};
-
-export const Logic = {
-  LogicChecks,
-  LogicLocations: new ModeStandard(1, getLocations()).nodes,
 };
 
 export default ModeStandard;
