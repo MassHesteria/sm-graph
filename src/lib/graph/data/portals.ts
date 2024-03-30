@@ -40,9 +40,7 @@ const samePortals = (unshuffled: PortalMapping[], shuffled: PortalMapping[]) => 
 const areaLoopCount = (shuffled: PortalMapping[]) => {
   let numLoops = 0;
   shuffled.forEach((m) => {
-    const a = m[0].area === "BlueBrinstar" ? "Crateria" : m[0].area
-    const b = m[1].area === "BlueBrinstar" ? "Crateria" : m[1].area
-    if (a === b) {
+    if (m[0].area === m[1].area) {
       numLoops += 1;
     }
   });
@@ -77,7 +75,7 @@ const shuffle = (rng: DotNetRandom, arr: any[]) => {
 
 const getAreaPortals = (): Portal[] => {
   return [
-    { name: "Door_RetroPBs", area: "BlueBrinstar" },
+    { name: "Door_RetroPBs", area: "Crateria" },
     { name: "Door_GreenHills", area: "GreenBrinstar" },
     { name: "Door_Moat", area: "Crateria" },
     { name: "Door_Ocean", area: "WreckedShip" },

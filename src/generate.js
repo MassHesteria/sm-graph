@@ -12,10 +12,14 @@ import { createLoadout } from "./lib/loadout";
 import ModeStandard from "./legacy/modeStandard";
 import ModeRecall from "./legacy/modeRecall";
 
+const getVanillaLocations = () => {
+  return getLocations().slice(0, 100)
+}
+
 export const generateLegacySeed = (seed, recall, full) => {
   const mode = recall
-    ? new ModeRecall(seed, getLocations())
-    : new ModeStandard(seed, getLocations());
+    ? new ModeRecall(seed, getVanillaLocations())
+    : new ModeStandard(seed, getVanillaLocations());
   const [getPrePool, canPlaceItem] = full
     ? [getFullPrePool, isEmptyNode]
     : [getMajorMinorPrePool, isValidMajorMinor];

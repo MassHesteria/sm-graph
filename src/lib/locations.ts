@@ -2,8 +2,8 @@ export const Area = Object.freeze({
   Crateria: 0,
   GreenBrinstar: 1,
   RedBrinstar: 2,
-  Kraid: 3,
-  Crocomire: 4,
+  KraidsLair: 3,
+  CrocomiresLair: 4,
   WreckedShip: 5,
   EastMaridia: 6,
   WestMaridia: 7,
@@ -13,16 +13,16 @@ export const Area = Object.freeze({
 
 // prettier-ignore
 export const AreaCounts = new Map([
-   [Area.Crateria,     0x2f8039],
-   [Area.GreenBrinstar, 0x2f803b],
-   [Area.UpperNorfair, 0x2f803d],
-   [Area.WreckedShip,  0x2f803f],
-   [Area.EastMaridia,  0x2f8041],
-   [Area.RedBrinstar,  0x2f8049],
-   [Area.Kraid,        0x2f804b],
-   [Area.WestMaridia,  0x2f804d],
-   [Area.LowerNorfair, 0x2f804f],
-   [Area.Crocomire,    0x2f8051],
+   [Area.Crateria,       0x2f8039],
+   [Area.GreenBrinstar,  0x2f803b],
+   [Area.UpperNorfair,   0x2f803d],
+   [Area.WreckedShip,    0x2f803f],
+   [Area.EastMaridia,    0x2f8041],
+   [Area.RedBrinstar,    0x2f8049],
+   [Area.KraidsLair,     0x2f804b],
+   [Area.WestMaridia,    0x2f804d],
+   [Area.LowerNorfair,   0x2f804f],
+   [Area.CrocomiresLair, 0x2f8051],
 ]);
 
 export class Location {
@@ -53,6 +53,24 @@ export class Location {
       (bytes[this.address] & 0x00ff);
     return code - this.modifier;
   }
+}
+
+export const getArea = (area: string): number => {
+  for (const [k, v] of Object.entries(Area)) {
+    if (k === area) {
+      return v
+    }
+  }
+  return -1
+}
+
+export const getAreaString = (area: number): string => {
+  for (const [k, v] of Object.entries(Area)) {
+    if (v === area) {
+      return k
+    }
+  }
+  return ''
 }
 
 // TODO: Remove _id
@@ -102,21 +120,21 @@ export const getLocations = () => [
   loc(0x7890e, 0x54, Area.RedBrinstar, 39, "Power Bombs (Alpha)"),
   loc(0x78914, 0x00, Area.RedBrinstar, 40, "Missiles (Alpha PBs)"),
   loc(0x7896e, 0x54, Area.RedBrinstar, 41, "Spazer"),
-  loc(0x7899c, 0xa8, Area.Kraid, 42, "Energy Tank (Kraid)"),
-  loc(0x789ec, 0xa8, Area.Kraid, 43, "Missiles (Kraid)"),
-  loc(0x78aca, 0x54, Area.Kraid, 44, "Varia Suit"),
+  loc(0x7899c, 0xa8, Area.KraidsLair, 42, "Energy Tank (Kraid)"),
+  loc(0x789ec, 0xa8, Area.KraidsLair, 43, "Missiles (Kraid)"),
+  loc(0x78aca, 0x54, Area.KraidsLair, 44, "Varia Suit"),
   loc(0x78ae4, 0xa8, Area.UpperNorfair, 45, "Missiles (Cathedral)"),
   loc(0x78b24, 0x54, Area.UpperNorfair, 46, "Ice Beam"),
   loc(0x78b46, 0xa8, Area.UpperNorfair, 47, "Missiles (Crumble Shaft)"),
-  loc(0x78ba4, 0x00, Area.Crocomire, 48, "Energy Tank (Crocomire)"),
+  loc(0x78ba4, 0x00, Area.CrocomiresLair, 48, "Energy Tank (Crocomire)"),
   loc(0x78bac, 0x54, Area.UpperNorfair, 49, "HiJump Boots"),
   loc(0x78bc0, 0x00, Area.UpperNorfair, 50, "Missiles (Croc Escape)"),
   loc(0x78be6, 0x00, Area.UpperNorfair, 51, "Missiles (HJB)"),
   loc(0x78bec, 0x00, Area.UpperNorfair, 52, "Energy Tank (HJB)"),
-  loc(0x78c04, 0x00, Area.Crocomire, 53, "Power Bombs (Crocomire)"),
-  loc(0x78c14, 0x00, Area.Crocomire, 54, "Missiles (Cosine)"),
-  loc(0x78c2a, 0x00, Area.Crocomire, 55, "Missiles (Indiana Jones)"),
-  loc(0x78c36, 0x54, Area.Crocomire, 56, "Grapple Beam"),
+  loc(0x78c04, 0x00, Area.CrocomiresLair, 53, "Power Bombs (Crocomire)"),
+  loc(0x78c14, 0x00, Area.CrocomiresLair, 54, "Missiles (Cosine)"),
+  loc(0x78c2a, 0x00, Area.CrocomiresLair, 55, "Missiles (Indiana Jones)"),
+  loc(0x78c36, 0x54, Area.CrocomiresLair, 56, "Grapple Beam"),
   loc(0x78c3e, 0x54, Area.UpperNorfair, 57, "Reserve Tank (Norfair)"),
   loc(0x78c44, 0xa8, Area.UpperNorfair, 58, "Missiles (Norfair Reserve 2)"),
   loc(0x78c52, 0x00, Area.UpperNorfair, 59, "Missiles (Norfair Reserve 1)"),
@@ -161,4 +179,14 @@ export const getLocations = () => [
   loc(0x7c74d, 0xa8, Area.EastMaridia, 98, "Missiles (Precious)"),
   loc(0x7c755, 0x00, Area.EastMaridia, 99, "Energy Tank (Botwoon)"),
   loc(0x7c7a7, 0x54, Area.EastMaridia, 100, "Space Jump"),
+  // Extra boss item locations
+  /*loc(0x7e9fa, 0x54, Area.WreckedShip, 101, "Varia Suit"),
+  loc(0x7ea2b, 0x54, Area.EastMaridia, 102, "Varia Suit"),
+  loc(0x7e9c9, 0x54, Area.LowerNorfair, 103, "Varia Suit"),
+  loc(0x7c7a7, 0x54, Area.KraidsLair, 104, "Space Jump"),
+  loc(0x7c7a7, 0x54, Area.WreckedShip, 105, "Space Jump"),
+  loc(0x7c7a7, 0x54, Area.LowerNorfair, 106, "Space Jump"),
+  loc(0x79108, 0xa8, Area.KraidsLair, 107, "Energy Tank (Ridley)"),
+  loc(0x79108, 0xa8, Area.WreckedShip, 108, "Energy Tank (Ridley)"),
+  loc(0x79108, 0xa8, Area.EastMaridia, 109, "Energy Tank (Ridley)"),*/
 ];

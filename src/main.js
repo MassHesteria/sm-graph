@@ -2,12 +2,11 @@ import { isBoss, minorItem } from "./lib/items";
 import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
-import { generateSeed } from "./lib/graph/fill";
+import { generateSeed, getGraphLocations } from "./lib/graph/fill";
 import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
 import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges";
-import { getLocations } from "./lib/locations";
 import CRC32 from "crc-32";
 
 import fs from "fs";
@@ -230,9 +229,7 @@ const computeChecksum = (array) => {
 const computeGraphChecksum = (graph) => {
   return (
     computeChecksum(
-      getLocations().map((l) => {
-        return graph.find((e) => e.to.name === l.name).to.item
-      })
+      getGraphLocations(graph).map((n) => n.to.item)
     )
   )
 }
