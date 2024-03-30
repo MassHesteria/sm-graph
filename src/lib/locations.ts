@@ -180,13 +180,13 @@ export const getLocations = () => [
   loc(0x7c755, 0x00, Area.EastMaridia, 99, "Energy Tank (Botwoon)"),
   loc(0x7c7a7, 0x54, Area.EastMaridia, 100, "Space Jump"),
   // Extra boss item locations
-  /*loc(0x7e9fa, 0x54, Area.WreckedShip, 101, "Varia Suit"),
-  loc(0x7ea2b, 0x54, Area.EastMaridia, 102, "Varia Suit"),
-  loc(0x7e9c9, 0x54, Area.LowerNorfair, 103, "Varia Suit"),
-  loc(0x7c7a7, 0x54, Area.KraidsLair, 104, "Space Jump"),
-  loc(0x7c7a7, 0x54, Area.WreckedShip, 105, "Space Jump"),
-  loc(0x7c7a7, 0x54, Area.LowerNorfair, 106, "Space Jump"),
-  loc(0x79108, 0xa8, Area.KraidsLair, 107, "Energy Tank (Ridley)"),
-  loc(0x79108, 0xa8, Area.WreckedShip, 108, "Energy Tank (Ridley)"),
-  loc(0x79108, 0xa8, Area.EastMaridia, 109, "Energy Tank (Ridley)"),*/
+  /*loc(0x7E9FA, 0x54, Area.WreckedShip, 101, "Varia Suit"),
+  loc(0x7EA2B, 0x54, Area.EastMaridia, 102, "Varia Suit"),
+  loc(0x7E9C9, 0x54, Area.LowerNorfair, 103, "Varia Suit"),
+  loc(0x7EC12, 0x54, Area.KraidsLair, 104, "Space Jump"),
+  loc(0x7EC74, 0x54, Area.WreckedShip, 105, "Space Jump"),
+  loc(0x7EC43, 0x54, Area.LowerNorfair, 106, "Space Jump"),
+  loc(0x7ED83, 0xa8, Area.KraidsLair, 107, "Energy Tank (Ridley)"),
+  loc(0x7EDB4, 0xa8, Area.WreckedShip, 108, "Energy Tank (Ridley)"),
+  loc(0x7EDE5, 0xa8, Area.EastMaridia, 109, "Energy Tank (Ridley)"),*/
 ];
