@@ -14,7 +14,7 @@ import { BossMode, MapLayout, MajorDistributionMode } from "./params";
 import { RecallVertexUpdates } from "./data/recall/vertex";
 import { RecallEdgeUpdates } from "./data/recall/edges";
 import { StandardAreaEdgeUpdates } from "./data/standard/area";
-import { mapPortals, PortalMapping } from "./data/portals";
+import { generatePortals, PortalMapping } from "./data/portals";
 import { bossItem, Item, ItemType } from "../items";
 import DotNetRandom from "../dotnet-random";
 import { ChozoVertexUpdates } from "./data/chozo/vertex";
@@ -133,8 +133,13 @@ const createGraph = (
 
   const allVertices = getAllVertices();
 
-  const findVertex = (name: string) => {
-    const vertex = allVertices.find((v) => v.name == name);
+  const findVertex = (name: string, area?: string) => {
+    const vertex = allVertices.find((v) => {
+      if (area != undefined && v.area != area) {
+        return false;
+      }
+      return v.name == name;
+    });
     if (vertex == undefined) {
       throw new Error(`createGraph: could not find vertex, ${name}`);
     }
@@ -177,8 +182,8 @@ const createGraph = (
     .concat(
       portalMapping.map((a) => {
         return {
-          from: findVertex(a[0]),
-          to: findVertex(a[1]),
+          from: findVertex(a[0].name, a[0].area),
+          to: findVertex(a[1].name, a[1].area),
           condition: true,
         };
       })
@@ -186,8 +191,8 @@ const createGraph = (
     .concat(
       portalMapping.map((a) => {
         return {
-          from: findVertex(a[1]),
-          to: findVertex(a[0]),
+          from: findVertex(a[1].name, a[1].area),
+          to: findVertex(a[0].name, a[0].area),
           condition: true,
         };
       })
@@ -414,7 +419,7 @@ export const loadGraph = (
   };
 
   const getPortals = () =>
-    portals ? portals : mapPortals(getSeed(), areaShuffle, bossMode);
+    portals ? portals : generatePortals(getSeed(), areaShuffle, bossMode);
 
   const edgeUpdates: EdgeUpdate[] = relaxed ? RelaxedEdgeUpdates : [];
 

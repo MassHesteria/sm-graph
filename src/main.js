@@ -160,23 +160,12 @@ const printUncollectedItems = (graph) => {
 
 const loadExternal = (fileName, majorDistribution) => {
   const { bosses, area, items } = readSeed(fileName);
-  const portals = area.length > 0 ? area : mapPortals(0, false, false);
-
-  if (bosses != undefined) {
-    const setPortal = (from, to) => {
-      const temp = portals.find((p) => p[0] == from);
-      if (temp == undefined) {
-        portals.push([from, to]);
-      } else {
-        temp[1] = to;
-      }
-    };
-
-    setPortal("Door_KraidBoss", `Exit_${bosses.kraidBoss}`);
-    setPortal("Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`);
-    setPortal("Door_DraygonBoss", `Exit_${bosses.draygonBoss}`);
-    setPortal("Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`);
-  }
+  const bossPortals = [
+    ["Door_KraidBoss", `Exit_${bosses.kraidBoss}`],
+    ["Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`],
+    ["Door_DraygonBoss", `Exit_${bosses.draygonBoss}`],
+    ["Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`]
+  ]
 
   const graph = loadGraph(
     1,
@@ -186,7 +175,7 @@ const loadExternal = (fileName, majorDistribution) => {
     area.length > 0,
     false,
     BossMode.Shuffled,
-    portals
+    mapPortals(area, bossPortals)
   );
 
   //-----------------------------------------------------------------
@@ -213,7 +202,15 @@ const loadVerifiedFill = (seed, preset) => {
   const recall = mapLayout == MapLayout.Recall;
   const full = majorDistribution == MajorDistributionMode.Full;
 
-  const graph = loadGraph(0, 1, mapLayout, majorDistribution);
+  const graph = loadGraph(
+    0,
+    1,
+    mapLayout,
+    majorDistribution,
+    false,
+    false,
+    BossMode.Vanilla,
+    mapPortals([], []));
   generateLegacySeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
   return graph;
 };
