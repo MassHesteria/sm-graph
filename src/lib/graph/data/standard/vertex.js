@@ -22,8 +22,6 @@ export const standardVertices = {
     "Supers (Climb)": "minor",
     "Missiles (Mother Brain)": "minor",
     "Construction Zone": "",
-  },
-  BlueBrinstar: {
     "Morphing Ball": "major",
     Door_RetroPBs: "",
     "Power Bombs (Morph)": "minor",

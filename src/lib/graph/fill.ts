@@ -18,7 +18,6 @@ const canPlaceItem_Full = (item: ItemType, vertex: Vertex) => {
   if (item.type == Item.Gravity) {
     switch (vertex.area) {
       case "Crateria":
-      case "BlueBrinstar":
         return false;
       default:
         break;
@@ -26,7 +25,6 @@ const canPlaceItem_Full = (item: ItemType, vertex: Vertex) => {
   } else if (item.type == Item.Varia) {
     switch (vertex.area) {
       case "Crateria":
-      case "BlueBrinstar":
       case "LowerNorfair":
         return false;
       default:
@@ -46,7 +44,6 @@ const canPlaceItem_MajorMinor = (item: ItemType, vertex: Vertex) => {
   if (item.type == Item.Gravity) {
     switch (vertex.area) {
       case "Crateria":
-      case "BlueBrinstar":
         return false;
       default:
         break;
@@ -54,7 +51,6 @@ const canPlaceItem_MajorMinor = (item: ItemType, vertex: Vertex) => {
   } else if (item.type == Item.Varia) {
     switch (vertex.area) {
       case "Crateria":
-      case "BlueBrinstar":
       case "LowerNorfair":
         return false;
       default:
