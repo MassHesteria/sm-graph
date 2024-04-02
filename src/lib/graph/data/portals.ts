@@ -204,6 +204,10 @@ const generateBossPortals = (mode: number, seed: number): PortalMapping[] => {
     shuffled = shuffleBosses();
   }
 
+  if (mode !== BossMode.Shuffled) {
+    shuffled.forEach(p => p[1].area = p[0].area)
+  }
+  
   return shuffled;
 };
 

@@ -58,13 +58,12 @@ const getStandardEdges = () => {
     GreenBrinstar: greenbrinstarEdges,
     RedBrinstar: redbrinstarEdges,
     KraidsLair: kraidslairEdges,
-    Crocomire: crocomireEdges,
+    CrocomiresLair: crocomireEdges,
     WestMaridia: westmaridiaEdges,
     EastMaridia: eastmaridiaEdges,
     UpperNorfair: uppernorfairEdges,
     LowerNorfair: lowernorfairEdges,
     WreckedShip: wreckedshipEdges,
-    Bosses: bossEdges,
   };
 };
 
@@ -91,40 +90,12 @@ const getAllVertices = (): Vertex[] => {
 };
 
 //-----------------------------------------------------------------
-// Converts the edge data into an array of edges which will be
-// used to actually create graph objects. This code runs only
-// once when the module is loaded.
-//-----------------------------------------------------------------
-
-const allEdges = Object.entries(getStandardEdges())
-  .map(([_, v]) => {
-    return Object.entries(v)
-      .map(([from, w]) => {
-        return Object.entries(w).map(([to, condition]) => {
-          return {
-            from: from,
-            to: to,
-            condition: condition as Condition,
-          };
-        });
-      })
-      .reduce((acc, cur) => {
-        return acc.concat(cur);
-      }, []);
-  })
-  .reduce((acc, cur) => {
-    return acc.concat(cur);
-  }, []);
-
-//-----------------------------------------------------------------
 // Build a graph representing the game world.
 //-----------------------------------------------------------------
-
 const createGraph = (
   portalMapping: PortalMapping[],
   vertexUpdates: VertexUpdate[],
   edgeUpdates: EdgeUpdate[],
-  startVertex?: string
 ): Graph => {
   //-----------------------------------------------------------------
   // Get all vertices for the graph. Vertices represent locations
@@ -141,10 +112,27 @@ const createGraph = (
       return v.name == name;
     });
     if (vertex == undefined) {
-      throw new Error(`createGraph: could not find vertex, ${name}`);
+      const msg = `createGraph: could not find vertex, ${name} ${area}`;
+      throw new Error(msg);
     }
     return vertex;
   };
+
+  const loadEdges = (areaEdges: any, area?: string) => {
+    return Object.entries(areaEdges)
+      .map(([from, w]) => {
+        return Object.entries(w as any).map(([to, condition]): Edge => {
+          return {
+            from: findVertex(from, area),
+            to: findVertex(to, area),
+            condition: condition as Condition,
+          };
+        });
+      })
+      .reduce((acc, cur) => {
+        return acc.concat(cur);
+      }, []);
+  }
 
   //-----------------------------------------------------------------
   // Apply specified vertex updates. Currently restricted to type
@@ -156,29 +144,41 @@ const createGraph = (
   });
 
   //-----------------------------------------------------------------
-  // Set a flag on the start vertex. This flag exists on all
-  // vertices and is used for caching to speed up solving.
+  // Converts the edge data into an array of edges which will be
+  // used to actually create graph objects. This code runs only
+  // once when the module is loaded.
   //-----------------------------------------------------------------
 
-  if (startVertex != undefined) {
-    findVertex(startVertex).pathToStart = true;
-  } else {
-    findVertex("Ship").pathToStart = true;
-  }
+  let edges: Edge[] = Object.entries(getStandardEdges())
+    .map(([area, areaEdges]) => loadEdges(areaEdges as any))
+    .reduce((acc, cur) => acc.concat(cur), []);
+
+  //-----------------------------------------------------------------
+  // Add boss edges.
+  //-----------------------------------------------------------------
+
+  const bossAreas = ["KraidsLair", "WreckedShip", "EastMaridia", "LowerNorfair"];
+  bossEdges.forEach(b => {
+    const keys = Object.keys(b);
+    bossAreas.forEach(area => {
+      const portal = portalMapping.find(p => {
+        if (p[1].area != area) {
+          return false;
+        }
+        return keys.includes(p[1].name)
+      })
+      if (portal != null) {
+        edges = edges.concat(loadEdges(b as any, area))
+      }
+    })
+  })
 
   //-----------------------------------------------------------------
   // Get all edges for the graph. Edges establish the condition to
   // travel from one vertex to another.
   //-----------------------------------------------------------------
 
-  const edges: Edge[] = allEdges
-    .map((e) => {
-      return {
-        from: findVertex(e.from),
-        to: findVertex(e.to),
-        condition: e.condition,
-      };
-    })
+  edges = edges
     .concat(
       portalMapping.map((a) => {
         return {
@@ -211,6 +211,14 @@ const createGraph = (
     }
     edge.condition = c.requires;
   });
+
+
+  //-----------------------------------------------------------------
+  // Set a flag on the start vertex. This flag exists on all
+  // vertices and is used for caching to speed up solving.
+  //-----------------------------------------------------------------
+
+  edges[0].from.pathToStart = true;
 
   //-----------------------------------------------------------------
   // Return all valid edges. Some edges are placeholders and may
@@ -346,8 +354,6 @@ const addBossItems = (graph: Graph, mode: number) => {
 
   if (mode == BossMode.Shuffled) {
     bosses.forEach((b) => {
-      const { exit, door } = getAdjacent(b);
-
       //-----------------------------------------------------------------
       // Add the pseudo item for defeating the boss before updating the
       // area associated with the boss node because defeating the boss
@@ -355,15 +361,6 @@ const addBossItems = (graph: Graph, mode: number) => {
       //-----------------------------------------------------------------
 
       addItem(b);
-
-      //-----------------------------------------------------------------
-      // Update the area of the boss and exit nodes to match the area
-      // of the boss door. The prize node is NOT updated because it
-      // should reference its vanilla area.
-      //-----------------------------------------------------------------
-
-      exit.area = door.area;
-      b.area = door.area;
     });
   } else {
     bosses.forEach((b) => {

@@ -78,6 +78,7 @@ const loc = (addr: number, modifier: number, area: number, _id: number, name: st
   return new Location(addr, modifier, area, name);
 };
 
+// NOTE: Order definitely matters for these
 export const getLocations = () => [
   loc(0x786de, 0x00, Area.Crateria, 1, "Morphing Ball"),
   loc(0x781cc, 0x00, Area.Crateria, 2, "Power Bombs (Landing Site)"),
@@ -123,6 +124,9 @@ export const getLocations = () => [
   loc(0x7899c, 0xa8, Area.KraidsLair, 42, "Energy Tank (Kraid)"),
   loc(0x789ec, 0xa8, Area.KraidsLair, 43, "Missiles (Kraid)"),
   loc(0x78aca, 0x54, Area.KraidsLair, 44, "Varia Suit"),
+  loc(0x7E9FA, 0x54, Area.WreckedShip, 101, "Varia Suit"),
+  loc(0x7EA2B, 0x54, Area.EastMaridia, 102, "Varia Suit"),
+  loc(0x7E9C9, 0x54, Area.LowerNorfair, 103, "Varia Suit"),
   loc(0x78ae4, 0xa8, Area.UpperNorfair, 45, "Missiles (Cathedral)"),
   loc(0x78b24, 0x54, Area.UpperNorfair, 46, "Ice Beam"),
   loc(0x78b46, 0xa8, Area.UpperNorfair, 47, "Missiles (Crumble Shaft)"),
@@ -151,6 +155,9 @@ export const getLocations = () => [
   loc(0x790c0, 0x00, Area.LowerNorfair, 70, "Power Bombs (Shame)"),
   loc(0x79100, 0x00, Area.LowerNorfair, 71, "Missiles (Three Muskateers)"),
   loc(0x79108, 0xa8, Area.LowerNorfair, 72, "Energy Tank (Ridley)"),
+  loc(0x7ED83, 0xa8, Area.KraidsLair, 107, "Energy Tank (Ridley)"),
+  loc(0x7EDB4, 0xa8, Area.WreckedShip, 108, "Energy Tank (Ridley)"),
+  loc(0x7EDE5, 0xa8, Area.EastMaridia, 109, "Energy Tank (Ridley)"),
   loc(0x79110, 0x54, Area.LowerNorfair, 73, "Screw Attack"),
   loc(0x79184, 0x00, Area.LowerNorfair, 74, "Energy Tank (Firefleas)"),
   loc(0x7c265, 0x00, Area.WreckedShip, 75, "Missiles (Spooky)"),
@@ -179,14 +186,7 @@ export const getLocations = () => [
   loc(0x7c74d, 0xa8, Area.EastMaridia, 98, "Missiles (Precious)"),
   loc(0x7c755, 0x00, Area.EastMaridia, 99, "Energy Tank (Botwoon)"),
   loc(0x7c7a7, 0x54, Area.EastMaridia, 100, "Space Jump"),
-  // Extra boss item locations
-  /*loc(0x7E9FA, 0x54, Area.WreckedShip, 101, "Varia Suit"),
-  loc(0x7EA2B, 0x54, Area.EastMaridia, 102, "Varia Suit"),
-  loc(0x7E9C9, 0x54, Area.LowerNorfair, 103, "Varia Suit"),
   loc(0x7EC12, 0x54, Area.KraidsLair, 104, "Space Jump"),
   loc(0x7EC74, 0x54, Area.WreckedShip, 105, "Space Jump"),
   loc(0x7EC43, 0x54, Area.LowerNorfair, 106, "Space Jump"),
-  loc(0x7ED83, 0xa8, Area.KraidsLair, 107, "Energy Tank (Ridley)"),
-  loc(0x7EDB4, 0xa8, Area.WreckedShip, 108, "Energy Tank (Ridley)"),
-  loc(0x7EDE5, 0xa8, Area.EastMaridia, 109, "Energy Tank (Ridley)"),*/
 ];

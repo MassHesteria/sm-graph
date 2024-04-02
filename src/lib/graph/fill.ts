@@ -362,7 +362,7 @@ export const generateSeed = (
 export const getGraphLocations = (graph: Graph) => {
   const temp = getLocations().map((l) => {
     const b = graph.find((e) => {
-      return e.to.name === l.name /*&& getArea(e.to.area) == l.area*/
+      return e.to.name === l.name && getArea(e.to.area) == l.area
     })
     //if (b == null) {
       //console.log(l)
