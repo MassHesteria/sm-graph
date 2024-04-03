@@ -211,6 +211,15 @@ const graphFill = (
   //
   //-----------------------------------------------------------------
 
+  //const bossVertices = graph
+    //.map((e) => e.from)
+    //.filter((v) => v.type == "boss")
+    //.filter(isUnique)
+
+  //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
+
   const canPlaceItem = restrictType
     ? canPlaceItem_MajorMinor
     : canPlaceItem_Full;
@@ -219,7 +228,7 @@ const graphFill = (
   //
   //-----------------------------------------------------------------
 
-  const itemPool = getItemPool(seed, settings);
+  const itemPool = getItemPool(seed, settings, shuffledLocations.length);
 
   //-----------------------------------------------------------------
   // Prefill locations with early items.
@@ -305,6 +314,8 @@ const graphFill = (
     }
 
     if (isGraphValid(cloneGraph(graph), settings, emptyLoadout)) {
+      //console.log('----')
+      //bossVertices.forEach(b => console.log(b.name,b.area))
       return attempts;
     }
   }

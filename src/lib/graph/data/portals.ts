@@ -181,9 +181,6 @@ const generateBossPortals = (mode: number, seed: number): PortalMapping[] => {
   if (mode == BossMode.Vanilla) {
     return bosses;
   }
-  if (mode == BossMode.Randomized) {
-    throw new Error("True boss rando not implemented yet");
-  }
 
   const rng = new DotNetRandom(seed + 1e7);
 
@@ -192,6 +189,14 @@ const generateBossPortals = (mode: number, seed: number): PortalMapping[] => {
     // Split up the boss doors and exits
     const doorPortals = bosses.map((b) => b[0]);
     const exitPortals = bosses.map((b) => b[1]);
+
+    // Randomly pick a boss for each door
+    if (mode == BossMode.Randomized) {
+      return doorPortals.map<PortalMapping>((d) => {
+        const exit = {...exitPortals[rng.NextInRange(0, 4)]}
+        return [d, exit]
+      });
+    }
 
     // Shuffle the exit portals and assign them to boss doors
     shuffle(rng, exitPortals);

@@ -140,6 +140,7 @@ const createGraph = (
   //-----------------------------------------------------------------
 
   vertexUpdates.forEach((v) => {
+    //TODO: Check areas at some point
     findVertex(v.name).type = v.type;
   });
 
@@ -205,6 +206,7 @@ const createGraph = (
 
   edgeUpdates.forEach((c) => {
     const [from, to] = c.edges;
+    //TODO: Not an issue now but check areas eventually
     const edge = edges.find((n) => n.from.name == from && n.to.name == to);
     if (edge == null) {
       throw new Error(`Could not find edge from ${from} to ${to}`);
@@ -239,7 +241,7 @@ export const cloneGraph = (graph: Graph): Graph => {
   const newVertices = getAllVertices();
 
   const remap = (orig: Vertex) => {
-    let v = newVertices.find((v) => v.name == orig.name);
+    let v = newVertices.find((v) => v.name == orig.name && v.area == orig.area);
     if (v == undefined) {
       throw new Error('cloneGraph: missing vertex to remap')
     }
@@ -304,7 +306,7 @@ const getVertexUpdates = (mode: number): VertexUpdate[] => {
 // nodes like the exit and prize nodes.
 //-----------------------------------------------------------------
 
-const addBossItems = (graph: Graph, mode: number) => {
+const addBossItems = (graph: Graph) => {
   const isUnique = (value: Vertex, index: number, array: Vertex[]) => {
     return array.indexOf(value) === index;
   };
@@ -313,7 +315,7 @@ const addBossItems = (graph: Graph, mode: number) => {
     .map((e) => e.from)
     .filter(isUnique);
 
-  const addItem = (boss: Vertex) => {
+  bosses.forEach(boss => {
     switch (boss.area) {
       case "KraidsLair":
         boss.item = bossItem(Item.DefeatedBrinstarBoss);
@@ -328,65 +330,7 @@ const addBossItems = (graph: Graph, mode: number) => {
         boss.item = bossItem(Item.DefeatedNorfairBoss);
         break;
     }
-  }
-
-  const getAdjacent = (boss: Vertex) => {
-    const exit = graph.find(
-      (e) => e.from.type == "exit" && e.to == boss
-    )?.from;
-
-    if (exit == undefined) {
-      throw new Error('getAdjacent: missing boss exit edge')
-    }
-
-    const doorEdge = graph.find((e) => e.from != boss && e.to == exit);
-
-    if (doorEdge == undefined) {
-      throw new Error('getAdjacent: missing boss door edge')
-    }
-
-    return {
-      exit,
-      door: doorEdge.from,
-      prize: graph.find((e) => e.from == boss && e.to.type == "major")?.to
-    }
-  }
-
-  if (mode == BossMode.Shuffled) {
-    bosses.forEach((b) => {
-      //-----------------------------------------------------------------
-      // Add the pseudo item for defeating the boss before updating the
-      // area associated with the boss node because defeating the boss
-      // will unlock its vanilla area.
-      //-----------------------------------------------------------------
-
-      addItem(b);
-    });
-  } else {
-    bosses.forEach((b) => {
-      const { exit, door, prize } = getAdjacent(b);
-
-      //-----------------------------------------------------------------
-      // Update the area of the boss, prize, and exit nodes to match
-      // the area of the boss door.
-      //-----------------------------------------------------------------
-
-      if (prize != undefined) {
-        prize.area = door.area;
-      }
-
-      exit.area = door.area;
-      b.area = door.area;
-
-      //-----------------------------------------------------------------
-      // Add the pseudo item for defeating the boss after updating the
-      // area associated with the boss node because defeating the boss
-      // will unlock the area where it is located.
-      //-----------------------------------------------------------------
-
-      addItem(b);
-    });
-  }
+  });
 };
 
 //-----------------------------------------------------------------
@@ -425,6 +369,6 @@ export const loadGraph = (
     getVertexUpdates(majorDistributionMode),
     edgeUpdates.concat(getEdgeUpdates(mapLayout, areaShuffle))
   );
-  addBossItems(g, bossMode);
+  addBossItems(g);
   return g;
 };

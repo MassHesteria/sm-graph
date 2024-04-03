@@ -74,6 +74,7 @@ const getItemName = (name) => {
 };
 
 const placeItem = (graph, location, item) => {
+  //TODO: Maybe check area at some point
   const part = graph.find((n) => n.from.name == location);
   if (part == null) {
     console.error("missing part", location);
@@ -184,6 +185,7 @@ const loadExternal = (fileName, majorDistribution) => {
 
   SeasonEdgeUpdates.forEach((c) => {
     const [from, to] = c.edges;
+    //TODO: Not currently an issue but should check areas eventually
     const edge = graph.find((n) => n.from.name == from && n.to.name == to);
     if (edge == null) {
       throw new Error(`Could not find edge from ${from} to ${to}`);
