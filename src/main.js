@@ -231,7 +231,7 @@ const computeChecksum = (array) => {
 const computeGraphChecksum = (graph) => {
   return (
     computeChecksum(
-      getGraphLocations(graph).map((n) => n.to.item)
+      getGraphLocations(graph).map((n) => n.item)
     )
   )
 }
