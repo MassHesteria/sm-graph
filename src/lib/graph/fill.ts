@@ -6,6 +6,7 @@ import { addItem, checkFlags, createLoadout } from "../loadout";
 import { getItemPool } from "./itemPool";
 import { MajorDistributionMode, Options, Settings } from "./params";
 import { canReachVertex } from "./search";
+import { getArea, getLocations } from "../locations";
 
 //-----------------------------------------------------------------
 // Utility routines.
@@ -210,6 +211,15 @@ const graphFill = (
   //
   //-----------------------------------------------------------------
 
+  //const bossVertices = graph
+    //.map((e) => e.from)
+    //.filter((v) => v.type == "boss")
+    //.filter(isUnique)
+
+  //-----------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------
+
   const canPlaceItem = restrictType
     ? canPlaceItem_MajorMinor
     : canPlaceItem_Full;
@@ -218,7 +228,7 @@ const graphFill = (
   //
   //-----------------------------------------------------------------
 
-  const itemPool = getItemPool(seed, settings);
+  const itemPool = getItemPool(seed, settings, shuffledLocations.length);
 
   //-----------------------------------------------------------------
   // Prefill locations with early items.
@@ -304,6 +314,8 @@ const graphFill = (
     }
 
     if (isGraphValid(cloneGraph(graph), settings, emptyLoadout)) {
+      //console.log('----')
+      //bossVertices.forEach(b => console.log(b.name,b.area))
       return attempts;
     }
   }
@@ -353,3 +365,19 @@ export const generateSeed = (
   }
   throw new Error(`Failed to generate seed ${seed}`);
 };
+
+//-----------------------------------------------------------------
+//
+//-----------------------------------------------------------------
+
+export const getGraphLocations = (graph: Graph) => {
+   return getLocations().map((l) => {
+    const b = graph.find((e) => {
+      return e.to.name === l.name && getArea(e.to.area) == l.area
+    })
+    //if (b == null) {
+      //console.log(l)
+    //}
+    return b?.to;
+  }).filter((n) => n != null)
+}

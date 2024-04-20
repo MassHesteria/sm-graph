@@ -2,12 +2,11 @@ import { isBoss, minorItem } from "./lib/items";
 import { createLoadout } from "./lib/loadout";
 import { loadGraph } from "./lib/graph/init";
 import { mapPortals } from "./lib/graph/data/portals";
-import { generateSeed } from "./lib/graph/fill";
+import { generateSeed, getGraphLocations } from "./lib/graph/fill";
 import { isGraphValid} from "./lib/graph/solver";
 import { BossMode, MajorDistributionMode, MapLayout } from "./lib/graph/params";
 import { getAllPresets, getPreset } from "./lib/presets";
 import { SeasonEdgeUpdates } from "./lib/graph/data/season/edges";
-import { getLocations } from "./lib/locations";
 import CRC32 from "crc-32";
 
 import fs from "fs";
@@ -75,6 +74,7 @@ const getItemName = (name) => {
 };
 
 const placeItem = (graph, location, item) => {
+  //TODO: Maybe check area at some point
   const part = graph.find((n) => n.from.name == location);
   if (part == null) {
     console.error("missing part", location);
@@ -160,23 +160,12 @@ const printUncollectedItems = (graph) => {
 
 const loadExternal = (fileName, majorDistribution) => {
   const { bosses, area, items } = readSeed(fileName);
-  const portals = area.length > 0 ? area : mapPortals(0, false, false);
-
-  if (bosses != undefined) {
-    const setPortal = (from, to) => {
-      const temp = portals.find((p) => p[0] == from);
-      if (temp == undefined) {
-        portals.push([from, to]);
-      } else {
-        temp[1] = to;
-      }
-    };
-
-    setPortal("Door_KraidBoss", `Exit_${bosses.kraidBoss}`);
-    setPortal("Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`);
-    setPortal("Door_DraygonBoss", `Exit_${bosses.draygonBoss}`);
-    setPortal("Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`);
-  }
+  const bossPortals = [
+    ["Door_KraidBoss", `Exit_${bosses.kraidBoss}`],
+    ["Door_PhantoonBoss", `Exit_${bosses.phantoonBoss}`],
+    ["Door_DraygonBoss", `Exit_${bosses.draygonBoss}`],
+    ["Door_RidleyBoss", `Exit_${bosses.ridleyBoss}`]
+  ]
 
   const graph = loadGraph(
     1,
@@ -186,7 +175,7 @@ const loadExternal = (fileName, majorDistribution) => {
     area.length > 0,
     false,
     BossMode.Shuffled,
-    portals
+    mapPortals(area, bossPortals)
   );
 
   //-----------------------------------------------------------------
@@ -196,6 +185,7 @@ const loadExternal = (fileName, majorDistribution) => {
 
   SeasonEdgeUpdates.forEach((c) => {
     const [from, to] = c.edges;
+    //TODO: Not currently an issue but should check areas eventually
     const edge = graph.find((n) => n.from.name == from && n.to.name == to);
     if (edge == null) {
       throw new Error(`Could not find edge from ${from} to ${to}`);
@@ -213,7 +203,15 @@ const loadVerifiedFill = (seed, preset) => {
   const recall = mapLayout == MapLayout.Recall;
   const full = majorDistribution == MajorDistributionMode.Full;
 
-  const graph = loadGraph(0, 1, mapLayout, majorDistribution);
+  const graph = loadGraph(
+    0,
+    1,
+    mapLayout,
+    majorDistribution,
+    false,
+    false,
+    BossMode.Vanilla,
+    mapPortals([], []));
   generateLegacySeed(seed, recall, full).forEach((i) => placeItem(graph, i.location.name, i.item));
   return graph;
 };
@@ -233,9 +231,7 @@ const computeChecksum = (array) => {
 const computeGraphChecksum = (graph) => {
   return (
     computeChecksum(
-      getLocations().map((l) => {
-        return graph.find((e) => e.to.name === l.name).to.item
-      })
+      getGraphLocations(graph).map((n) => n.item)
     )
   )
 }
