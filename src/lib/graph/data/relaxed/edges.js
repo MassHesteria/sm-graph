@@ -27,8 +27,8 @@ const EastMaridia_DoorAqueduct_to_Aqueduct = {
   requires: () => CanUsePowerBombs && HasGravity,
 };
 
-const EastMaridia_DoorHighway_to_MaridiaHighway = {
-  edges: ["Door_Highway", "MaridiaHighway"],
+const EastMaridia_DoorEMHighway_to_MaridiaHighway = {
+  edges: ["Door_EMHighway", "MaridiaHighway"],
   requires: () => HasGravity,
 };
 
@@ -88,7 +88,7 @@ export const RelaxedEdgeUpdates = [
   WestMaridia_DoorMaridiaMap_to_AboveMaridiaMap,
   WestMaridia_DoorRedFish_to_RedFish,
   EastMaridia_DoorAqueduct_to_Aqueduct,
-  EastMaridia_DoorHighway_to_MaridiaHighway,
+  EastMaridia_DoorEMHighway_to_MaridiaHighway,
   EastMaridia_Aqueduct_to_Missiles,
   EastMaridia_OasisBottom_to_SpringBall,
   UpperNorfair_BusinessCenter_to_TopRightDoor,

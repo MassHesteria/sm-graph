@@ -44,6 +44,8 @@ const getPortal = (name) => {
       return "Door_KronicBoost"
     case "Door_HighwayExit":
       return "Door_WSHighway"
+    case "Door_Highway":
+      return "Door_EMHighway"
     default:
       break;
   }

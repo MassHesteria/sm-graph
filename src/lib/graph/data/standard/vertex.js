@@ -214,7 +214,7 @@ export const standardVertices = {
   EastMaridia: {
     Door_DraygonBoss: "",
     Door_Aqueduct: "",
-    Door_Highway: "",
+    Door_EMHighway: "",
     BotwoonHallwayLeft: "",
     BotwoonHallwayRight: "",
     Aqueduct: "",
