@@ -103,7 +103,7 @@ export const standardVertices = {
     KronicBoostBottom: "",
     NutellaRefill: "",
     BusinessCenter: "",
-    BusinessCenterTopRightDoor: "",
+    CathedralEntrance: "",
     BusinessCenterSaveStation: "",
     IceBeamGatesTopLeftDoor: "",
     IceBeamGatesBottomLeftDoor: "",

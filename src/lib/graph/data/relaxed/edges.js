@@ -43,8 +43,8 @@ const EastMaridia_OasisBottom_to_SpringBall = {
     HasGrapple && (CanFly || HasHiJump)
 };
 
-const UpperNorfair_BusinessCenter_to_TopRightDoor = {
-  edges: ["BusinessCenter", "BusinessCenterTopRightDoor"],
+const UpperNorfair_BusinessCenter_to_CathedralEntrance = {
+  edges: ["BusinessCenter", "CathedralEntrance"],
   requires: () => HasVaria || HasHeatShield,
 };
 
@@ -93,7 +93,7 @@ export const RelaxedEdgeUpdates = [
   EastMaridia_DoorEMHighway_to_MaridiaHighway,
   EastMaridia_Aqueduct_to_Missiles,
   EastMaridia_OasisBottom_to_SpringBall,
-  UpperNorfair_BusinessCenter_to_TopRightDoor,
+  UpperNorfair_BusinessCenter_to_CathedralEntrance,
   UpperNorfair_BusinessCenter_to_BCSaveStation,
   UpperNorfair_DoorSingleChamber_to_TopRightDoor,
   UpperNorfair_DoorKronicBoost_to_KronicBoostBottom,
