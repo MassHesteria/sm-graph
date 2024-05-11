@@ -67,8 +67,8 @@ const WreckedShip_ShipHallway_to_SpongeBath = {
   requires: true,
 };
 
-const WreckedShip_RearExit_to_Highway = {
-  edges: ["ShipRearExit", "Door_HighwayExit"],
+const WreckedShip_RearExit_to_WSHighway = {
+  edges: ["ShipRearExit", "Door_WSHighway"],
   requires: () => (HasHiJump || HasGravity) && HasMorph,
 };
 
@@ -128,7 +128,7 @@ export const StandardAreaEdgeUpdates = [
   RedBrinstar_MaridiaEscapePortal_to_RedTowerElevator,
   RedBrinstar_AboveKraidPortal_to_RedTowerBottom,
   WreckedShip_ShipHallway_to_SpongeBath,
-  WreckedShip_RearExit_to_Highway,
+  WreckedShip_RearExit_to_WSHighway,
   EastMaridia_OasisBottom_to_Aqueduct,
   EastMaridia_OasisBottom_to_AboveMaridiaMap,
   WestMaridia_AboveMaridiaMap_to_OasisBottom,

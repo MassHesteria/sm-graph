@@ -39,8 +39,13 @@ const defaultBosses = () => {
 };
 
 const getPortal = (name) => {
-  if (name == "Door_LavaDive") {
-    return "Door_KronicBoost"
+  switch (name) {
+    case "Door_LavaDive":
+      return "Door_KronicBoost"
+    case "Door_HighwayExit":
+      return "Door_WSHighway"
+    default:
+      break;
   }
   return name
 }

@@ -178,7 +178,7 @@ export const standardVertices = {
     "Missiles (Bowling)": "minor",
     "Missiles (Ocean Middle)": "minor",
     "Missiles (Sky)": "minor",
-    Door_HighwayExit: "",
+    Door_WSHighway: "",
     SpongeBathLeft: "",
     SpongeBathRight: "",
     Exit_Phantoon: "exit",
