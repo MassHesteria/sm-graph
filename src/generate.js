@@ -48,6 +48,8 @@ const getPortal = (name) => {
       return "Door_EMHighway"
     case "Door_Muskateers":
       return "Door_Musketeers"
+    case "Door_Crabs":
+      return "Door_CrateriaCrabs"
     default:
       break;
   }

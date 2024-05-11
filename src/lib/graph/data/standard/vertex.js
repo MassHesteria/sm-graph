@@ -15,7 +15,7 @@ export const standardVertices = {
     "Energy Tank (Terminator)": "major",
     Door_G4: "",
     Door_Kago: "",
-    Door_Crabs: "",
+    Door_CrateriaCrabs: "",
     PreMoat: "",
     Climb: "",
     ClimbSupersBottom: "",

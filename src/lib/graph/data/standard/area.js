@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------
 
 const Crateria_PreMoat_to_Crabs = {
-  edges: ["PreMoat", "Door_Crabs"],
+  edges: ["PreMoat", "Door_CrateriaCrabs"],
   requires: true,
 };
 

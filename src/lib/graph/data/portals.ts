@@ -83,7 +83,7 @@ const getAreaPortals = (): Portal[] => {
     { name: "Door_Tourian", area: "Tourian" },
     { name: "Door_Kago", area: "Crateria" },
     { name: "Door_GreenElevator", area: "GreenBrinstar" },
-    { name: "Door_Crabs", area: "Crateria" },
+    { name: "Door_CrateriaCrabs", area: "Crateria" },
     { name: "Door_RedElevator", area: "RedBrinstar" },
     { name: "Door_WSHighway", area: "WreckedShip" },
     { name: "Door_EMHighway", area: "EastMaridia" },
