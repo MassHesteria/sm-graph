@@ -48,8 +48,10 @@ const UpperNorfair_BusinessCenter_to_TopRightDoor = {
   requires: () => HasVaria || HasHeatShield,
 };
 
-const UpperNorfair_BusinessCenter_to_BottomRightDoor = {
-  edges: ["BusinessCenter", "BusinessCenterBottomRightDoor"],
+// Obviously these suits are not required to get to the save
+// station, but we use this to prevent logical hell runs
+const UpperNorfair_BusinessCenter_to_BCSaveStation= {
+  edges: ["BusinessCenter", "BusinessCenterSaveStation"],
   requires: () => HasVaria || HasHeatShield,
 };
 
@@ -92,7 +94,7 @@ export const RelaxedEdgeUpdates = [
   EastMaridia_Aqueduct_to_Missiles,
   EastMaridia_OasisBottom_to_SpringBall,
   UpperNorfair_BusinessCenter_to_TopRightDoor,
-  UpperNorfair_BusinessCenter_to_BottomRightDoor,
+  UpperNorfair_BusinessCenter_to_BCSaveStation,
   UpperNorfair_DoorSingleChamber_to_TopRightDoor,
   UpperNorfair_DoorKronicBoost_to_KronicBoostBottom,
   UpperNorfair_DoorCrocEntry_to_PreCrocomire,

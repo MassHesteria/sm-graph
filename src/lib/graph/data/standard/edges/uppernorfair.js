@@ -8,7 +8,7 @@ export const uppernorfairEdges = {
     Door_KraidMouth: () => SuperPacks >= 1,
     IceBeamGatesTopLeftDoor: () => CanOpenGreenDoors && (HasMorph || HasSpeed),
     BusinessCenterTopRightDoor: true,
-    BusinessCenterBottomRightDoor: true,
+    BusinessCenterSaveStation: true,
     "Energy Tank (HJB)": () => CanOpenRedDoors,
   },
 
@@ -29,7 +29,7 @@ export const uppernorfairEdges = {
     "Missiles (Cathedral)": () => HellRunTanks >= 5 && CanOpenRedDoors,
   },
 
-  BusinessCenterBottomRightDoor: {
+  BusinessCenterSaveStation: {
     BusinessCenter: true,
     BubbleMountainBottomLeftDoor: () => HasSpeed,
   },
@@ -87,7 +87,7 @@ export const uppernorfairEdges = {
 
   BubbleMountainBottomLeftDoor: {
     BubbleMountainMain: () => CanPassBombPassages,
-    BusinessCenterBottomRightDoor: () => HasSpeed,
+    BusinessCenterSaveStation: () => HasSpeed,
     NutellaRefill: () => HellRunTanks >= 1 && (HasWave || CanOpenRedDoors),
     KronicBoostBottom: () => HellRunTanks >= 2,
     BubbleMountainKingCacLedge: () => HellRunTanks >= 6,

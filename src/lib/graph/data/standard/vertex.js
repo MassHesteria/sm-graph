@@ -104,7 +104,7 @@ export const standardVertices = {
     NutellaRefill: "",
     BusinessCenter: "",
     BusinessCenterTopRightDoor: "",
-    BusinessCenterBottomRightDoor: "",
+    BusinessCenterSaveStation: "",
     IceBeamGatesTopLeftDoor: "",
     IceBeamGatesBottomLeftDoor: "",
     SingleChamberTopRightDoor: "",
