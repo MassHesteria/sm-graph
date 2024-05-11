@@ -50,6 +50,8 @@ const getPortal = (name) => {
       return "Door_Musketeers"
     case "Door_Crabs":
       return "Door_CrateriaCrabs"
+    case "Door_ElevatorEntry":
+      return "Door_BusinessCenterLeft"
     default:
       break;
   }

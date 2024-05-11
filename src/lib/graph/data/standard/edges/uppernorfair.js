@@ -1,10 +1,10 @@
 export const uppernorfairEdges = {
-  Door_ElevatorEntry: {
+  Door_BusinessCenterLeft: {
     BusinessCenter: true,
   },
 
   BusinessCenter: {
-    Door_ElevatorEntry: true,
+    Door_BusinessCenterLeft: true,
     Door_KraidMouth: () => SuperPacks >= 1,
     IceBeamGatesTopLeftDoor: () => CanOpenGreenDoors && (HasMorph || HasSpeed),
     CathedralEntrance: true,

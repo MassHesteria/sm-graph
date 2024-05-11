@@ -75,7 +75,7 @@ export const standardVertices = {
     RedBrinstarElevatorRoom: "",
   },
   UpperNorfair: {
-    Door_ElevatorEntry: "",
+    Door_BusinessCenterLeft: "",
     Door_KraidMouth: "",
     "Ice Beam": "major",
     "Missiles (Crumble Shaft)": "minor",
