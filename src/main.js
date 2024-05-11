@@ -304,10 +304,9 @@ let step = start;
 const presets = getAllPresets();
 
 const chozo = getPreset("chozo");
-const classic_mm = getPreset("classic_mm");
+const classic_mm = getPreset("classic");
 const classic_full = getPreset("classic_full");
-const recall_mm = getPreset("recall_mm");
-const recall_full = getPreset("recall_full");
+const recall_mm = getPreset("recall");
 
 for (let i = startSeed; i <= endSeed; i++) {
   readFromFolders.forEach((f) => {
@@ -322,7 +321,6 @@ for (let i = startSeed; i <= endSeed; i++) {
     solveVerifiedFill(i, classic_mm);
     solveVerifiedFill(i, classic_full);
     solveVerifiedFill(i, recall_mm);
-    solveVerifiedFill(i, recall_full);
   }
   if (graphFillMode) {
     presets.forEach((p) => {
