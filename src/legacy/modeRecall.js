@@ -342,7 +342,7 @@ class ModeRecall {
       return canPassWorstRoom(load);
     });
 
-    minor("Missiles (Three Muskateers)", (load) => {
+    minor("Missiles (Three Musketeers)", (load) => {
       return canPassWorstRoom(load);
     });
 

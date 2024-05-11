@@ -46,6 +46,18 @@ const getPortal = (name) => {
       return "Door_WSHighway"
     case "Door_Highway":
       return "Door_EMHighway"
+    case "Door_Muskateers":
+      return "Door_Musketeers"
+    default:
+      break;
+  }
+  return name
+}
+
+const getLocation = (name) => {
+  switch (name) {
+    case "Missiles (Three Muskateers)":
+      return "Missiles (Three Musketeers)"
     default:
       break;
   }
@@ -73,7 +85,7 @@ export const readSeed = (fileName) => {
     area,
     items: info.itemLocations.map((i) => {
       return {
-        location: i.location,
+        location: getLocation(i.location),
         item: Item[i.item],
       };
     })

@@ -102,7 +102,7 @@ const getAreaPortals = (): Portal[] => {
     { name: "Door_CrocEntry", area: "UpperNorfair" },
     { name: "Door_Croc", area: "CrocomiresLair" },
     { name: "Door_SingleChamber", area: "UpperNorfair" },
-    { name: "Door_Muskateers", area: "LowerNorfair" },
+    { name: "Door_Musketeers", area: "LowerNorfair" },
     { name: "Door_KronicBoost", area: "UpperNorfair" },
     { name: "Door_RidleyMouth", area: "LowerNorfair" },
     { name: "Door_PreAqueduct", area: "WestMaridia" },
