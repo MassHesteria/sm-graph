@@ -37,8 +37,8 @@ const UpperNorfair_KingCacLedge_to_SingleChamberPortal = {
   requires: () => HasMorph && CanDestroyBombWalls && HellRunTanks >= 2,
 };
 
-const UpperNorfair_KronicBoostBottom_to_LavaDivePortal = {
-  edges: ["KronicBoostBottom", "Door_LavaDive"],
+const UpperNorfair_KronicBoostBottom_to_KronicBoostPortal = {
+  edges: ["KronicBoostBottom", "Door_KronicBoost"],
   requires: true,
 };
 
@@ -121,7 +121,7 @@ export const StandardAreaEdgeUpdates = [
   GreenBrinstar_Tube_to_NoobBridgePortal,
   GreenBrinstar_NoobBridgePortal_to_Tube,
   UpperNorfair_KingCacLedge_to_SingleChamberPortal,
-  UpperNorfair_KronicBoostBottom_to_LavaDivePortal,
+  UpperNorfair_KronicBoostBottom_to_KronicBoostPortal,
   UpperNorfair_PreCrocomire_to_CrocEntry,
   RedBrinstar_RedTowerElevator_to_MaridiaEscapePortal,
   RedBrinstar_RedTowerBottom_to_AboveKraidPortal,

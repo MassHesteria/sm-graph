@@ -38,6 +38,13 @@ const defaultBosses = () => {
   }
 };
 
+const getPortal = (name) => {
+  if (name == "Door_LavaDive") {
+    return "Door_KronicBoost"
+  }
+  return name
+}
+
 export const readSeed = (fileName) => {
   if (fileName == undefined || fileName.length <= 0) {
     return {
@@ -48,9 +55,15 @@ export const readSeed = (fileName) => {
   }
 
   const info = JSON.parse(fs.readFileSync(fileName, "utf-8"));
+  let area = []
+  if (info.portals) {
+    area = info.portals.map(([a, b]) => {
+      return [getPortal(a), getPortal(b)]
+    })
+  }
   return {
     bosses: info.bosses == undefined ? defaultBosses() : info.bosses,
-    area: info.portals == undefined ? [] : info.portals,
+    area,
     items: info.itemLocations.map((i) => {
       return {
         location: i.location,

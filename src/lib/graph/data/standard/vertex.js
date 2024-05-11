@@ -94,7 +94,7 @@ export const standardVertices = {
     "Missiles (Wave)": "minor",
     Door_CrocEntry: "",
     Door_SingleChamber: "",
-    Door_LavaDive: "",
+    Door_KronicBoost: "",
     PreCrocomire: "",
     BubbleMountainMain: "",
     BubbleMountainBottomLeftDoor: "",

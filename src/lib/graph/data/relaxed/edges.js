@@ -58,8 +58,8 @@ const UpperNorfair_DoorSingleChamber_to_TopRightDoor = {
   requires: () => HasVaria || HasHeatShield,
 };
 
-const UpperNorfair_DoorLavaDive_to_KronicBoostBottom = {
-  edges: ["Door_LavaDive", "KronicBoostBottom"],
+const UpperNorfair_DoorKronicBoost_to_KronicBoostBottom = {
+  edges: ["Door_KronicBoost", "KronicBoostBottom"],
   requires: () => HasVaria || HasHeatShield,
 };
 
@@ -94,7 +94,7 @@ export const RelaxedEdgeUpdates = [
   UpperNorfair_BusinessCenter_to_TopRightDoor,
   UpperNorfair_BusinessCenter_to_BottomRightDoor,
   UpperNorfair_DoorSingleChamber_to_TopRightDoor,
-  UpperNorfair_DoorLavaDive_to_KronicBoostBottom,
+  UpperNorfair_DoorKronicBoost_to_KronicBoostBottom,
   UpperNorfair_DoorCrocEntry_to_PreCrocomire,
   UpperNorfair_IceBeamGatesTopLeft_to_IceBeam,
   UpperNorfair_IceBeamGatesBottomLeft_to_CrumbleShaft

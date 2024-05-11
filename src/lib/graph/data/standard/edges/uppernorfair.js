@@ -95,7 +95,7 @@ export const uppernorfairEdges = {
 
   KronicBoostBottom: {
     BubbleMountainBottomLeftDoor: () => HellRunTanks >= 2, //TODO: pretty aggressive
-    Door_LavaDive: () => CanUsePowerBombs,
+    Door_KronicBoost: () => CanUsePowerBombs,
     //TODO: could probably remove this because going around requires less
     //NutellaRefill: () =>
     //HasMorph &&
@@ -137,7 +137,7 @@ export const uppernorfairEdges = {
     SingleChamberTopRightDoor: true,
   },
 
-  Door_LavaDive: {
+  Door_KronicBoost: {
     KronicBoostBottom: true,
   },
 
