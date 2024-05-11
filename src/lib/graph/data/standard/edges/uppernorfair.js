@@ -5,7 +5,7 @@ export const uppernorfairEdges = {
 
   BusinessCenter: {
     Door_BusinessCenterLeft: true,
-    Door_KraidMouth: () => SuperPacks >= 1,
+    Door_BusinessCenterRight: () => SuperPacks >= 1,
     IceBeamGatesTopLeftDoor: () => CanOpenGreenDoors && (HasMorph || HasSpeed),
     CathedralEntrance: true,
     BusinessCenterSaveStation: true,
@@ -155,7 +155,7 @@ export const uppernorfairEdges = {
     BubbleMountainMain: true,
   },
 
-  Door_KraidMouth: {
+  Door_BusinessCenterRight: {
     BusinessCenter: () => SuperPacks >= 1,
   },
 

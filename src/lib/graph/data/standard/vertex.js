@@ -76,7 +76,7 @@ export const standardVertices = {
   },
   UpperNorfair: {
     Door_BusinessCenterLeft: "",
-    Door_KraidMouth: "",
+    Door_BusinessCenterRight: "",
     "Ice Beam": "major",
     "Missiles (Crumble Shaft)": "minor",
     "Energy Tank (HJB)": "minor",
