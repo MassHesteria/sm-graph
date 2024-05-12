@@ -93,7 +93,7 @@ const getAreaPortals = (): Portal[] => {
     { name: "Door_RedFish", area: "WestMaridia" },
     { name: "Door_MaridiaTube", area: "RedBrinstar" },
     { name: "Door_MainStreet", area: "WestMaridia" },
-    { name: "Door_KraidEntry", area: "RedBrinstar" },
+    { name: "Door_RedTowerToKraid", area: "RedBrinstar" },
     { name: "Door_BusinessCenterLeft", area: "UpperNorfair" },
     { name: "Door_AboveKraid", area: "RedBrinstar" },
     { name: "Door_MaridiaMap", area: "WestMaridia" },

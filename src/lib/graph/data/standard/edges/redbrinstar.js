@@ -30,7 +30,7 @@ export const redbrinstarEdges = {
     RedTowerBottom: () => SuperPacks >= 1,
   },
 
-  Door_KraidEntry: {
+  Door_RedTowerToKraid: {
     RedTowerBottom: true,
   },
 
@@ -69,7 +69,7 @@ export const redbrinstarEdges = {
 
   RedTowerBottom: {
     Door_AboveKraid: false,
-    Door_KraidEntry: true,
+    Door_RedTowerToKraid: true,
     Door_MaridiaTube: () =>
       CanUsePowerBombs && (HasHiJump || CanMoveInWestMaridia),
     RedTowerMid: true,

@@ -56,6 +56,8 @@ const getPortal = (name) => {
       return "Door_BusinessCenterRight"
     case "Door_Croc":
       return "Door_CrocsLair"
+    case "Door_KraidEntry":
+      return "Door_RedTowerToKraid"
     default:
       break;
   }
