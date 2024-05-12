@@ -26,7 +26,7 @@ export const redbrinstarEdges = {
         (HasVaria && TotalTanks >= 2)),
   },
 
-  Door_AboveKraid: {
+  Door_RedTowerToMaridiaMap: {
     RedTowerBottom: () => SuperPacks >= 1,
   },
 
@@ -68,7 +68,7 @@ export const redbrinstarEdges = {
   },
 
   RedTowerBottom: {
-    Door_AboveKraid: false,
+    Door_RedTowerToMaridiaMap: false,
     Door_RedTowerToKraid: true,
     Door_MaridiaTube: () =>
       CanUsePowerBombs && (HasHiJump || CanMoveInWestMaridia),

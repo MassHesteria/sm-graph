@@ -53,12 +53,12 @@ const RedBrinstar_MaridiaEscapePortal_to_RedTowerElevator = {
 };
 
 const RedBrinstar_RedTowerBottom_to_AboveKraidPortal = {
-  edges: ["RedTowerBottom", "Door_AboveKraid"],
+  edges: ["RedTowerBottom", "Door_RedTowerToMaridiaMap"],
   requires: true,
 };
 
 const RedBrinstar_AboveKraidPortal_to_RedTowerBottom = {
-  edges: ["Door_AboveKraid", "RedTowerBottom"],
+  edges: ["Door_RedTowerToMaridiaMap", "RedTowerBottom"],
   requires: true,
 };
 

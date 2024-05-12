@@ -66,7 +66,7 @@ export const standardVertices = {
     Door_RedElevator: "",
     Door_MaridiaEscape: "",
     Door_MaridiaTube: "",
-    Door_AboveKraid: "",
+    Door_RedTowerToMaridiaMap: "",
     Door_RedTowerToKraid: "",
     RedTowerTop: "",
     RedTowerMid: "",

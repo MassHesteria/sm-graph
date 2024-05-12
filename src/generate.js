@@ -58,6 +58,8 @@ const getPortal = (name) => {
       return "Door_CrocsLair"
     case "Door_KraidEntry":
       return "Door_RedTowerToKraid"
+    case "Door_AboveKraid":
+      return "Door_RedTowerToMaridiaMap"
     default:
       break;
   }
