@@ -251,7 +251,7 @@ export const standardVertices = {
     "Energy Tank (Ridley)": "major",
   },
   CrocomiresLair: {
-    Door_Croc: "",
+    Door_CrocsLair: "",
     PostCroc: "",
     "Energy Tank (Crocomire)": "major",
     "Power Bombs (Crocomire)": "minor",
