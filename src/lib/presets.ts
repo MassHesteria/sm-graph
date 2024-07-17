@@ -11,6 +11,7 @@ import {
   Options
 } from "./graph/params";
 import DotNetRandom from "./dotnet-random";
+import { getSeedNumber } from './sm-rando'
 
 export type Preset = {
   title: string;
@@ -32,6 +33,7 @@ export const getAllPresets = () => {
     Preset_Chozo_Bozo,
     Preset_2017_MM,
     Preset_SGL23,
+    Preset_Spring_2024,
     Preset_MM_Surprise,
     Preset_MM_Area_Surprise,
     Preset_Full_Surprise,
@@ -41,6 +43,8 @@ export const getAllPresets = () => {
     Preset_Chozo,
     Preset_Chozo_Bozo_Area,
     Preset_Chozo_Area_Shifted,
+    Preset_MM_Area_Shuffled,
+    Preset_Full_Area_Shuffled
   ];
 };
 
@@ -84,7 +88,9 @@ type WeightedOption = {
 
 
 const generateMysteryPreset = (): Preset => {
-  const rnd = new DotNetRandom(Date.now() / 10000)
+  const MAX_SEED = 2000001
+  const timestamp = Math.floor(Date.now() % MAX_SEED)
+  const rnd = new DotNetRandom(timestamp)
 
   const getWeightedRandom = (options: WeightedOption[]) => {
     let sum = 0
@@ -103,55 +109,45 @@ const generateMysteryPreset = (): Preset => {
     fileName: 'Mystery',
     tags: ['mystery'],
     settings: {
-      mapLayout: getWeightedRandom([
-        { value: MapLayout.Standard, weight: 0.8 },
-        { value: MapLayout.Classic, weight: 0.1 },
-        { value: MapLayout.Recall, weight: 0.1 },
-      ]),
+      mapLayout: MapLayout.Standard,
       majorDistribution: getWeightedRandom([
-        { value: MajorDistributionMode.Standard, weight: 0.3 },
-        { value: MajorDistributionMode.Chozo, weight: 0.3 },
-        { value: MajorDistributionMode.Full, weight: 0.3 },
-        { value: MajorDistributionMode.Recall, weight: 0.1 },
+        { value: MajorDistributionMode.Standard, weight: 0.34 },
+        { value: MajorDistributionMode.Chozo, weight: 0.33 },
+        { value: MajorDistributionMode.Full, weight: 0.33 },
       ]),
       minorDistribution: getWeightedRandom([
-        { value: MinorDistributionMode.Standard, weight: 0.6 },
-        { value: MinorDistributionMode.Dash, weight: 0.4 },
+        { value: MinorDistributionMode.Standard, weight: 0.5 },
+        { value: MinorDistributionMode.Dash, weight: 0.5 },
       ]),
       extraItems:
         [getWeightedRandom([
-          { value: [], weight: 0.65 },
-          { value: [Item.DoubleJump], weight: 0.35 },
+          { value: [], weight: 0.5 },
+          { value: [Item.DoubleJump], weight: 0.5 },
         ])].concat(
           getWeightedRandom([
-            { value: [], weight: 0.8 },
-            { value: [Item.HeatShield], weight: 0.2 },
-          ]).concat(
-          getWeightedRandom([
-            { value: [], weight: 0.85 },
-            { value: [Item.PressureValve], weight: 0.15 },
+            { value: [], weight: 0.75 },
+            { value: [Item.HeatShield], weight: 0.25 },
           ])
-          )
         ),
       beamMode: getWeightedRandom([
-        { value: BeamMode.Vanilla, weight: 0.5 },
-        { value: BeamMode.Starter, weight: 0.3 },
-        { value: BeamMode.StarterPlus, weight: 0.2 },
+        { value: BeamMode.Vanilla, weight: 0.34 },
+        { value: BeamMode.Starter, weight: 0.33 },
+        { value: BeamMode.StarterPlus, weight: 0.33 },
       ]),
       suitMode: SuitMode.Dash,
       gravityHeatReduction: getWeightedRandom([
-        { value: GravityHeatReduction.Off, weight: 0.7 },
-        { value: GravityHeatReduction.On, weight: 0.3 },
+        { value: GravityHeatReduction.Off, weight: 0.75 },
+        { value: GravityHeatReduction.On, weight: 0.25 },
       ]),
       randomizeAreas: getWeightedRandom([
-        { value: true, weight: 0.7 },
-        { value: false, weight: 0.3 },
+        { value: true, weight: 0.67 },
+        { value: false, weight: 0.33 },
       ]),
       bossMode: getWeightedRandom([
-        { value: BossMode.Vanilla, weight: 0.15 },
+        { value: BossMode.Vanilla, weight: 0.3 },
         { value: BossMode.Shuffled, weight: 0.3 },
         { value: BossMode.Shifted, weight: 0.3 },
-        { value: BossMode.Surprise, weight: 0.25 },
+        { value: BossMode.Surprise, weight: 0.1 },
       ])
     },
     options: {
@@ -196,6 +192,48 @@ export const Preset_MM_Area_Surprise: Preset = {
     gravityHeatReduction: GravityHeatReduction.Off,
     randomizeAreas: true,
     bossMode: BossMode.Surprise,
+  },
+  options: {
+    DisableFanfare: false,
+    RelaxedLogic: false
+  }
+};
+
+export const Preset_MM_Area_Shuffled: Preset = {
+  title: "MM Area Shuffled",
+  fileName: "MMAreaShuffled",
+  tags: ["mm_area_shuffled"],
+  settings: {
+    mapLayout: MapLayout.Standard,
+    majorDistribution: MajorDistributionMode.Standard,
+    minorDistribution: MinorDistributionMode.Standard,
+    extraItems: [],
+    beamMode: BeamMode.Vanilla,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.Off,
+    randomizeAreas: true,
+    bossMode: BossMode.Shuffled,
+  },
+  options: {
+    DisableFanfare: false,
+    RelaxedLogic: false
+  }
+};
+
+export const Preset_Full_Area_Shuffled: Preset = {
+  title: "Full Area Shuffled",
+  fileName: "FullAreaShuffled",
+  tags: ["full_area_shuffled"],
+  settings: {
+    mapLayout: MapLayout.Standard,
+    majorDistribution: MajorDistributionMode.Full,
+    minorDistribution: MinorDistributionMode.Standard,
+    extraItems: [],
+    beamMode: BeamMode.Vanilla,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.Off,
+    randomizeAreas: true,
+    bossMode: BossMode.Shuffled,
   },
   options: {
     DisableFanfare: false,
@@ -376,7 +414,7 @@ export const Preset_Chozo_Area_Shifted: Preset = {
 };
 
 //-----------------------------------------------------------------
-// SG Live 2023 Tournament Settings
+// Event / Tournament Settings
 //-----------------------------------------------------------------
 
 export const Preset_SGL23: Preset = {
@@ -393,6 +431,27 @@ export const Preset_SGL23: Preset = {
     gravityHeatReduction: GravityHeatReduction.Off,
     randomizeAreas: true,
     bossMode: BossMode.Shifted,
+  },
+  options: {
+    DisableFanfare: false,
+    RelaxedLogic: false
+  },
+};
+
+export const Preset_Spring_2024: Preset = {
+  title: "Spring Invitational 2024",
+  fileName: "Spring24",
+  tags: ["spring24"],
+  settings: {
+    mapLayout: MapLayout.Standard,
+    majorDistribution: MajorDistributionMode.Chozo,
+    minorDistribution: MinorDistributionMode.Dash,
+    extraItems: [],
+    beamMode: BeamMode.StarterPlus,
+    suitMode: SuitMode.Dash,
+    gravityHeatReduction: GravityHeatReduction.Off,
+    randomizeAreas: true,
+    bossMode: BossMode.Vanilla,
   },
   options: {
     DisableFanfare: false,
